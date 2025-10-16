@@ -7,6 +7,7 @@ import PRODUCTS from '../pages/products.jsx';
 import MARKETING from '../pages/marketing.jsx';
 import USER_MANAGEMENT from '../pages/user-management.jsx';
 import FORMULA_MANAGEMENT from '../pages/formula-management.jsx';
+import COLOR_LIBRARY from '../pages/color-library.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -34,4 +35,7 @@ export const routers = [{
 }, {
   id: "formula-management",
   component: FORMULA_MANAGEMENT
+}, {
+  id: "color-library",
+  component: COLOR_LIBRARY
 }]
