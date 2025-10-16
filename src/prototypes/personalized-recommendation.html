@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个性化推荐系统 - AI染发色彩大师</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .color-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .match-score {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #8b5cf6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-palette text-white"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">个性化推荐系统</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-purple-600">
+                        <i class="fas fa-history"></i>
+                    </button>
+                    <button class="text-gray-600 hover:text-purple-600">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 用户画像卡片 -->
+        <section class="mb-8">
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">您的色彩画像</h2>
+                    <button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                        <i class="fas fa-sync-alt mr-2"></i>重新分析
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-purple-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fas fa-user text-purple-600 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">暖色调</h3>
+                        <p class="text-sm text-gray-600">肤色类型</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fas fa-snowflake text-blue-600 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">春季型</h3>
+                        <p class="text-sm text-gray-600">色彩季节</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-green-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fas fa-heart text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">自然风格</h3>
+                        <p class="text-sm text-gray-600">风格偏好</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-orange-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fas fa-star text-orange-600 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">4.5分</h3>
+                        <p class="text-sm text-gray-600">历史评分</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 智能分析工具 -->
+        <section class="mb-8">
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl shadow-xl p-6 text-white">
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold mb-4">AI智能色彩分析</h2>
+                    <p class="text-purple-100 mb-6">上传照片或回答问题，让AI为您分析最适合的色彩方案</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button class="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-4 hover:bg-white/30 transition-all">
+                            <i class="fas fa-camera text-3xl mb-2"></i>
+                            <p class="font-medium">拍照分析</p>
+                        </button>
+                        <button class="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-4 hover:bg-white/30 transition-all">
+                            <i class="fas fa-upload text-3xl mb-2"></i>
+                            <p class="font-medium">上传照片</p>
+                        </button>
+                        <button class="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-4 hover:bg-white/30 transition-all">
+                            <i class="fas fa-question-circle text-3xl mb-2"></i>
+                            <p class="font-medium">色彩测试</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 个性化推荐 -->
+        <section class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">为您推荐</h2>
+                <div class="flex space-x-2">
+                    <button class="px-4 py-2 bg-purple-100 text-purple-600 rounded-lg">全部</button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-purple-100 hover:text-purple-600">春季</button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-purple-100 hover:text-purple-600">夏季</button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-purple-100 hover:text-purple-600">秋季</button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-purple-100 hover:text-purple-600">冬季</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 推荐卡片1 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                    <div class="relative">
+                        <div class="h-48 bg-gradient-to-br from-pink-300 to-purple-400"></div>
+                        <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fas fa-fire mr-1"></i>热门
+                        </div>
+                        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
+                            <span class="text-sm font-medium match-score font-bold">95% 匹配</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">蜜桃橙</h3>
+                        <p class="text-gray-600 mb-4">温暖甜美的蜜桃橙色，非常适合春季暖色调肤色，给人温柔甜美的感觉</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="color-circle" style="background-color: #FFB347;"></div>
+                                <span class="text-sm text-gray-600">#FFB347</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-500"></i>
+                                <span class="text-sm text-gray-600 ml-1">4.8</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">
+                                查看详情
+                            </button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 推荐卡片2 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                    <div class="relative">
+                        <div class="h-48 bg-gradient-to-br from-purple-300 to-pink-300"></div>
+                        <div class="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fas fa-leaf mr-1"></i>新品
+                        </div>
+                        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
+                            <span class="text-sm font-medium match-score font-bold">92% 匹配</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">樱花粉</h3>
+                        <p class="text-gray-600 mb-4">浪漫温柔的樱花粉色，显白效果极佳，适合追求甜美风格的用户</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="color-circle" style="background-color: #FFB6C1;"></div>
+                                <span class="text-sm text-gray-600">#FFB6C1</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-500"></i>
+                                <span class="text-sm text-gray-600 ml-1">4.7</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">
+                                查看详情
+                            </button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 推荐卡片3 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                    <div class="relative">
+                        <div class="h-48 bg-gradient-to-br from-yellow-200 to-orange-300"></div>
+                        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
+                            <span class="text-sm font-medium match-score font-bold">88% 匹配</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">奶茶棕</h3>
+                        <p class="text-gray-600 mb-4">自然低调的奶茶棕色，日常百搭，适合追求自然风格的用户</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="color-circle" style="background-color: #D2B48C;"></div>
+                                <span class="text-sm text-gray-600">#D2B48C</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-500"></i>
+                                <span class="text-sm text-gray-600 ml-1">4.6</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">
+                                查看详情
+                            </button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 推荐理由 -->
+        <section class="mb-8">
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">AI推荐理由</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-palette text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">肤色匹配</h3>
+                            <p class="text-gray-600">基于您的暖色调肤色特征，推荐了温暖柔和的色彩系列，能够更好地衬托您的肤色</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-snowflake text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">季节适配</h3>
+                            <p class="text-gray-600">春季型肤色适合温暖明亮的色彩，推荐的色彩符合春季的色彩特征</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-chart-line text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">流行趋势</h3>
+                            <p class="text-gray-600">结合2024年春季流行色彩趋势，推荐了当下最受欢迎的色彩方案</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-heart text-orange-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">个人偏好</h3>
+                            <p class="text-gray-600">根据您的历史选择和评分记录，推荐了符合您个人喜好的色彩风格</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 用户反馈 -->
+        <section>
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">帮助AI更好地了解您</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <i class="fas fa-thumbs-up text-4xl text-green-500 mb-4"></i>
+                        <h3 class="font-semibold text-gray-800 mb-2">喜欢这些推荐吗？</h3>
+                        <p class="text-gray-600 mb-4">您的反馈将帮助AI更好地了解您的喜好</p>
+                        <div class="flex justify-center space-x-2">
+                            <button class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                <i class="fas fa-smile mr-2"></i>很喜欢
+                            </button>
+                            <button class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
+                                <i class="fas fa-meh mr-2"></i>一般
+                            </button>
+                            <button class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                <i class="fas fa-frown mr-2"></i>不喜欢
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <i class="fas fa-sliders-h text-4xl text-purple-500 mb-4"></i>
+                        <h3 class="font-semibold text-gray-800 mb-2">调整推荐偏好</h3>
+                        <p class="text-gray-600 mb-4">告诉我们您的具体需求和偏好</p>
+                        <button class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                            <i class="fas fa-cog mr-2"></i>个性化设置
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部导航 -->
+    <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-around py-2">
+                <button class="flex flex-col items-center p-2 text-purple-600">
+                    <i class="fas fa-home text-xl"></i>
+                    <span class="text-xs mt-1">首页</span>
+                </button>
+                <button class="flex flex-col items-center p-2 text-gray-600">
+                    <i class="fas fa-palette text-xl"></i>
+                    <span class="text-xs mt-1">识色</span>
+                </button>
+                <button class="flex flex-col items-center p-2 text-gray-600">
+                    <i class="fas fa-flask text-xl"></i>
+                    <span class="text-xs mt-1">配方</span>
+                </button>
+                <button class="flex flex-col items-center p-2 text-gray-600">
+                    <i class="fas fa-users text-xl"></i>
+                    <span class="text-xs mt-1">社区</span>
+                </button>
+                <button class="flex flex-col items-center p-2 text-gray-600">
+                    <i class="fas fa-shopping-bag text-xl"></i>
+                    <span class="text-xs mt-1">产品</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // 模拟交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加点击效果
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+
+            // 模拟加载效果
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.textContent.includes('查看详情')) {
+                        // 模拟加载
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<div class="loading-spinner inline-block mr-2"></div>加载中...';
+                        this.disabled = true;
+                        
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.disabled = false;
+                            alert('详情页面开发中...');
+                        }, 1500);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+  

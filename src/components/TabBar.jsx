@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // @ts-ignore;
 import { Button } from '@/components/ui';
 // @ts-ignore;
-import { Home, Palette, Beaker, Users, User, MessageSquare, Bell, Settings, Search, Plus, Camera, Mic, ChevronUp, Zap, Heart, Star, TrendingUp, Package, ShoppingCart, HelpCircle, LogOut, Menu, X } from 'lucide-react';
+import { Home, Palette, Beaker, Users, User, MessageSquare, Bell, Settings, Search, Plus, Camera, Mic, ChevronUp, Zap, Heart, Star, TrendingUp, Package, ShoppingCart, HelpCircle, LogOut, Menu, X, FlaskConical, Layers, Store, Megaphone, UsersCog } from 'lucide-react';
 
 export function TabBar({
   currentPage,
@@ -61,7 +61,7 @@ export function TabBar({
     };
   }, [touchStartY, showQuickActions]);
 
-  // 导航项配置
+  // 导航项配置 - 扩展为8个主要功能
   const navItems = [{
     id: 'home',
     name: '首页',
@@ -84,18 +84,39 @@ export function TabBar({
     bgColor: 'bg-green-100',
     badge: 0
   }, {
+    id: 'mixing-simulation',
+    name: '模拟',
+    icon: FlaskConical,
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-100',
+    badge: 0
+  }, {
     id: 'community',
     name: '社区',
     icon: Users,
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-100',
-    badge: unreadMessages
-  }, {
-    id: 'user',
-    name: '我的',
-    icon: User,
     color: 'text-pink-600',
     bgColor: 'bg-pink-100',
+    badge: unreadMessages
+  }, {
+    id: 'products',
+    name: '产品',
+    icon: Package,
+    color: 'text-indigo-600',
+    bgColor: 'bg-indigo-100',
+    badge: 0
+  }, {
+    id: 'marketing',
+    name: '营销',
+    icon: Megaphone,
+    color: 'text-red-600',
+    bgColor: 'bg-red-100',
+    badge: 0
+  }, {
+    id: 'user-management',
+    name: '管理',
+    icon: UsersCog,
+    color: 'text-gray-600',
+    bgColor: 'bg-gray-100',
     badge: unreadNotifications
   }];
 
@@ -155,14 +176,14 @@ export function TabBar({
   const getNavItemStyle = item => {
     const isActive = activeTab === item.id;
     return `
-      relative flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-300 transform
+      relative flex flex-col items-center justify-center py-2 px-2 rounded-lg transition-all duration-300 transform
       ${isActive ? `${item.color} ${item.bgColor} scale-110 shadow-lg` : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}
       ${isAnimating ? 'pointer-events-none' : ''}
     `;
   };
   return <>
       {/* 快捷操作面板 */}
-      <div className={`fixed bottom-20 left-0 right-0 z-40 transition-all duration-500 transform ${showQuickActions ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'}`}>
+      <div className={`fixed bottom-20 left-0 right-0 z-40 transition-all duration-500 transform ${showQuickActions ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-100 pointer-events-none'}`}>
         <div className="bg-white rounded-t-3xl shadow-2xl border-t border-gray-200">
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
@@ -255,25 +276,25 @@ export function TabBar({
           </div>
         </div>}
 
-      {/* 主导航栏 */}
+      {/* 主导航栏 - 适配8个导航项 */}
       <div ref={tabbarRef} className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-30" style={{
       paddingBottom: 'env(safe-area-inset-bottom)'
     }}>
         <div className="relative">
           {/* 导航内容 */}
-          <div className="flex items-center justify-around py-2">
+          <div className="flex items-center justify-around py-1">
             {navItems.map(item => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             return <button key={item.id} onClick={() => handleTabChange(item.id)} className={getNavItemStyle(item)} style={{
-              minWidth: isMobile ? '60px' : '80px'
+              minWidth: isMobile ? '40px' : '60px'
             }}>
                   {/* 激活状态背景 */}
                   {isActive && <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg animate-pulse" />}
                   
                   {/* 图标容器 */}
                   <div className="relative">
-                    <Icon className={`w-6 h-6 transition-all duration-300 ${isActive ? 'scale-110 rotate-12' : 'scale-100 rotate-0'}`} />
+                    <Icon className={`w-5 h-5 transition-all duration-300 ${isActive ? 'scale-110 rotate-12' : 'scale-100 rotate-0'}`} />
                     
                     {/* 徽章 */}
                     {item.badge > 0 && <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center animate-bounce">
@@ -284,7 +305,7 @@ export function TabBar({
                     {isActive && <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-current rounded-full animate-pulse" />}
                   </div>
                   
-                  {/* 文字标签 */}
+                  {/* 文字标签 - 缩小字体以适应8个导航项 */}
                   <span className={`text-xs mt-1 font-medium transition-all duration-300 ${isActive ? 'opacity-100 transform scale-105' : 'opacity-70'}`}>
                     {item.name}
                   </span>

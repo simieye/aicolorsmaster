@@ -372,14 +372,14 @@ export default function PersonalizedRecommendation(props) {
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-green-100 rounded-full mx-auto mb-2 flex items-center justify-center">
-                    <Star className="w-8 h-8 text-green-600" />
+                    <Heart className="w-8 h-8 text-green-600" />
                   </div>
                   <p className="text-sm text-gray-600">风格偏好</p>
                   <p className="font-medium">{userProfile.preferences.style}</p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-orange-100 rounded-full mx-auto mb-2 flex items-center justify-center">
-                    <Heart className="w-8 h-8 text-orange-600" />
+                    <Star className="w-8 h-8 text-orange-600" />
                   </div>
                   <p className="text-sm text-gray-600">历史评价</p>
                   <p className="font-medium">4.5分</p>
@@ -402,13 +402,11 @@ export default function PersonalizedRecommendation(props) {
         <Card className="mb-8">
           <CardContent className="p-4">
             <div className="flex flex-col lg:flex-row gap-4">
-              {/* 搜索框 */}
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input type="text" placeholder="搜索色彩名称或描述..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
               </div>
-
-              {/* 分类筛选 */}
+              
               <div className="flex gap-2">
                 <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                   {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}

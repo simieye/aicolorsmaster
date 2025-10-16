@@ -8,10 +8,6 @@ import MARKETING from '../pages/marketing.jsx';
 import USER_MANAGEMENT from '../pages/user-management.jsx';
 import FORMULA_MANAGEMENT from '../pages/formula-management.jsx';
 import COLOR_LIBRARY from '../pages/color-library.jsx';
-import LANGUAGE_SETTINGS from '../pages/language-settings.jsx';
-import LOGIN from '../pages/login.jsx';
-import REGISTER from '../pages/register.jsx';
-import USER_PROFILE from '../pages/user-profile.jsx';
 import AI_CHAT from '../pages/ai-chat.jsx';
 import AFFILIATE_MARKETING from '../pages/affiliate-marketing.jsx';
 import STORE_MANAGEMENT from '../pages/store-management.jsx';
@@ -47,18 +43,6 @@ export const routers = [{
 }, {
   id: "color-library",
   component: COLOR_LIBRARY
-}, {
-  id: "language-settings",
-  component: LANGUAGE_SETTINGS
-}, {
-  id: "login",
-  component: LOGIN
-}, {
-  id: "register",
-  component: REGISTER
-}, {
-  id: "user-profile",
-  component: USER_PROFILE
 }, {
   id: "ai-chat",
   component: AI_CHAT

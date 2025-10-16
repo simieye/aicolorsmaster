@@ -3,16 +3,16 @@ import React, { useState, useEffect } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Camera, QrCode, History, Settings, Zap, Link, Tag, TrendingUp, Clock, ChevronRight, Shield, Flashlight } from 'lucide-react';
+import { Camera, QrCode, History, Settings, Zap, Link, Tag, TrendingUp, Clock, ChevronRight, Shield, Flashlight, Smartphone, Package, BarChart3, Activity, PieChart, Download, Filter } from 'lucide-react';
 
 // @ts-ignore;
 import { useI18n } from '@/lib/i18n';
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
 // @ts-ignore;
-import { QRScanner } from '@/components/QRScanner';
+import { QRScannerEnhanced } from '@/components/QRScannerEnhanced';
 // @ts-ignore;
-import { ScanHistory } from '@/components/ScanHistory';
+import { ScanHistoryEnhanced } from '@/components/ScanHistoryEnhanced';
 export default function QRScannerPage(props) {
   const {
     $w,
@@ -34,9 +34,12 @@ export default function QRScannerPage(props) {
   const [scannerSettings, setScannerSettings] = useState({
     autoSave: true,
     soundEnabled: true,
-    vibrateEnabled: true,
+    vibrationEnabled: true,
     torchEnabled: false,
-    beepVolume: 0.5
+    beepVolume: 0.5,
+    scanMode: 'qr',
+    showGrid: true,
+    enableFullscreen: true
   });
   useEffect(() => {
     loadScanHistory();
@@ -66,8 +69,7 @@ export default function QRScannerPage(props) {
       const newHistory = [{
         ...result,
         id: Date.now()
-      }, ...scanHistory.slice(0, 99) // 最多保存100条
-      ];
+      }, ...scanHistory.slice(0, 99)]; // 最多保存100条
       setScanHistory(newHistory);
       localStorage.setItem('scanHistory', JSON.stringify(newHistory));
     }
@@ -77,6 +79,26 @@ export default function QRScannerPage(props) {
   };
   const handleScanResultByType = result => {
     switch (result.type) {
+      case 'miniprogram':
+        toast({
+          title: "小程序码识别",
+          description: `识别到${result.data.platform === 'wechat' ? '微信' : '支付宝'}小程序`
+        });
+        // 处理小程序跳转
+        setTimeout(() => {
+          if (result.data.platform === 'wechat') {
+            toast({
+              title: "微信小程序",
+              description: "正在跳转到微信小程序..."
+            });
+          } else {
+            toast({
+              title: "支付宝小程序",
+              description: "正在跳转到支付宝小程序..."
+            });
+          }
+        }, 1500);
+        break;
       case 'product':
         toast({
           title: "产品二维码",
@@ -114,6 +136,12 @@ export default function QRScannerPage(props) {
         });
         // 处理邀请逻辑
         break;
+      case 'barcode':
+        toast({
+          title: "条形码识别",
+          description: `识别到条形码: ${result.data.code}`
+        });
+        break;
       case 'url':
         toast({
           title: "网址二维码",
@@ -145,10 +173,15 @@ export default function QRScannerPage(props) {
       acc[item.type] = (acc[item.type] || 0) + 1;
       return acc;
     }, {});
+    const modeStats = scanHistory.reduce((acc, item) => {
+      acc[item.scanMode] = (acc[item.scanMode] || 0) + 1;
+      return acc;
+    }, {});
     return {
       totalScans: scanHistory.length,
       todayScans,
-      typeStats
+      typeStats,
+      modeStats
     };
   };
   const stats = getStats();
@@ -157,11 +190,11 @@ export default function QRScannerPage(props) {
         {/* 页面头部 */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">扫码功能</h1>
-          <p className="text-gray-600">快速扫描二维码，获取产品信息和优惠活动</p>
+          <p className="text-gray-600">快速扫描二维码，支持小程序码、条形码等多种格式</p>
         </div>
 
         {/* 主要功能卡片 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* 扫码卡片 */}
           <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setShowScanner(true)}>
             <CardContent className="p-6 text-center">
@@ -169,7 +202,7 @@ export default function QRScannerPage(props) {
                 <Camera className="w-10 h-10 text-purple-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">开始扫码</h3>
-              <p className="text-gray-600 text-sm">使用相机扫描二维码</p>
+              <p className="text-gray-600 text-sm">支持二维码、条形码、小程序码</p>
             </CardContent>
           </Card>
 
@@ -180,7 +213,7 @@ export default function QRScannerPage(props) {
                 <History className="w-10 h-10 text-blue-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">扫描历史</h3>
-              <p className="text-gray-600 text-sm">查看历史扫描记录</p>
+              <p className="text-gray-600 text-sm">查看和管理扫描记录</p>
             </CardContent>
           </Card>
 
@@ -191,7 +224,18 @@ export default function QRScannerPage(props) {
                 <Settings className="w-10 h-10 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">扫码设置</h3>
-              <p className="text-gray-600 text-sm">配置扫码功能选项</p>
+              <p className="text-gray-600 text-sm">配置扫码功能和偏好</p>
+            </CardContent>
+          </Card>
+
+          {/* 统计卡片 */}
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="p-6 text-center">
+              <div className="w-20 h-20 bg-orange-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <BarChart3 className="w-10 h-10 text-orange-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">扫码统计</h3>
+              <p className="text-gray-600 text-sm">查看扫码数据分析</p>
             </CardContent>
           </Card>
         </div>
@@ -221,11 +265,62 @@ export default function QRScannerPage(props) {
 
           <Card>
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">{stats.typeStats.promotion || 0}</div>
-              <p className="text-gray-600 text-sm">促销扫描</p>
+              <div className="text-3xl font-bold text-orange-600 mb-2">{stats.typeStats.miniprogram || 0}</div>
+              <p className="text-gray-600 text-sm">小程序扫描</p>
             </CardContent>
           </Card>
         </div>
+
+        {/* 扫码类型分布 */}
+        {Object.keys(stats.typeStats).length > 0 && <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <PieChart className="w-5 h-5 mr-2" />
+                扫描类型分布
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {Object.entries(stats.typeStats).map(([type, count]) => {
+              const getIcon = type => {
+                switch (type) {
+                  case 'product':
+                    return <Tag className="w-4 h-4 text-purple-600" />;
+                  case 'promotion':
+                    return <TrendingUp className="w-4 h-4 text-green-600" />;
+                  case 'miniprogram':
+                    return <Smartphone className="w-4 h-4 text-orange-600" />;
+                  case 'barcode':
+                    return <Package className="w-4 h-4 text-gray-600" />;
+                  default:
+                    return <QrCode className="w-4 h-4 text-gray-600" />;
+                }
+              };
+              const getLabel = type => {
+                switch (type) {
+                  case 'product':
+                    return '产品';
+                  case 'promotion':
+                    return '促销';
+                  case 'miniprogram':
+                    return '小程序';
+                  case 'barcode':
+                    return '条形码';
+                  default:
+                    return '其他';
+                }
+              };
+              return <div key={type} className="text-center">
+                      <div className="w-12 h-12 bg-gray-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                        {getIcon(type)}
+                      </div>
+                      <div className="text-lg font-bold">{count}</div>
+                      <div className="text-sm text-gray-600">{getLabel(type)}</div>
+                    </div>;
+            })}
+              </div>
+            </CardContent>
+          </Card>}
 
         {/* 最近扫描 */}
         {scanHistory.length > 0 && <Card>
@@ -246,6 +341,8 @@ export default function QRScannerPage(props) {
                     <div className="flex items-center space-x-3">
                       {item.type === 'product' && <Tag className="w-4 h-4 text-purple-600" />}
                       {item.type === 'promotion' && <TrendingUp className="w-4 h-4 text-green-600" />}
+                      {item.type === 'miniprogram' && <Smartphone className="w-4 h-4 text-orange-600" />}
+                      {item.type === 'barcode' && <Package className="w-4 h-4 text-gray-600" />}
                       {item.type === 'invite' && <Link className="w-4 h-4 text-blue-600" />}
                       {item.type === 'url' && <Link className="w-4 h-4 text-gray-600" />}
                       
@@ -253,6 +350,8 @@ export default function QRScannerPage(props) {
                         <p className="font-medium text-gray-800">
                           {item.type === 'product' && `产品: ${item.data.productId}`}
                           {item.type === 'promotion' && `促销: ${item.data.promoCode}`}
+                          {item.type === 'miniprogram' && `${item.data.platform === 'wechat' ? '微信' : '支付宝'}小程序`}
+                          {item.type === 'barcode' && `条形码: ${item.data.code}`}
                           {item.type === 'invite' && `邀请: ${item.data.inviteCode}`}
                           {item.type === 'url' && '网址链接'}
                         </p>
@@ -280,12 +379,12 @@ export default function QRScannerPage(props) {
               <div>
                 <h4 className="font-semibold mb-3 flex items-center">
                   <QrCode className="w-4 h-4 mr-2 text-purple-600" />
-                  支持的二维码类型
+                  支持的码类型
                 </h4>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li>• 产品二维码 - 快速查看产品详情</li>
-                  <li>• 促销二维码 - 获取优惠活动信息</li>
-                  <li>• 邀请二维码 - 接受好友邀请</li>
+                  <li>• 二维码 - 产品、促销、邀请等</li>
+                  <li>• 小程序码 - 微信、支付宝小程序</li>
+                  <li>• 条形码 - 商品条码识别</li>
                   <li>• 网址二维码 - 快速访问链接</li>
                 </ul>
               </div>
@@ -296,10 +395,12 @@ export default function QRScannerPage(props) {
                   扫码功能特点
                 </h4>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li>• 自动识别二维码类型</li>
-                  <li>• 支持手电筒功能</li>
-                  <li>• 可从相册选择图片</li>
-                  <li>• 扫描历史记录管理</li>
+                  <li>• 智能识别多种码类型</li>
+                  <li>• 支持手电筒和网格辅助</li>
+                  <li>• 可从相册选择图片识别</li>
+                  <li>• 完整的扫描历史记录</li>
+                  <li>• 支持声音和震动反馈</li>
+                  <li>• 全屏模式提升扫码体验</li>
                 </ul>
               </div>
             </div>
@@ -307,11 +408,11 @@ export default function QRScannerPage(props) {
         </Card>
       </div>
 
-      {/* 扫码器组件 */}
-      {showScanner && <QRScanner onScanResult={handleScanResult} onClose={() => setShowScanner(false)} showHistory={true} showSettings={true} />}
+      {/* 增强版扫码器组件 */}
+      {showScanner && <QRScannerEnhanced onScanResult={handleScanResult} onClose={() => setShowScanner(false)} showHistory={true} showSettings={true} enableSound={scannerSettings.soundEnabled} enableVibration={scannerSettings.vibrationEnabled} />}
 
-      {/* 历史记录组件 */}
-      {showHistory && <ScanHistory onScanSelect={handleHistorySelect} onClose={() => setShowHistory(false)} />}
+      {/* 增强版历史记录组件 */}
+      {showHistory && <ScanHistoryEnhanced onScanSelect={handleHistorySelect} onClose={() => setShowHistory(false)} />}
 
       {/* 设置弹窗 */}
       {showSettings && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -349,9 +450,29 @@ export default function QRScannerPage(props) {
                   <span className="text-sm">震动反馈</span>
                   <button onClick={() => saveSettings({
                 ...scannerSettings,
-                vibrateEnabled: !scannerSettings.vibrateEnabled
-              })} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${scannerSettings.vibrateEnabled ? 'bg-purple-600' : 'bg-gray-200'}`}>
-                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${scannerSettings.vibrateEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
+                vibrationEnabled: !scannerSettings.vibrationEnabled
+              })} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${scannerSettings.vibrationEnabled ? 'bg-purple-600' : 'bg-gray-200'}`}>
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${scannerSettings.vibrationEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">显示网格</span>
+                  <button onClick={() => saveSettings({
+                ...scannerSettings,
+                showGrid: !scannerSettings.showGrid
+              })} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${scannerSettings.showGrid ? 'bg-purple-600' : 'bg-gray-200'}`}>
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${scannerSettings.showGrid ? 'translate-x-6' : 'translate-x-1'}`} />
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">全屏模式</span>
+                  <button onClick={() => saveSettings({
+                ...scannerSettings,
+                enableFullscreen: !scannerSettings.enableFullscreen
+              })} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${scannerSettings.enableFullscreen ? 'bg-purple-600' : 'bg-gray-200'}`}>
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${scannerSettings.enableFullscreen ? 'translate-x-6' : 'translate-x-1'}`} />
                   </button>
                 </div>
               </div>

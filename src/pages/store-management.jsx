@@ -9,6 +9,14 @@ import { Store, Package, ShoppingCart, Users, BarChart3, Settings, Clock, MapPin
 import { useI18n } from '@/lib/i18n';
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
+// @ts-ignore;
+import { StoreStatsCard } from '@/components/StoreStatsCard';
+// @ts-ignore;
+import { InventoryTable } from '@/components/InventoryTable';
+// @ts-ignore;
+import { OrderTable } from '@/components/OrderTable';
+// @ts-ignore;
+import { EmployeeCard } from '@/components/EmployeeCard';
 export default function StoreManagement(props) {
   const {
     $w,
@@ -225,10 +233,42 @@ export default function StoreManagement(props) {
   };
 
   // 处理库存补货
-  const handleRestock = itemId => {
+  const handleRestock = item => {
     toast({
       title: "补货申请已提交",
       description: "库存补货申请已提交给供应商"
+    });
+  };
+
+  // 处理员工编辑
+  const handleEditEmployee = employee => {
+    toast({
+      title: "编辑员工",
+      description: `正在编辑 ${employee.name} 的信息`
+    });
+  };
+
+  // 处理员工查看
+  const handleViewEmployee = employee => {
+    toast({
+      title: "查看员工详情",
+      description: `正在查看 ${employee.name} 的详细信息`
+    });
+  };
+
+  // 处理订单查看
+  const handleViewOrder = order => {
+    toast({
+      title: "查看订单详情",
+      description: `正在查看订单 ${order.id} 的详细信息`
+    });
+  };
+
+  // 处理库存编辑
+  const handleEditInventory = item => {
+    toast({
+      title: "编辑库存",
+      description: `正在编辑 ${item.name} 的库存信息`
     });
   };
 
@@ -238,65 +278,10 @@ export default function StoreManagement(props) {
     return <div className="space-y-6">
         {/* 数据概览卡片 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">今日订单</p>
-                  <p className="text-2xl font-bold text-gray-800">18</p>
-                  <p className="text-xs text-green-600">+25% 较昨日</p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <ShoppingCart className="w-6 h-6 text-blue-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">今日营收</p>
-                  <p className="text-2xl font-bold text-gray-800">¥3,680</p>
-                  <p className="text-xs text-green-600">+18% 较昨日</p>
-                </div>
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-green-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">库存预警</p>
-                  <p className="text-2xl font-bold text-gray-800">2</p>
-                  <p className="text-xs text-orange-600">需要补货</p>
-                </div>
-                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Package className="w-6 h-6 text-orange-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">在岗员工</p>
-                  <p className="text-2xl font-bold text-gray-800">8</p>
-                  <p className="text-xs text-purple-600">4位技师</p>
-                </div>
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                  <Users className="w-6 h-6 text-purple-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <StoreStatsCard title="今日订单" value="18" change="+25% 较昨日" changeType="up" icon={ShoppingCart} color="blue" />
+          <StoreStatsCard title="今日营收" value="¥3,680" change="+18% 较昨日" changeType="up" icon={TrendingUp} color="green" />
+          <StoreStatsCard title="库存预警" value="2" change="需要补货" changeType="down" icon={Package} color="orange" />
+          <StoreStatsCard title="在岗员工" value="8" change="4位技师" changeType="up" icon={Users} color="purple" />
         </div>
 
         {/* 门店状态 */}
@@ -377,7 +362,7 @@ export default function StoreManagement(props) {
                     <Package className="w-4 h-4 mr-2 text-orange-600" />
                     <span className="text-sm">樱花粉染发剂库存不足</span>
                   </div>
-                  <Button size="sm" variant="outline" onClick={() => handleRestock(2)}>
+                  <Button size="sm" variant="outline" onClick={() => handleRestock(inventoryData[1])}>
                     立即补货
                   </Button>
                 </div>
@@ -432,45 +417,10 @@ export default function StoreManagement(props) {
     return <div className="space-y-6">
         {/* 库存统计 */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">总库存</p>
-                <p className="text-2xl font-bold text-gray-800">260</p>
-                <p className="text-xs text-gray-500">件商品</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">库存预警</p>
-                <p className="text-2xl font-bold text-orange-600">2</p>
-                <p className="text-xs text-gray-500">需要补货</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">库存价值</p>
-                <p className="text-2xl font-bold text-green-600">¥18,560</p>
-                <p className="text-xs text-gray-500">总价值</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">供应商</p>
-                <p className="text-2xl font-bold text-blue-600">5</p>
-                <p className="text-xs text-gray-500">合作供应商</p>
-              </div>
-            </CardContent>
-          </Card>
+          <StoreStatsCard title="总库存" value="260" change="件商品" changeType="up" icon={Package} color="blue" />
+          <StoreStatsCard title="库存预警" value="2" change="需要补货" changeType="down" icon={AlertCircle} color="orange" />
+          <StoreStatsCard title="库存价值" value="¥18,560" change="总价值" changeType="up" icon={TrendingUp} color="green" />
+          <StoreStatsCard title="供应商" value="5" change="合作供应商" changeType="up" icon={Store} color="purple" />
         </div>
 
         {/* 搜索和筛选 */}
@@ -498,71 +448,7 @@ export default function StoreManagement(props) {
         </Card>
 
         {/* 库存列表 */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center">
-                <Package className="w-5 h-5 mr-2" />
-                库存列表
-              </CardTitle>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                添加商品
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4">商品名称</th>
-                    <th className="text-left py-3 px-4">分类</th>
-                    <th className="text-left py-3 px-4">当前库存</th>
-                    <th className="text-left py-3 px-4">安全库存</th>
-                    <th className="text-left py-3 px-4">单价</th>
-                    <th className="text-left py-3 px-4">供应商</th>
-                    <th className="text-left py-3 px-4">状态</th>
-                    <th className="text-center py-3 px-4">操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredInventory.map(item => <tr key={item.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4 font-medium">{item.name}</td>
-                      <td className="py-3 px-4">
-                        <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                          {item.category}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`font-medium ${item.currentStock <= item.minStock ? 'text-orange-600' : 'text-gray-800'}`}>
-                          {item.currentStock} {item.unit}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">{item.minStock} {item.unit}</td>
-                      <td className="py-3 px-4">¥{item.price}</td>
-                      <td className="py-3 px-4 text-sm">{item.supplier}</td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-1 text-xs rounded-full ${item.status === 'normal' ? 'bg-green-100 text-green-800' : item.status === 'low' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'}`}>
-                          {item.status === 'normal' ? '正常' : item.status === 'low' ? '库存不足' : '库存过多'}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <div className="flex items-center justify-center space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Edit className="w-3 h-3" />
-                          </Button>
-                          {item.status === 'low' && <Button size="sm" onClick={() => handleRestock(item.id)}>
-                              补货
-                            </Button>}
-                        </div>
-                      </td>
-                    </tr>)}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+        <InventoryTable inventory={filteredInventory} onEdit={handleEditInventory} onRestock={handleRestock} />
       </div>;
   };
 
@@ -572,45 +458,10 @@ export default function StoreManagement(props) {
     return <div className="space-y-6">
         {/* 订单统计 */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">今日订单</p>
-                <p className="text-2xl font-bold text-blue-600">18</p>
-                <p className="text-xs text-green-600">+25% 较昨日</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">待服务</p>
-                <p className="text-2xl font-bold text-orange-600">5</p>
-                <p className="text-xs text-gray-500">等待服务</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">进行中</p>
-                <p className="text-2xl font-bold text-purple-600">3</p>
-                <p className="text-xs text-gray-500">服务进行中</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">已完成</p>
-                <p className="text-2xl font-bold text-green-600">10</p>
-                <p className="text-xs text-gray-500">今日完成</p>
-              </div>
-            </CardContent>
-          </Card>
+          <StoreStatsCard title="今日订单" value="18" change="+25% 较昨日" changeType="up" icon={ShoppingCart} color="blue" />
+          <StoreStatsCard title="待服务" value="5" change="等待服务" changeType="down" icon={Clock} color="orange" />
+          <StoreStatsCard title="进行中" value="3" change="服务进行中" changeType="up" icon={Eye} color="purple" />
+          <StoreStatsCard title="已完成" value="10" change="今日完成" changeType="up" icon={CheckCircle} color="green" />
         </div>
 
         {/* 搜索筛选 */}
@@ -638,71 +489,7 @@ export default function StoreManagement(props) {
         </Card>
 
         {/* 订单列表 */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center">
-                <ShoppingCart className="w-5 h-5 mr-2" />
-                订单列表
-              </CardTitle>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                新建订单
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4">订单号</th>
-                    <th className="text-left py-3 px-4">客户信息</th>
-                    <th className="text-left py-3 px-4">服务项目</th>
-                    <th className="text-left py-3 px-4">技师</th>
-                    <th className="text-left py-3 px-4">预约时间</th>
-                    <th className="text-left py-3 px-4">金额</th>
-                    <th className="text-left py-3 px-4">状态</th>
-                    <th className="text-center py-3 px-4">操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredOrders.map(order => <tr key={order.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4 font-medium">{order.id}</td>
-                      <td className="py-3 px-4">
-                        <div>
-                          <p className="font-medium">{order.customerName}</p>
-                          <p className="text-sm text-gray-600">{order.customerPhone}</p>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">{order.service}</td>
-                      <td className="py-3 px-4">{order.employee}</td>
-                      <td className="py-3 px-4">{order.appointmentTime}</td>
-                      <td className="py-3 px-4 font-medium">¥{order.amount}</td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-1 text-xs rounded-full ${order.status === '待服务' ? 'bg-orange-100 text-orange-800' : order.status === '进行中' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
-                          {order.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <div className="flex items-center justify-center space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Eye className="w-3 h-3" />
-                          </Button>
-                          {order.status === '待服务' && <Button size="sm" onClick={() => handleOrderStatusUpdate(order.id, '进行中')}>
-                              开始服务
-                            </Button>}
-                          {order.status === '进行中' && <Button size="sm" onClick={() => handleOrderStatusUpdate(order.id, '已完成')}>
-                              完成服务
-                            </Button>}
-                        </div>
-                      </td>
-                    </tr>)}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+        <OrderTable orders={filteredOrders} onView={handleViewOrder} onUpdateStatus={handleOrderStatusUpdate} />
       </div>;
   };
 
@@ -711,45 +498,10 @@ export default function StoreManagement(props) {
     return <div className="space-y-6">
         {/* 员工统计 */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">总员工数</p>
-                <p className="text-2xl font-bold text-gray-800">12</p>
-                <p className="text-xs text-gray-500">在职员工</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">在岗员工</p>
-                <p className="text-2xl font-bold text-green-600">8</p>
-                <p className="text-xs text-gray-500">今日在岗</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">平均评分</p>
-                <p className="text-2xl font-bold text-purple-600">4.7</p>
-                <p className="text-xs text-gray-500">客户满意度</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">本月订单</p>
-                <p className="text-2xl font-bold text-blue-600">369</p>
-                <p className="text-xs text-green-600">+15% 较上月</p>
-              </div>
-            </CardContent>
-          </Card>
+          <StoreStatsCard title="总员工数" value="12" change="在职员工" changeType="up" icon={Users} color="blue" />
+          <StoreStatsCard title="在岗员工" value="8" change="今日在岗" changeType="up" icon={CheckCircle} color="green" />
+          <StoreStatsCard title="平均评分" value="4.7" change="客户满意度" changeType="up" icon={Star} color="purple" />
+          <StoreStatsCard title="本月订单" value="369" change="+15% 较上月" changeType="up" icon={TrendingUp} color="orange" />
         </div>
 
         {/* 员工列表 */}
@@ -768,52 +520,7 @@ export default function StoreManagement(props) {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {employeeData.map(employee => <div key={employee.id} className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <img src={employee.avatar} alt={employee.name} className="w-12 h-12 rounded-full" />
-                    <div>
-                      <h4 className="font-semibold">{employee.name}</h4>
-                      <p className="text-sm text-gray-600">{employee.position}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">电话：</span>
-                      <span>{employee.phone}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">入职时间：</span>
-                      <span>{employee.joinDate}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">今日订单：</span>
-                      <span className="font-medium">{employee.todayOrders}单</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">本月订单：</span>
-                      <span className="font-medium">{employee.monthlyOrders}单</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">客户评分：</span>
-                      <span className="font-medium text-purple-600">{employee.rating}分</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mt-4 pt-4 border-t">
-                    <span className={`px-2 py-1 text-xs rounded-full ${employee.status === '在职' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                      {employee.status}
-                    </span>
-                    <div className="flex space-x-2">
-                      <Button size="sm" variant="outline">
-                        <Edit className="w-3 h-3" />
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Eye className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>)}
+              {employeeData.map(employee => <EmployeeCard key={employee.id} employee={employee} onEdit={handleEditEmployee} onView={handleViewEmployee} />)}
             </div>
           </CardContent>
         </Card>
