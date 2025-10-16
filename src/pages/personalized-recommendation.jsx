@@ -1,14 +1,18 @@
 // @ts-ignore;
 import React, { useState, useEffect } from 'react';
 // @ts-ignore;
-import { Button, Card, CardContent, useToast } from '@/components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Sparkles, Heart, Star, TrendingUp, Filter, ChevronLeft, Palette, Users, BarChart3, Zap } from 'lucide-react';
+import { Sparkles, Heart, Bookmark, Share2, Filter, Search, TrendingUp, Settings, User, Palette, Star, ChevronRight, RefreshCw } from 'lucide-react';
 
 // @ts-ignore;
 import { useI18n } from '@/lib/i18n';
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
+// @ts-ignore;
+import { RecommendationCard } from '@/components/RecommendationCard';
+// @ts-ignore;
+import { ColorAnalysis } from '@/components/ColorAnalysis';
 export default function PersonalizedRecommendation(props) {
   const {
     $w,
@@ -20,267 +24,446 @@ export default function PersonalizedRecommendation(props) {
   const {
     t
   } = useI18n();
+
+  // 状态管理
   const [recommendations, setRecommendations] = useState([]);
+  const [filteredRecommendations, setFilteredRecommendations] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [loading, setLoading] = useState(false);
+  const [selectedSeason, setSelectedSeason] = useState('all');
+  const [sortBy, setSortBy] = useState('match');
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [favorites, setFavorites] = useState([]);
+  const [likes, setLikes] = useState([]);
 
-  // 模拟用户数据
-  useEffect(() => {
-    setUserProfile({
-      skinTone: 'warm',
-      hairType: 'normal',
-      preferences: ['purple', 'blue', 'pink'],
-      history: ['微潮紫', '樱花粉', '雾霾蓝'],
-      season: 'spring'
-    });
-
-    // 模拟推荐数据
-    setRecommendations([{
-      id: 1,
-      name: '薰衣草紫',
-      hex: '#E6E6FA',
-      category: 'purple',
-      match: 95,
-      reason: '根据您的肤色历史偏好推荐',
-      trend: 'up',
-      popularity: 89,
-      image: 'https://images.unsplash.com/photo-1562322140-3b7c543c6b0e?w=300&h=200&fit=crop'
-    }, {
-      id: 2,
-      name: '薄荷绿',
-      hex: '#98FB98',
-      category: 'green',
-      match: 88,
-      reason: '春季流行色彩，适合您的肤色',
-      trend: 'up',
-      popularity: 76,
-      image: 'https://images.unsplash.com/photo-1560069007-1cbae254d414?w=300&h=200&fit=crop'
-    }, {
-      id: 3,
-      name: '珊瑚橙',
-      hex: '#FF7F50',
-      category: 'orange',
-      match: 82,
-      reason: '与您的历史偏好相似',
-      trend: 'stable',
-      popularity: 68,
-      image: 'https://images.unsplash.com/photo-1549558943-7162b4c5b6c5?w=300&h=200&fit=crop'
-    }, {
-      id: 4,
-      name: '雾霾蓝',
-      hex: '#778899',
-      category: 'blue',
-      match: 78,
-      reason: '适合您的肤色类型',
-      trend: 'down',
-      popularity: 71,
-      image: 'https://images.unsplash.com/photo-1562322140-3b7c543c6b0e?w=300&h=200&fit=crop'
-    }, {
-      id: 5,
-      name: '奶茶棕',
-      hex: '#D2B48C',
-      category: 'brown',
-      match: 75,
-      reason: '自然低调，适合日常',
-      trend: 'up',
-      popularity: 85,
-      image: 'https://images.unsplash.com/photo-1562322140-3b7c543c6b0e?w=300&h=200&fit=crop'
-    }, {
-      id: 6,
-      name: '樱花粉',
-      hex: '#FFB6C1',
-      category: 'pink',
-      match: 92,
-      reason: '您的历史偏好色系',
-      trend: 'stable',
-      popularity: 79,
-      image: 'https://images.unsplash.com/photo-1549558943-7162b4c5b6c5?w=300&h=200&fit=crop'
-    }]);
-  }, []);
+  // 分类选项
   const categories = [{
     id: 'all',
-    name: '全部',
-    icon: Palette
+    name: '全部'
   }, {
-    id: 'purple',
-    name: '紫色系',
-    icon: Sparkles
+    id: 'warm',
+    name: '暖色调'
   }, {
-    id: 'blue',
-    name: '蓝色系',
-    icon: Zap
+    id: 'cool',
+    name: '冷色调'
   }, {
-    id: 'pink',
-    name: '粉色系',
-    icon: Heart
+    id: 'neutral',
+    name: '中性色调'
   }, {
-    id: 'green',
-    name: '绿色系',
-    icon: TrendingUp
+    id: 'trendy',
+    name: '潮流色'
   }, {
-    id: 'orange',
-    name: '橙色系',
-    icon: Star
-  }, {
-    id: 'brown',
-    name: '棕色系',
-    icon: Users
+    id: 'natural',
+    name: '自然色'
   }];
-  const filteredRecommendations = selectedCategory === 'all' ? recommendations : recommendations.filter(item => item.category === selectedCategory);
-  const handleColorSelect = color => {
-    toast({
-      title: "色彩选择",
-      description: `您选择了${color.name}，正在生成配方...`
-    });
-  };
-  const handleLike = colorId => {
-    setRecommendations(prev => prev.map(item => item.id === colorId ? {
-      ...item,
-      liked: !item.liked
-    } : item));
-    toast({
-      title: "收藏成功",
-      description: "已添加到您的收藏"
-    });
-  };
-  const refreshRecommendations = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast({
-        title: "刷新成功",
-        description: "已更新推荐内容"
-      });
-    }, 1500);
-  };
-  const getTrendIcon = trend => {
-    switch (trend) {
-      case 'up':
-        return <TrendingUp className="w-4 h-4 text-green-500" />;
-      case 'down':
-        return <TrendingUp className="w-4 h-4 text-red-500 rotate-180" />;
-      default:
-        return <div className="w-4 h-4 bg-gray-400 rounded-full" />;
+
+  // 季节选项
+  const seasons = [{
+    id: 'all',
+    name: '全部'
+  }, {
+    id: 'spring',
+    name: '春季'
+  }, {
+    id: 'summer',
+    name: '夏季'
+  }, {
+    id: 'autumn',
+    name: '秋季'
+  }, {
+    id: 'winter',
+    name: '冬季'
+  }];
+
+  // 初始化数据
+  useEffect(() => {
+    loadUserProfile();
+    loadRecommendations();
+    loadUserPreferences();
+  }, []);
+
+  // 加载用户画像
+  const loadUserProfile = () => {
+    const savedProfile = localStorage.getItem('userProfile');
+    if (savedProfile) {
+      setUserProfile(JSON.parse(savedProfile));
+    } else {
+      // 模拟用户画像
+      const mockProfile = {
+        skinTone: '暖色调',
+        season: '春季',
+        preferences: {
+          style: '自然',
+          boldness: '中等',
+          maintenance: '低'
+        },
+        history: [{
+          color: '奶茶棕',
+          rating: 5,
+          date: '2024-01-10'
+        }, {
+          color: '樱花粉',
+          rating: 4,
+          date: '2024-01-05'
+        }]
+      };
+      setUserProfile(mockProfile);
     }
   };
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
-      {/* 头部 */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <button onClick={() => $w.utils.navigateBack()} className="p-2 hover:bg-gray-100 rounded-lg mr-3">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <div className="flex items-center space-x-3">
-              <Sparkles className="w-5 h-5 text-purple-600" />
-              <h1 className="text-lg font-semibold">个性化推荐</h1>
-            </div>
-          </div>
-          <button onClick={refreshRecommendations} className="p-2 hover:bg-gray-100 rounded-lg" disabled={loading}>
-            <Filter className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-          </button>
-        </div>
-      </div>
 
-      <div className="container mx-auto px-4 py-6">
-        {/* 用户画像 */}
-        {userProfile && <Card className="mb-6">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold">您的色彩画像</h3>
-                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
-                  AI分析
-                </span>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div>
-                  <div className="text-sm text-gray-600">肤色类型</div>
-                  <div className="font-medium">暖色调</div>
+  // 加载推荐数据
+  const loadRecommendations = async () => {
+    setLoading(true);
+
+    // 模拟API调用
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const mockRecommendations = [{
+      id: 1,
+      colorName: '蜜桃橙',
+      colorHex: '#FFB347',
+      matchScore: 95,
+      category: 'warm',
+      season: 'spring',
+      description: '温暖甜美的蜜桃橙色，非常适合春季暖色调肤色，给人温柔甜美的感觉',
+      reasons: ['与您的暖色调肤色完美匹配', '春季流行色彩，时尚感强', '适合日常妆容，自然不夸张'],
+      trending: true,
+      isNew: false,
+      price: 288,
+      popularity: 892
+    }, {
+      id: 2,
+      colorName: '樱花粉',
+      colorHex: '#FFB6C1',
+      matchScore: 92,
+      category: 'warm',
+      season: 'spring',
+      description: '浪漫温柔的樱花粉色，显白效果极佳，适合追求甜美风格的用户',
+      reasons: ['显白效果突出，提升气色', '符合您的春季色彩特征', '温柔甜美，适合各种场合'],
+      trending: true,
+      isNew: true,
+      price: 268,
+      popularity: 1256
+    }, {
+      id: 3,
+      colorName: '奶茶棕',
+      colorHex: '#D2B48C',
+      matchScore: 88,
+      category: 'neutral',
+      season: 'autumn',
+      description: '自然低调的奶茶棕色，日常百搭，适合追求自然风格的用户',
+      reasons: ['自然低调，适合日常使用', '与您的肤色特征协调', '维护成本低，持久度高'],
+      trending: false,
+      isNew: false,
+      price: 198,
+      popularity: 2341
+    }, {
+      id: 4,
+      colorName: '雾霾蓝',
+      colorHex: '#778899',
+      matchScore: 75,
+      category: 'cool',
+      season: 'winter',
+      description: '高级感十足的雾霾蓝色，适合追求个性时尚的用户',
+      reasons: ['高级感强，时尚前卫', '适合冬季使用，显白效果好', '独特个性，不易撞色'],
+      trending: true,
+      isNew: false,
+      price: 328,
+      popularity: 567
+    }, {
+      id: 5,
+      colorName: '焦糖色',
+      colorHex: '#CD853F',
+      matchScore: 85,
+      category: 'warm',
+      season: 'autumn',
+      description: '温暖醇厚的焦糖色，秋季首选，给人温暖舒适的感觉',
+      reasons: ['温暖醇厚，适合秋季使用', '与您的暖色调肤色匹配', '成熟稳重，适合职场女性'],
+      trending: false,
+      isNew: true,
+      price: 258,
+      popularity: 789
+    }, {
+      id: 6,
+      colorName: '薄荷绿',
+      colorHex: '#98FB98',
+      matchScore: 70,
+      category: 'cool',
+      season: 'summer',
+      description: '清新自然的薄荷绿色，夏季首选，给人清爽舒适的感觉',
+      reasons: ['清新自然，夏季首选', '独特个性，不易撞色', '适合年轻用户，活力十足'],
+      trending: true,
+      isNew: false,
+      price: 298,
+      popularity: 445
+    }];
+    setRecommendations(mockRecommendations);
+    setFilteredRecommendations(mockRecommendations);
+    setLoading(false);
+  };
+
+  // 加载用户偏好
+  const loadUserPreferences = () => {
+    const savedFavorites = localStorage.getItem('favorites');
+    const savedLikes = localStorage.getItem('likes');
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
+    }
+    if (savedLikes) {
+      setLikes(JSON.parse(savedLikes));
+    }
+  };
+
+  // 筛选推荐
+  useEffect(() => {
+    let filtered = recommendations;
+
+    // 按分类筛选
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(rec => rec.category === selectedCategory);
+    }
+
+    // 按季节筛选
+    if (selectedSeason !== 'all') {
+      filtered = filtered.filter(rec => rec.season === selectedSeason);
+    }
+
+    // 按搜索词筛选
+    if (searchTerm) {
+      filtered = filtered.filter(rec => rec.colorName.toLowerCase().includes(searchTerm.toLowerCase()) || rec.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+
+    // 排序
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'match':
+          return b.matchScore - a.matchScore;
+        case 'popularity':
+          return b.popularity - a.popularity;
+        case 'price':
+          return a.price - b.price;
+        case 'trending':
+          return (b.trending ? 1 : 0) - (a.trending ? 1 : 0);
+        default:
+          return 0;
+      }
+    });
+    setFilteredRecommendations(filtered);
+  }, [recommendations, selectedCategory, selectedSeason, searchTerm, sortBy]);
+
+  // 处理分析完成
+  const handleAnalysisComplete = result => {
+    // 根据分析结果更新推荐
+    const updatedRecommendations = recommendations.map(rec => {
+      let newMatchScore = rec.matchScore;
+      if (result.skinTone === '暖色调' && rec.category === 'warm') {
+        newMatchScore = Math.min(100, rec.matchScore + 10);
+      } else if (result.skinTone === '冷色调' && rec.category === 'cool') {
+        newMatchScore = Math.min(100, rec.matchScore + 10);
+      } else if (result.skinTone === '暖色调' && rec.category === 'cool') {
+        newMatchScore = Math.max(0, rec.matchScore - 10);
+      } else if (result.skinTone === '冷色调' && rec.category === 'warm') {
+        newMatchScore = Math.max(0, rec.matchScore - 10);
+      }
+      return {
+        ...rec,
+        matchScore: newMatchScore
+      };
+    });
+    setRecommendations(updatedRecommendations);
+    toast({
+      title: "分析完成",
+      description: "已根据您的分析结果更新推荐"
+    });
+  };
+
+  // 处理点赞
+  const handleLike = id => {
+    const newLikes = likes.includes(id) ? likes.filter(likeId => likeId !== id) : [...likes, id];
+    setLikes(newLikes);
+    localStorage.setItem('likes', JSON.stringify(newLikes));
+    toast({
+      title: likes.includes(id) ? "取消点赞" : "点赞成功",
+      description: likes.includes(id) ? "已取消点赞" : "已添加到喜欢列表"
+    });
+  };
+
+  // 处理收藏
+  const handleFavorite = id => {
+    const newFavorites = favorites.includes(id) ? favorites.filter(favId => favId !== id) : [...favorites, id];
+    setFavorites(newFavorites);
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+    toast({
+      title: favorites.includes(id) ? "取消收藏" : "收藏成功",
+      description: favorites.includes(id) ? "已取消收藏" : "已添加到收藏列表"
+    });
+  };
+
+  // 处理分享
+  const handleShare = recommendation => {
+    if (navigator.share) {
+      navigator.share({
+        title: `${recommendation.colorName} - 个性化推荐`,
+        text: recommendation.description,
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(`${recommendation.colorName}: ${recommendation.description}`);
+      toast({
+        title: "复制成功",
+        description: "推荐信息已复制到剪贴板"
+      });
+    }
+  };
+
+  // 处理查看详情
+  const handleView = recommendation => {
+    // 跳转到详情页面
+    $w.utils.navigateTo({
+      pageId: 'products',
+      params: {
+        productId: recommendation.id,
+        colorName: recommendation.colorName
+      }
+    });
+  };
+
+  // 刷新推荐
+  const refreshRecommendations = () => {
+    setLoading(true);
+    loadRecommendations();
+    toast({
+      title: "推荐已更新",
+      description: "已为您刷新个性化推荐"
+    });
+  };
+  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
+      <div className="container mx-auto px-4 py-8">
+        {/* 页面头部 */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">个性化色彩推荐</h1>
+          <p className="text-gray-600">基于AI算法和您的特征，为您推荐最适合的色彩方案</p>
+        </div>
+
+        {/* 用户画像卡片 */}
+        {userProfile && <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <User className="w-5 h-5 mr-2" />
+                您的色彩画像
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-purple-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <Palette className="w-8 h-8 text-purple-600" />
+                  </div>
+                  <p className="text-sm text-gray-600">肤色类型</p>
+                  <p className="font-medium">{userProfile.skinTone}</p>
                 </div>
-                <div>
-                  <div className="text-sm text-gray-600">发质类型</div>
-                  <div className="font-medium">正常发质</div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <Sparkles className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <p className="text-sm text-gray-600">适合季节</p>
+                  <p className="font-medium">{userProfile.season}型</p>
                 </div>
-                <div>
-                  <div className="text-sm text-gray-600">偏好色系</div>
-                  <div className="font-medium">紫色系</div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-green-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <Star className="w-8 h-8 text-green-600" />
+                  </div>
+                  <p className="text-sm text-gray-600">风格偏好</p>
+                  <p className="font-medium">{userProfile.preferences.style}</p>
                 </div>
-                <div>
-                  <div className="text-sm text-gray-600">季节推荐</div>
-                  <div className="font-medium">春季</div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-orange-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <Heart className="w-8 h-8 text-orange-600" />
+                  </div>
+                  <p className="text-sm text-gray-600">历史评价</p>
+                  <p className="font-medium">4.5分</p>
                 </div>
               </div>
             </CardContent>
           </Card>}
 
-        {/* 分类筛选 */}
-        <div className="mb-6">
-          <div className="flex space-x-2 overflow-x-auto pb-2">
-            {categories.map(category => {
-            const Icon = category.icon;
-            return <button key={category.id} onClick={() => setSelectedCategory(category.id)} className={`flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap transition-colors ${selectedCategory === category.id ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:border-purple-500'}`}>
-                  <Icon className="w-4 h-4" />
-                  <span className="text-sm">{category.name}</span>
-                </button>;
-          })}
-          </div>
+        {/* 智能分析 */}
+        <div className="mb-8">
+          <ColorAnalysis onAnalysisComplete={handleAnalysisComplete} onSkinToneDetected={skinTone => {
+          setUserProfile(prev => prev ? {
+            ...prev,
+            skinTone
+          } : null);
+        }} />
         </div>
+
+        {/* 筛选和搜索 */}
+        <Card className="mb-8">
+          <CardContent className="p-4">
+            <div className="flex flex-col lg:flex-row gap-4">
+              {/* 搜索框 */}
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input type="text" placeholder="搜索色彩名称或描述..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+              </div>
+
+              {/* 分类筛选 */}
+              <div className="flex gap-2">
+                <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                  {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+                </select>
+
+                <select value={selectedSeason} onChange={e => setSelectedSeason(e.target.value)} className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                  {seasons.map(season => <option key={season.id} value={season.id}>{season.name}</option>)}
+                </select>
+
+                <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                  <option value="match">匹配度</option>
+                  <option value="popularity">人气</option>
+                  <option value="price">价格</option>
+                  <option value="trending">热门</option>
+                </select>
+
+                <Button onClick={refreshRecommendations} disabled={loading} variant="outline" className="flex items-center">
+                  <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                  刷新
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* 推荐列表 */}
-        <div className="space-y-4">
-          {filteredRecommendations.map(color => <Card key={color.id} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-4">
-                <div className="flex space-x-4">
-                  <img src={color.image} alt={color.name} className="w-20 h-20 rounded-lg object-cover" />
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h4 className="font-semibold text-lg">{color.name}</h4>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <div className="w-6 h-6 rounded-full border-2 border-gray-300" style={{
-                        backgroundColor: color.hex
-                      }}></div>
-                          <span className="text-sm text-gray-600">{color.hex}</span>
-                          <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
-                            {color.match}% 匹配
-                          </span>
-                        </div>
-                      </div>
-                      <button onClick={() => handleLike(color.id)} className="p-2 hover:bg-gray-100 rounded-lg">
-                        <Heart className={`w-5 h-5 ${color.liked ? 'text-red-500 fill-current' : 'text-gray-400'}`} />
-                      </button>
-                    </div>
-                    
-                    <p className="text-sm text-gray-600 mt-2">{color.reason}</p>
-                    
-                    <div className="flex items-center justify-between mt-3">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-1">
-                          {getTrendIcon(color.trend)}
-                          <span className="text-xs text-gray-600">趋势</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <BarChart3 className="w-4 h-4 text-gray-400" />
-                          <span className="text-xs text-gray-600">{color.popularity}% 热度</span>
-                        </div>
-                      </div>
-                      <Button onClick={() => handleColorSelect(color)} size="sm" className="bg-purple-600 hover:bg-purple-700 text-white">
-                        选择
-                      </Button>
-                    </div>
-                  </div>
+        {loading ? <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">正在为您生成个性化推荐...</p>
+          </div> : <>
+            {filteredRecommendations.length === 0 ? <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <Search className="w-8 h-8 text-gray-400" />
                 </div>
-              </CardContent>
-            </Card>)}
-        </div>
+                <p className="text-gray-600">没有找到匹配的推荐</p>
+                <Button onClick={() => {
+            setSearchTerm('');
+            setSelectedCategory('all');
+            setSelectedSeason('all');
+          }} variant="outline" className="mt-4">
+                  清除筛选条件
+                </Button>
+              </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredRecommendations.map(recommendation => <RecommendationCard key={recommendation.id} recommendation={recommendation} onLike={handleLike} onFavorite={handleFavorite} onView={handleView} onShare={handleShare} />)}
+              </div>}
+          </>}
 
-        {/* 加载更多 */}
-        <div className="text-center mt-8">
-          <Button variant="outline" className="bg-white hover:bg-gray-50" onClick={refreshRecommendations} disabled={loading}>
-            {loading ? '加载中...' : '加载更多推荐'}
-          </Button>
-        </div>
+        {/* 推荐统计 */}
+        {!loading && filteredRecommendations.length > 0 && <div className="mt-8 text-center">
+            <p className="text-sm text-gray-600">
+              为您找到 <span className="font-medium text-purple-600">{filteredRecommendations.length}</span> 个个性化推荐
+              {likes.length > 0 && <>，已喜欢 <span className="font-medium text-red-500">{likes.length}</span> 个</>}
+              {favorites.length > 0 && <>，已收藏 <span className="font-medium text-yellow-500">{favorites.length}</span> 个</>}
+            </p>
+          </div>}
       </div>
 
       {/* 底部导航 */}

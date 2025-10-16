@@ -1,10 +1,16 @@
 // @ts-ignore;
 import React, { useState, useEffect } from 'react';
 // @ts-ignore;
-import { Button, Card, CardContent, CardHeader, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, useToast } from '@/components/ui';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Users, Heart, MessageCircle, Share2, TrendingUp, Star, Camera, Filter } from 'lucide-react';
+import { Camera, Filter } from 'lucide-react';
 
+// @ts-ignore;
+import { TabBar } from '@/components/TabBar';
+// @ts-ignore;
+import { PostCard } from '@/components/PostCard';
+// @ts-ignore;
+import { CommunityStats } from '@/components/CommunityStats';
 export default function Community(props) {
   const {
     $w,
@@ -72,6 +78,60 @@ export default function Community(props) {
       tags: ['薄荷绿', '夏日', '清新'],
       kolRating: '不错',
       createdAt: '1天前'
+    }, {
+      id: 4,
+      author: 'Kevin总监',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+      role: '技术总监',
+      title: '奶茶棕自然百搭',
+      beforeImage: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=300&h=400&fit=crop',
+      afterImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop',
+      color: '奶茶棕',
+      category: '微潮色系',
+      likes: 2103,
+      comments: 124,
+      shares: 78,
+      rating: 4.6,
+      description: '奶茶棕真的很显白，而且很日常，上班族首选',
+      tags: ['奶茶棕', '日常', '显白'],
+      kolRating: '推荐',
+      createdAt: '3天前'
+    }, {
+      id: 5,
+      author: 'Amy设计师',
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face',
+      role: '首席设计师',
+      title: '焦糖色秋冬温暖',
+      beforeImage: 'https://images.unsplash.com/photo-1562322145-93d8e9a1c7b6?w=300&h=400&fit=crop',
+      afterImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=400&fit=crop',
+      color: '焦糖色',
+      category: '微潮色系',
+      likes: 1876,
+      comments: 92,
+      shares: 56,
+      rating: 4.8,
+      description: '秋冬必备焦糖色，温暖又有气质',
+      tags: ['焦糖色', '秋冬', '温暖'],
+      kolRating: '很OK',
+      createdAt: '4天前'
+    }, {
+      id: 6,
+      author: 'David造型师',
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face',
+      role: '高级造型师',
+      title: '雾霾蓝高级感',
+      beforeImage: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=300&h=400&fit=crop',
+      afterImage: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=400&fit=crop',
+      color: '雾霾蓝',
+      category: '潮色系',
+      likes: 1654,
+      comments: 87,
+      shares: 43,
+      rating: 4.5,
+      description: '雾霾蓝真的很有高级感，适合追求个性的客户',
+      tags: ['雾霾蓝', '高级感', '个性'],
+      kolRating: '不错',
+      createdAt: '5天前'
     }];
     setPosts(mockPosts);
   }, []);
@@ -101,7 +161,7 @@ export default function Community(props) {
     if (sortBy === 'recent') return 0; // 简化处理
     return 0;
   });
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
+  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
       <div className="container mx-auto px-4 py-8">
         {/* 页面标题 */}
         <div className="text-center mb-8">
@@ -144,135 +204,20 @@ export default function Community(props) {
         </div>
 
         {/* 统计信息 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <Users className="w-8 h-8 text-purple-600 mr-3" />
-              <div>
-                <p className="text-2xl font-bold">1000万+</p>
-                <p className="text-sm text-gray-600">美业者</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <Heart className="w-8 h-8 text-red-500 mr-3" />
-              <div>
-                <p className="text-2xl font-bold">50万+</p>
-                <p className="text-sm text-gray-600">作品</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <TrendingUp className="w-8 h-8 text-green-600 mr-3" />
-              <div>
-                <p className="text-2xl font-bold">33%</p>
-                <p className="text-sm text-gray-600">复购提升</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <Star className="w-8 h-8 text-yellow-500 mr-3" />
-              <div>
-                <p className="text-2xl font-bold">4.8</p>
-                <p className="text-sm text-gray-600">平均评分</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CommunityStats />
 
         {/* 作品展示 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedPosts.map(post => <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              {/* 作者信息 */}
-              <div className="p-4 pb-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <img src={post.avatar} alt={post.author} className="w-10 h-10 rounded-full mr-3" />
-                    <div>
-                      <p className="font-semibold">{post.author}</p>
-                      <p className="text-xs text-gray-600">{post.role}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center text-yellow-500">
-                      <Star className="w-4 h-4 fill-current" />
-                      <span className="text-sm ml-1">{post.rating}</span>
-                    </div>
-                    <p className="text-xs text-gray-600">{post.createdAt}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* 对比图片 */}
-              <div className="relative h-64">
-                <div className="absolute inset-0 flex">
-                  <div className="w-1/2 relative">
-                    <img src={post.beforeImage} alt="染发前" className="w-full h-full object-cover" />
-                    <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                      染发前
-                    </div>
-                  </div>
-                  <div className="w-1/2 relative">
-                    <img src={post.afterImage} alt="染发后" className="w-full h-full object-cover" />
-                    <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                      染发后
-                    </div>
-                  </div>
-                </div>
-                <div className="absolute top-2 left-2 bg-purple-600 text-white px-3 py-1 rounded-full text-sm">
-                  {post.color}
-                </div>
-              </div>
-
-              {/* 内容 */}
-              <CardContent className="p-4">
-                <h3 className="font-semibold mb-2">{post.title}</h3>
-                <p className="text-sm text-gray-600 mb-3">{post.description}</p>
-                
-                {/* 标签 */}
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {post.tags.map((tag, index) => <span key={index} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
-                      #{tag}
-                    </span>)}
-                </div>
-
-                {/* KOL评价 */}
-                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-3 rounded-lg mb-3">
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 text-yellow-600 mr-2" />
-                    <span className="text-sm font-semibold">KOL评价：</span>
-                    <span className="text-sm text-orange-600 ml-1">"{post.kolRating}"</span>
-                  </div>
-                </div>
-
-                {/* 互动按钮 */}
-                <div className="flex items-center justify-between pt-3 border-t">
-                  <button onClick={() => handleLike(post.id)} className="flex items-center text-gray-600 hover:text-red-500 transition-colors">
-                    <Heart className="w-4 h-4 mr-1" />
-                    <span className="text-sm">{post.likes}</span>
-                  </button>
-                  <button className="flex items-center text-gray-600 hover:text-blue-500 transition-colors">
-                    <MessageCircle className="w-4 h-4 mr-1" />
-                    <span className="text-sm">{post.comments}</span>
-                  </button>
-                  <button onClick={() => handleShare(post)} className="flex items-center text-gray-600 hover:text-green-500 transition-colors">
-                    <Share2 className="w-4 h-4 mr-1" />
-                    <span className="text-sm">{post.shares}</span>
-                  </button>
-                </div>
-              </CardContent>
-            </Card>)}
-        </div>
-
-        {/* 加载更多 */}
-        <div className="text-center mt-8">
-          <Button variant="outline" className="px-8">
-            加载更多作品
-          </Button>
+          {sortedPosts.map(post => <PostCard key={post.id} post={post} onLike={handleLike} onShare={handleShare} />)}
         </div>
       </div>
+
+      {/* 底部导航 */}
+      <TabBar currentPage="community" onPageChange={pageId => {
+      $w.utils.navigateTo({
+        pageId: pageId,
+        params: {}
+      });
+    }} />
     </div>;
 }

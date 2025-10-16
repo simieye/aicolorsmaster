@@ -5,6 +5,8 @@ import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/co
 // @ts-ignore;
 import { Camera, Upload, Palette, Droplets, CheckCircle, AlertCircle } from 'lucide-react';
 
+// @ts-ignore;
+import { TabBar } from '@/components/TabBar';
 export default function ColorRecognition(props) {
   const {
     $w,
@@ -59,7 +61,7 @@ export default function ColorRecognition(props) {
   const handleCameraCapture = () => {
     fileInputRef.current?.click();
   };
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
+  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
       <div className="container mx-auto px-4 py-8">
         {/* 页面标题 */}
         <div className="text-center mb-8">
@@ -93,7 +95,7 @@ export default function ColorRecognition(props) {
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold mb-2">上传头发照片</h3>
-                        <p className="text-gray-600 text-sm mb-4">请确保光线充足，头发清晰可见</p>
+                        <p className="text-gray-600 text-sm mb-4">请确保光线充足��头发清晰可见</p>
                       </div>
                       <div className="flex gap-4 justify-center">
                         <Button onClick={handleCameraCapture} className="bg-purple-600 hover:bg-purple-700">
@@ -227,5 +229,13 @@ export default function ColorRecognition(props) {
           </div>
         </div>
       </div>
+
+      {/* 底部导航 */}
+      <TabBar currentPage="color-recognition" onPageChange={pageId => {
+      $w.utils.navigateTo({
+        pageId: pageId,
+        params: {}
+      });
+    }} />
     </div>;
 }

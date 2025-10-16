@@ -5,6 +5,8 @@ import { Button, Card, CardContent, CardHeader, CardTitle, Select, SelectContent
 // @ts-ignore;
 import { Palette, Beaker, Clock, CheckCircle, TrendingUp, Sparkles } from 'lucide-react';
 
+// @ts-ignore;
+import { TabBar } from '@/components/TabBar';
 export default function FormulaGeneration(props) {
   const {
     $w,
@@ -154,7 +156,7 @@ export default function FormulaGeneration(props) {
       });
     }, 2000);
   };
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
+  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
       <div className="container mx-auto px-4 py-8">
         {/* 页面标题 */}
         <div className="text-center mb-8">
@@ -351,5 +353,13 @@ export default function FormulaGeneration(props) {
           </div>
         </div>
       </div>
+
+      {/* 底部导航 */}
+      <TabBar currentPage="formula-generation" onPageChange={pageId => {
+      $w.utils.navigateTo({
+        pageId: pageId,
+        params: {}
+      });
+    }} />
     </div>;
 }
