@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Store, Package, ShoppingCart, Users, BarChart3, Settings, Bell, Search, Plus, Edit, Trash2, Eye, Calendar, Clock, MapPin, Phone, Mail, AlertTriangle, TrendingUp, TrendingDown, CheckCircle, XCircle, Filter, Download, Upload, X } from 'lucide-react';
+import { Store, Package, ShoppingCart, Users, BarChart3, Settings, Bell, Search, Plus, Edit, Trash2, Eye, Calendar, Clock, MapPin, Phone, Mail, AlertTriangle, TrendingUp, TrendingDown, CheckCircle, XCircle, Filter, Download, Upload, X, Globe } from 'lucide-react';
 
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
@@ -60,15 +60,15 @@ export default function StoreManagement(props) {
         todayCustomers: '今日客户',
         storeRating: '门店评分',
         totalProducts: '总商品数',
-        inventoryAlert: '库存预警',
+        stockWarning: '库存预警',
         totalValue: '库存总值',
-        todayUpdates: '今日更新',
+        todayUpdate: '今日更新',
         totalOrders: '总订单',
         pending: '待处理',
         processing: '处理中',
         completed: '已完成',
         totalEmployees: '员工总数',
-        todayServices: '今日服务',
+        todayService: '今日服务',
         avgRating: '平均评分',
         attendance: '出勤率',
         storeStatus: '门店状态',
@@ -79,17 +79,15 @@ export default function StoreManagement(props) {
         services: '服务项目',
         quickActions: '快捷操作',
         newOrder: '新建订单',
-        inventoryManagement: '库存管理',
-        employeeManagement: '员工管理',
-        dataReports: '数据报表',
+        inventoryManage: '库存管理',
+        employeeManage: '员工管理',
+        dataReport: '数据报表',
         createNewOrder: '创建新的服务订单',
-        viewAndUpdateInventory: '查看和更新库存状态',
+        viewUpdateInventory: '查看和更新库存状态',
         manageEmployeeInfo: '管理员工信息和排班',
         viewBusinessData: '查看经营数据分析',
-        lowStockWarning: '库存预警',
-        immediateRestock: '立即补货',
-        restockSuccess: '补货成功',
-        restockQuantity: '已成功补货',
+        lowStockAlert: '库存预警',
+        needRestock: '需要补货',
         inventoryList: '库存列表',
         productName: '商品名称',
         category: '分类',
@@ -101,9 +99,12 @@ export default function StoreManagement(props) {
         actions: '操作',
         normal: '正常',
         lowStock: '库存不足',
+        restockNow: '立即补货',
+        filter: '筛选',
+        export: '导出',
         addProduct: '添加商品',
         orderList: '订单列表',
-        orderNumber: '订单号',
+        orderId: '订单号',
         customerInfo: '客户信息',
         serviceItem: '服务项目',
         technician: '技师',
@@ -116,31 +117,16 @@ export default function StoreManagement(props) {
         position: '职位',
         contactInfo: '联系方式',
         joinDate: '入职时间',
+        todayOrdersCount: '今日订单',
         monthlyOrders: '本月订单',
         schedule: '排班',
-        workingEmployees: '在职员工',
-        totalServices: '总服务次数',
-        customerSatisfaction: '客户满意度',
-        todayAttendance: '今日出勤',
+        addEmployee: '添加员工',
         notificationCenter: '通知中心',
         newOrderNotification: '新订单',
         orderCompleted: '订单完成',
         search: '搜索',
-        filter: '筛选',
-        export: '导出',
         open: '营业中',
-        closed: '休息中',
-        units: '种商品',
-        needRestock: '需要补货',
-        totalValueDesc: '总价值',
-        productUpdates: '商品更新',
-        waitingProcess: '等待处理',
-        inService: '正在服务',
-        serviceCompleted: '服务完成',
-        onDuty: '在职员工',
-        serviceTimes: '总服务次数',
-        attendanceRate: '出勤率',
-        todayDuty: '今日出勤'
+        closed: '休息中'
       },
       'en-US': {
         title: 'Store Management System',
@@ -154,17 +140,17 @@ export default function StoreManagement(props) {
         todayCustomers: "Today's Customers",
         storeRating: 'Store Rating',
         totalProducts: 'Total Products',
-        inventoryAlert: 'Inventory Alert',
+        stockWarning: 'Stock Warning',
         totalValue: 'Total Value',
-        todayUpdates: "Today's Updates",
+        todayUpdate: "Today's Update",
         totalOrders: 'Total Orders',
         pending: 'Pending',
         processing: 'Processing',
         completed: 'Completed',
         totalEmployees: 'Total Employees',
-        todayServices: "Today's Services",
+        todayService: "Today's Service",
         avgRating: 'Average Rating',
-        attendance: 'Attendance',
+        attendance: 'Attendance Rate',
         storeStatus: 'Store Status',
         basicInfo: 'Basic Information',
         businessInfo: 'Business Information',
@@ -173,17 +159,15 @@ export default function StoreManagement(props) {
         services: 'Services',
         quickActions: 'Quick Actions',
         newOrder: 'New Order',
-        inventoryManagement: 'Inventory Management',
-        employeeManagement: 'Employee Management',
-        dataReports: 'Data Reports',
+        inventoryManage: 'Inventory Management',
+        employeeManage: 'Employee Management',
+        dataReport: 'Data Report',
         createNewOrder: 'Create new service order',
-        viewAndUpdateInventory: 'View and update inventory status',
+        viewUpdateInventory: 'View and update inventory status',
         manageEmployeeInfo: 'Manage employee information and scheduling',
         viewBusinessData: 'View business data analysis',
-        lowStockWarning: 'Low Stock Warning',
-        immediateRestock: 'Immediate Restock',
-        restockSuccess: 'Restock Successful',
-        restockQuantity: 'Successfully restocked',
+        lowStockAlert: 'Low Stock Alert',
+        needRestock: 'Need Restock',
         inventoryList: 'Inventory List',
         productName: 'Product Name',
         category: 'Category',
@@ -195,9 +179,12 @@ export default function StoreManagement(props) {
         actions: 'Actions',
         normal: 'Normal',
         lowStock: 'Low Stock',
+        restockNow: 'Restock Now',
+        filter: 'Filter',
+        export: 'Export',
         addProduct: 'Add Product',
         orderList: 'Order List',
-        orderNumber: 'Order Number',
+        orderId: 'Order ID',
         customerInfo: 'Customer Info',
         serviceItem: 'Service Item',
         technician: 'Technician',
@@ -206,35 +193,20 @@ export default function StoreManagement(props) {
         start: 'Start',
         complete: 'Complete',
         employeeList: 'Employee List',
-        employeeInfo: 'Employee Info',
+        employeeInfo: 'Employee Information',
         position: 'Position',
         contactInfo: 'Contact Info',
         joinDate: 'Join Date',
+        todayOrdersCount: "Today's Orders",
         monthlyOrders: 'Monthly Orders',
         schedule: 'Schedule',
-        workingEmployees: 'Active Employees',
-        totalServices: 'Total Services',
-        customerSatisfaction: 'Customer Satisfaction',
-        todayAttendance: "Today's Attendance",
+        addEmployee: 'Add Employee',
         notificationCenter: 'Notification Center',
         newOrderNotification: 'New Order',
         orderCompleted: 'Order Completed',
         search: 'Search',
-        filter: 'Filter',
-        export: 'Export',
         open: 'Open',
-        closed: 'Closed',
-        units: 'products',
-        needRestock: 'need restock',
-        totalValueDesc: 'total value',
-        productUpdates: 'product updates',
-        waitingProcess: 'waiting process',
-        inService: 'in service',
-        serviceCompleted: 'service completed',
-        onDuty: 'active employees',
-        serviceTimes: 'total services',
-        attendanceRate: 'attendance rate',
-        todayDuty: "today's attendance"
+        closed: 'Closed'
       },
       'ja-JP': {
         title: '店舗管理システム',
@@ -248,39 +220,37 @@ export default function StoreManagement(props) {
         todayCustomers: '本日の顧客',
         storeRating: '店舗評価',
         totalProducts: '総商品数',
-        inventoryAlert: '在庫警告',
+        stockWarning: '在庫警告',
         totalValue: '総価値',
-        todayUpdates: '本日の更新',
+        todayUpdate: '本日の更新',
         totalOrders: '総注文数',
-        pending: '待機中',
+        pending: '保留中',
         processing: '処理中',
         completed: '完了',
         totalEmployees: '総従業員数',
-        todayServices: '本日のサービス',
+        todayService: '本日のサービス',
         avgRating: '平均評価',
         attendance: '出勤率',
-        storeStatus: '店舗状態',
+        storeStatus: '店舗ステータス',
         basicInfo: '基本情報',
         businessInfo: '営業情報',
         businessHours: '営業時間',
-        manager: '店長',
+        manager: 'マネージャー',
         services: 'サービス項目',
         quickActions: 'クイックアクション',
         newOrder: '新規注文',
-        inventoryManagement: '在庫管理',
-        employeeManagement: '従業員管理',
-        dataReports: 'データレポート',
+        inventoryManage: '在庫管理',
+        employeeManage: '従業員管理',
+        dataReport: 'データレポート',
         createNewOrder: '新しいサービス注文を作成',
-        viewAndUpdateInventory: '在庫状況を表示・更新',
-        manageEmployeeInfo: '従業員情報とシフト管理',
-        viewBusinessData: '営業データ分析を表示',
-        lowStockWarning: '在庫警告',
-        immediateRestock: '即時補充',
-        restockSuccess: '補充成功',
-        restockQuantity: '補充完了',
+        viewUpdateInventory: '在庫ステータスの表示と更新',
+        manageEmployeeInfo: '従業員情報とスケジュール管理',
+        viewBusinessData: '営業データ分析の表示',
+        lowStockAlert: '在庫警告',
+        needRestock: '補充が必要',
         inventoryList: '在庫リスト',
         productName: '商品名',
-        category: 'カテゴリー',
+        category: 'カテゴリ',
         stock: '在庫',
         unitPrice: '単価',
         supplier: 'サプライヤー',
@@ -289,9 +259,12 @@ export default function StoreManagement(props) {
         actions: 'アクション',
         normal: '正常',
         lowStock: '在庫不足',
+        restockNow: '今すぐ補充',
+        filter: 'フィルター',
+        export: 'エクスポート',
         addProduct: '商品追加',
         orderList: '注文リスト',
-        orderNumber: '注文番号',
+        orderId: '注文ID',
         customerInfo: '顧客情報',
         serviceItem: 'サービス項目',
         technician: '技術者',
@@ -304,31 +277,16 @@ export default function StoreManagement(props) {
         position: '役職',
         contactInfo: '連絡先情報',
         joinDate: '入社日',
+        todayOrdersCount: '本日の注文',
         monthlyOrders: '月次注文',
-        schedule: 'シフト',
-        workingEmployees: '勤務中従業員',
-        totalServices: '総サービス数',
-        customerSatisfaction: '顧客満足度',
-        todayAttendance: '本日出勤',
+        schedule: 'スケジュール',
+        addEmployee: '従業員追加',
         notificationCenter: '通知センター',
         newOrderNotification: '新規注文',
         orderCompleted: '注文完了',
         search: '検索',
-        filter: 'フィルター',
-        export: 'エクスポート',
         open: '営業中',
-        closed: '休業中',
-        units: '商品',
-        needRestock: '補充が必要',
-        totalValueDesc: '総価値',
-        productUpdates: '商品更新',
-        waitingProcess: '処理待ち',
-        inService: 'サービス中',
-        serviceCompleted: 'サービス完了',
-        onDuty: '勤務中',
-        serviceTimes: '総サービス数',
-        attendanceRate: '出勤率',
-        todayDuty: '本日出勤'
+        closed: '休業中'
       },
       'ko-KR': {
         title: '매장 관리 시스템',
@@ -341,37 +299,35 @@ export default function StoreManagement(props) {
         todayOrders: '오늘 주문',
         todayCustomers: '오늘 고객',
         storeRating: '매장 평점',
-        totalProducts: '총 상품수',
-        inventoryAlert: '재고 경고',
+        totalProducts: '총 상품 수',
+        stockWarning: '재고 경고',
         totalValue: '총 가치',
-        todayUpdates: '오늘 업데이트',
-        totalOrders: '총 주문수',
+        todayUpdate: '오늘 업데이트',
+        totalOrders: '총 주문',
         pending: '대기 중',
         processing: '처리 중',
         completed: '완료',
-        totalEmployees: '총 직원수',
-        todayServices: '오늘 서비스',
+        totalEmployees: '총 직원 수',
+        todayService: '오늘 서비스',
         avgRating: '평균 평점',
         attendance: '출근률',
         storeStatus: '매장 상태',
         basicInfo: '기본 정보',
         businessInfo: '영업 정보',
         businessHours: '영업 시간',
-        manager: '점장',
+        manager: '매니저',
         services: '서비스 항목',
         quickActions: '빠른 작업',
         newOrder: '신규 주문',
-        inventoryManagement: '재고 관리',
-        employeeManagement: '직원 관리',
-        dataReports: '데이터 보고서',
+        inventoryManage: '재고 관리',
+        employeeManage: '직원 관리',
+        dataReport: '데이터 보고서',
         createNewOrder: '새로운 서비스 주문 생성',
-        viewAndUpdateInventory: '재고 상태 보기 및 업데이트',
-        manageEmployeeInfo: '직원 정보 및 근무표 관리',
+        viewUpdateInventory: '재고 상태 보기 및 업데이트',
+        manageEmployeeInfo: '직원 정보 및 스케줄 관리',
         viewBusinessData: '영업 데이터 분석 보기',
-        lowStockWarning: '재고 부족 경고',
-        immediateRestock: '즉시 재입고',
-        restockSuccess: '재입고 성공',
-        restockQuantity: '성공적으로 재입고됨',
+        lowStockAlert: '재고 부족 경고',
+        needRestock: '재보충 필요',
         inventoryList: '재고 목록',
         productName: '상품명',
         category: '카테고리',
@@ -383,9 +339,12 @@ export default function StoreManagement(props) {
         actions: '작업',
         normal: '정상',
         lowStock: '재고 부족',
+        restockNow: '즉시 재보충',
+        filter: '필터',
+        export: '내보내기',
         addProduct: '상품 추가',
         orderList: '주문 목록',
-        orderNumber: '주문번호',
+        orderId: '주문 ID',
         customerInfo: '고객 정보',
         serviceItem: '서비스 항목',
         technician: '기술자',
@@ -398,31 +357,16 @@ export default function StoreManagement(props) {
         position: '직책',
         contactInfo: '연락처 정보',
         joinDate: '입사일',
+        todayOrdersCount: '오늘 주문',
         monthlyOrders: '월간 주문',
-        schedule: '근무표',
-        workingEmployees: '재직 직원',
-        totalServices: '총 서비스수',
-        customerSatisfaction: '고객 만족도',
-        todayAttendance: '오늘 출근',
+        schedule: '스케줄',
+        addEmployee: '직원 추가',
         notificationCenter: '알림 센터',
         newOrderNotification: '신규 주문',
         orderCompleted: '주문 완료',
         search: '검색',
-        filter: '필터',
-        export: '내보내기',
         open: '영업 중',
-        closed: '휴업',
-        units: '상품',
-        needRestock: '재입고 필요',
-        totalValueDesc: '총 가치',
-        productUpdates: '상품 업데이트',
-        waitingProcess: '처리 대기',
-        inService: '서비스 중',
-        serviceCompleted: '서비스 완료',
-        onDuty: '재직 직원',
-        serviceTimes: '총 서비스수',
-        attendanceRate: '출근률',
-        todayDuty: '오늘 출근'
+        closed: '휴업'
       }
     };
     return texts[selectedLanguage]?.[key] || texts['zh-CN'][key] || key;
@@ -588,8 +532,8 @@ export default function StoreManagement(props) {
       lastUpdate: new Date().toISOString().split('T')[0]
     } : item));
     toast({
-      title: getText('restockSuccess'),
-      description: `${getText('restockQuantity')} ${quantity} 件`
+      title: "补货成功",
+      description: `已成功补货 ${quantity} 件`
     });
   };
 
@@ -600,10 +544,9 @@ export default function StoreManagement(props) {
       status: newStatus,
       completeTime: newStatus === 'completed' ? new Date().toLocaleString() : null
     } : order));
-    const statusText = newStatus === 'completed' ? getText('completed') : newStatus === 'processing' ? getText('processing') : getText('pending');
     toast({
       title: "状态更新成功",
-      description: `订单状态已更新为 ${statusText}`
+      description: `订单状态已更新为 ${newStatus === 'completed' ? getText('completed') : newStatus === 'processing' ? getText('processing') : getText('pending')}`
     });
   };
 
@@ -723,7 +666,7 @@ export default function StoreManagement(props) {
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">{getText('status')}</span>
                     <span className={`px-2 py-1 text-xs rounded-full ${storeData.status === '营业中' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {storeData.status}
+                      {getText(storeData.status === '营业中' ? 'open' : 'closed')}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -761,8 +704,8 @@ export default function StoreManagement(props) {
               <div className="w-16 h-16 bg-green-100 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <Package className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="font-semibold mb-2">{getText('inventoryManagement')}</h3>
-              <p className="text-sm text-gray-600">{getText('viewAndUpdateInventory')}</p>
+              <h3 className="font-semibold mb-2">{getText('inventoryManage')}</h3>
+              <p className="text-sm text-gray-600">{getText('viewUpdateInventory')}</p>
             </CardContent>
           </Card>
 
@@ -771,7 +714,7 @@ export default function StoreManagement(props) {
               <div className="w-16 h-16 bg-purple-100 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <Users className="w-8 h-8 text-purple-600" />
               </div>
-              <h3 className="font-semibold mb-2">{getText('employeeManagement')}</h3>
+              <h3 className="font-semibold mb-2">{getText('employeeManage')}</h3>
               <p className="text-sm text-gray-600">{getText('manageEmployeeInfo')}</p>
             </CardContent>
           </Card>
@@ -781,7 +724,7 @@ export default function StoreManagement(props) {
               <div className="w-16 h-16 bg-orange-100 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <BarChart3 className="w-8 h-8 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-2">{getText('dataReports')}</h3>
+              <h3 className="font-semibold mb-2">{getText('dataReport')}</h3>
               <p className="text-sm text-gray-600">{getText('viewBusinessData')}</p>
             </CardContent>
           </Card>
@@ -800,7 +743,7 @@ export default function StoreManagement(props) {
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">{getText('totalProducts')}</p>
                 <p className="text-2xl font-bold text-gray-800">{inventoryData.length}</p>
-                <p className="text-xs text-gray-500">{getText('units')}</p>
+                <p className="text-xs text-gray-500">种商品</p>
               </div>
             </CardContent>
           </Card>
@@ -808,7 +751,7 @@ export default function StoreManagement(props) {
           <Card>
             <CardContent className="p-6">
               <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">{getText('inventoryAlert')}</p>
+                <p className="text-sm text-gray-600 mb-2">{getText('stockWarning')}</p>
                 <p className="text-2xl font-bold text-red-600">{lowStockItems.length}</p>
                 <p className="text-xs text-gray-500">{getText('needRestock')}</p>
               </div>
@@ -820,7 +763,7 @@ export default function StoreManagement(props) {
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">{getText('totalValue')}</p>
                 <p className="text-2xl font-bold text-green-600">¥{inventoryData.reduce((sum, item) => sum + item.stock * item.price, 0).toLocaleString()}</p>
-                <p className="text-xs text-gray-500">{getText('totalValueDesc')}</p>
+                <p className="text-xs text-gray-500">总价值</p>
               </div>
             </CardContent>
           </Card>
@@ -828,9 +771,9 @@ export default function StoreManagement(props) {
           <Card>
             <CardContent className="p-6">
               <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">{getText('todayUpdates')}</p>
+                <p className="text-sm text-gray-600 mb-2">{getText('todayUpdate')}</p>
                 <p className="text-2xl font-bold text-blue-600">3</p>
-                <p className="text-xs text-gray-500">{getText('productUpdates')}</p>
+                <p className="text-xs text-gray-500">商品更新</p>
               </div>
             </CardContent>
           </Card>
@@ -841,7 +784,7 @@ export default function StoreManagement(props) {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <AlertTriangle className="w-5 h-5 mr-2 text-red-500" />
-                {getText('lowStockWarning')}
+                {getText('lowStockAlert')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -851,11 +794,11 @@ export default function StoreManagement(props) {
                       <Package className="w-5 h-5 text-red-500" />
                       <div>
                         <h4 className="font-medium">{item.name}</h4>
-                        <p className="text-sm text-gray-600">{getText('stock')}: {item.stock} {item.unit} ({getText('lowStock')}: {item.minStock} {item.unit})</p>
+                        <p className="text-sm text-gray-600">当前库存: {item.stock} {item.unit} (最低: {item.minStock} {item.unit})</p>
                       </div>
                     </div>
                     <Button onClick={() => handleRestock(item.id, item.maxStock - item.stock)} size="sm" className="bg-red-600 hover:bg-red-700">
-                      {getText('immediateRestock')}
+                      {getText('restockNow')}
                     </Button>
                   </div>)}
               </div>
@@ -927,7 +870,7 @@ export default function StoreManagement(props) {
                       <td className="py-3 px-4">{item.lastUpdate}</td>
                       <td className="py-3 px-4 text-center">
                         <span className={`px-2 py-1 text-xs rounded-full ${item.status === 'low' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
-                          {item.status === 'low' ? getText('lowStock') : getText('normal')}
+                          {getText(item.status === 'low' ? 'lowStock' : 'normal')}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-center">
@@ -965,7 +908,7 @@ export default function StoreManagement(props) {
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">{getText('totalOrders')}</p>
                 <p className="text-2xl font-bold text-gray-800">{orderStats.total}</p>
-                <p className="text-xs text-gray-500">{getText('todayOrders')}</p>
+                <p className="text-xs text-gray-500">今日订单</p>
               </div>
             </CardContent>
           </Card>
@@ -975,7 +918,7 @@ export default function StoreManagement(props) {
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">{getText('pending')}</p>
                 <p className="text-2xl font-bold text-orange-600">{orderStats.pending}</p>
-                <p className="text-xs text-gray-500">{getText('waitingProcess')}</p>
+                <p className="text-xs text-gray-500">等待处理</p>
               </div>
             </CardContent>
           </Card>
@@ -985,7 +928,7 @@ export default function StoreManagement(props) {
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">{getText('processing')}</p>
                 <p className="text-2xl font-bold text-blue-600">{orderStats.processing}</p>
-                <p className="text-xs text-gray-500">{getText('inService')}</p>
+                <p className="text-xs text-gray-500">正在服务</p>
               </div>
             </CardContent>
           </Card>
@@ -995,7 +938,7 @@ export default function StoreManagement(props) {
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">{getText('completed')}</p>
                 <p className="text-2xl font-bold text-green-600">{orderStats.completed}</p>
-                <p className="text-xs text-gray-500">{getText('serviceCompleted')}</p>
+                <p className="text-xs text-gray-500">服务完成</p>
               </div>
             </CardContent>
           </Card>
@@ -1026,7 +969,7 @@ export default function StoreManagement(props) {
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4">{getText('orderNumber')}</th>
+                    <th className="text-left py-3 px-4">{getText('orderId')}</th>
                     <th className="text-left py-3 px-4">{getText('customerInfo')}</th>
                     <th className="text-left py-3 px-4">{getText('serviceItem')}</th>
                     <th className="text-left py-3 px-4">{getText('technician')}</th>
@@ -1053,7 +996,7 @@ export default function StoreManagement(props) {
                       <td className="py-3 px-4">{order.orderTime}</td>
                       <td className="py-3 px-4 text-center">
                         <span className={`px-2 py-1 text-xs rounded-full ${order.status === 'completed' ? 'bg-green-100 text-green-800' : order.status === 'processing' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800'}`}>
-                          {order.status === 'completed' ? getText('completed') : order.status === 'processing' ? getText('processing') : getText('pending')}
+                          {getText(order.status)}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-center">
@@ -1062,7 +1005,7 @@ export default function StoreManagement(props) {
                             <Eye className="w-3 h-3" />
                           </Button>
                           {order.status !== 'completed' && <Button size="sm" onClick={() => handleOrderStatusUpdate(order.id, order.status === 'pending' ? 'processing' : 'completed')}>
-                            {order.status === 'pending' ? getText('start') : getText('complete')}
+                            {getText(order.status === 'pending' ? 'start' : 'complete')}
                           </Button>}
                         </div>
                       </td>
@@ -1091,7 +1034,7 @@ export default function StoreManagement(props) {
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">{getText('totalEmployees')}</p>
                 <p className="text-2xl font-bold text-gray-800">{employeeStats.total}</p>
-                <p className="text-xs text-gray-500">{getText('onDuty')}</p>
+                <p className="text-xs text-gray-500">在职员工</p>
               </div>
             </CardContent>
           </Card>
@@ -1099,9 +1042,9 @@ export default function StoreManagement(props) {
           <Card>
             <CardContent className="p-6">
               <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">{getText('todayServices')}</p>
+                <p className="text-sm text-gray-600 mb-2">{getText('todayService')}</p>
                 <p className="text-2xl font-bold text-blue-600">{employeeStats.todayOrders}</p>
-                <p className="text-xs text-gray-500">{getText('serviceTimes')}</p>
+                <p className="text-xs text-gray-500">总服务次数</p>
               </div>
             </CardContent>
           </Card>
@@ -1111,7 +1054,7 @@ export default function StoreManagement(props) {
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">{getText('avgRating')}</p>
                 <p className="text-2xl font-bold text-purple-600">{employeeStats.avgRating}</p>
-                <p className="text-xs text-gray-500">{getText('customerSatisfaction')}</p>
+                <p className="text-xs text-gray-500">客户满意度</p>
               </div>
             </CardContent>
           </Card>
@@ -1121,7 +1064,7 @@ export default function StoreManagement(props) {
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">{getText('attendance')}</p>
                 <p className="text-2xl font-bold text-green-600">100%</p>
-                <p className="text-xs text-gray-500">{getText('todayDuty')}</p>
+                <p className="text-xs text-gray-500">今日出勤</p>
               </div>
             </CardContent>
           </Card>
@@ -1142,7 +1085,7 @@ export default function StoreManagement(props) {
                 </Button>
                 <Button size="sm">
                   <Plus className="w-4 h-4 mr-2" />
-                  添加员工
+                  {getText('addEmployee')}
                 </Button>
               </div>
             </div>
@@ -1156,7 +1099,7 @@ export default function StoreManagement(props) {
                     <th className="text-left py-3 px-4">{getText('position')}</th>
                     <th className="text-left py-3 px-4">{getText('contactInfo')}</th>
                     <th className="text-left py-3 px-4">{getText('joinDate')}</th>
-                    <th className="text-left py-3 px-4">{getText('todayOrders')}</th>
+                    <th className="text-left py-3 px-4">{getText('todayOrdersCount')}</th>
                     <th className="text-left py-3 px-4">{getText('monthlyOrders')}</th>
                     <th className="text-left py-3 px-4">{getText('avgRating')}</th>
                     <th className="text-left py-3 px-4">{getText('schedule')}</th>
@@ -1229,6 +1172,7 @@ export default function StoreManagement(props) {
             {/* 语言切换 */}
             <div className="relative">
               <button className="flex items-center space-x-2 px-3 py-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <Globe className="w-4 h-4 text-gray-600" />
                 <span className="text-sm font-medium">{languages.find(lang => lang.code === selectedLanguage)?.flag}</span>
               </button>
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
@@ -1303,7 +1247,7 @@ export default function StoreManagement(props) {
             <div className="flex items-start space-x-3 p-3 bg-red-50 rounded-lg">
               <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5" />
               <div>
-                <h4 className="font-medium text-sm">{getText('lowStockWarning')}</h4>
+                <h4 className="font-medium text-sm">{getText('lowStockAlert')}</h4>
                 <p className="text-xs text-gray-600">樱花粉染发剂库存不足，请及时补货</p>
                 <p className="text-xs text-gray-500 mt-1">5分钟前</p>
               </div>
