@@ -8,13 +8,9 @@ import MARKETING from '../pages/marketing.jsx';
 import USER_MANAGEMENT from '../pages/user-management.jsx';
 import FORMULA_MANAGEMENT from '../pages/formula-management.jsx';
 import COLOR_LIBRARY from '../pages/color-library.jsx';
+import LANGUAGE_SETTINGS from '../pages/language-settings.jsx';
 import LOGIN from '../pages/login.jsx';
-import REGISTER from '../pages/register.jsx';
-import FORGOT_PASSWORD from '../pages/forgot-password.jsx';
-import LANGUAGE_SELECTOR from '../pages/language-selector.jsx';
-import I18N_CONFIG from '../pages/i18n-config.jsx';
 import AI_CHAT from '../pages/ai-chat.jsx';
-import AFFILIATE_MARKETING from '../pages/affiliate-marketing.jsx';
 import STORE_MANAGEMENT from '../pages/store-management.jsx';
 import QR_SCANNER from '../pages/qr-scanner.jsx';
 import PERSONALIZED_RECOMMENDATION from '../pages/personalized-recommendation.jsx';
@@ -49,26 +45,14 @@ export const routers = [{
   id: "color-library",
   component: COLOR_LIBRARY
 }, {
+  id: "language-settings",
+  component: LANGUAGE_SETTINGS
+}, {
   id: "login",
   component: LOGIN
 }, {
-  id: "register",
-  component: REGISTER
-}, {
-  id: "forgot-password",
-  component: FORGOT_PASSWORD
-}, {
-  id: "language-selector",
-  component: LANGUAGE_SELECTOR
-}, {
-  id: "i18n-config",
-  component: I18N_CONFIG
-}, {
   id: "ai-chat",
   component: AI_CHAT
-}, {
-  id: "affiliate-marketing",
-  component: AFFILIATE_MARKETING
 }, {
   id: "store-management",
   component: STORE_MANAGEMENT

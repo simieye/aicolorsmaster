@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Send, Bot, Sparkles, Palette, Camera, Mic, Image as ImageIcon, History, Settings, HelpCircle, ChevronDown, Volume2, VolumeX, Upload, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { Send, Bot, Sparkles, Palette, Camera, Mic, Image as ImageIcon, History, Settings, HelpCircle, ChevronDown, Volume2, X, Plus, Minus } from 'lucide-react';
 
 // @ts-ignore;
 import { useI18n } from '@/lib/i18n';
@@ -31,14 +31,12 @@ export default function AIChat(props) {
   const [showSettings, setShowSettings] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showCamera, setShowCamera] = useState(false);
-  const [cameraStream, setCameraStream] = useState(null);
+  const [showVoicePlayer, setShowVoicePlayer] = useState(false);
+  const [voiceUrl, setVoiceUrl] = useState('');
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
+  const recordingInterval = useRef(null);
 
   // 初始化欢迎消息
   useEffect(() => {
@@ -68,17 +66,23 @@ export default function AIChat(props) {
     });
   }, [messages]);
 
-  // 录音计时器
+  // 录音计时
   useEffect(() => {
-    let interval;
     if (isRecording) {
-      interval = setInterval(() => {
+      recordingInterval.current = setInterval(() => {
         setRecordingTime(prev => prev + 1);
       }, 1000);
     } else {
+      if (recordingInterval.current) {
+        clearInterval(recordingInterval.current);
+      }
       setRecordingTime(0);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (recordingInterval.current) {
+        clearInterval(recordingInterval.current);
+      }
+    };
   }, [isRecording]);
 
   // 快速操作选项
@@ -193,43 +197,33 @@ export default function AIChat(props) {
     };
   };
 
-  // 开始录音
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true
-      });
-      setIsRecording(true);
-      toast({
-        title: "开始录音",
-        description: "正在录制您的语音..."
-      });
-    } catch (error) {
-      toast({
-        title: "录音失败",
-        description: "无法访问麦克风，请检查权限设置",
-        variant: "destructive"
-      });
-    }
+  // 处理语音录制
+  const handleStartRecording = () => {
+    setIsRecording(true);
+    toast({
+      title: "开始录音",
+      description: "正在录制您的语音..."
+    });
   };
-
-  // 停止录音
-  const stopRecording = () => {
+  const handleStopRecording = () => {
     setIsRecording(false);
-    const voiceMessage = {
-      id: Date.now(),
-      type: 'user',
-      content: `🎤 语音消息 (${formatTime(recordingTime)})`,
-      timestamp: new Date()
-    };
-    setMessages(prev => [...prev, voiceMessage]);
+    setIsLoading(true);
 
-    // 模拟AI回复
+    // 模拟语音识别和AI回复
     setTimeout(() => {
+      const voiceMessage = {
+        id: Date.now(),
+        type: 'user',
+        content: '🎤 语音消息：我想了解一下今年流行的发色',
+        voiceUrl: 'https://example.com/voice.mp3',
+        duration: recordingTime,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, voiceMessage]);
       const botResponse = {
         id: Date.now() + 1,
         type: 'bot',
-        content: '我听到了您的语音！根据您的需求，我为您推荐了以下色彩方案：',
+        content: '我听到了您的语音！今年特别流行这些色彩：',
         colors: [{
           name: '樱花粉',
           hex: '#FFB6C1'
@@ -241,7 +235,7 @@ export default function AIChat(props) {
           hex: '#FF7F50'
         }],
         formulas: [{
-          name: '樱花粉配方',
+          name: '樱花粉配��',
           hex: '#FFB6C1',
           match: 93
         }, {
@@ -252,74 +246,12 @@ export default function AIChat(props) {
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botResponse]);
+      setIsLoading(false);
     }, 2000);
   };
 
-  // 格式化时间
-  const formatTime = seconds => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  // 打开相机
-  const openCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: 'environment'
-        }
-      });
-      setCameraStream(stream);
-      setShowCamera(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error) {
-      toast({
-        title: "相机打开失败",
-        description: "无法访问相机，请检查权限设置",
-        variant: "destructive"
-      });
-    }
-  };
-
-  // 关闭相机
-  const closeCamera = () => {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach(track => track.stop());
-      setCameraStream(null);
-    }
-    setShowCamera(false);
-  };
-
-  // 拍照
-  const takePhoto = () => {
-    if (videoRef.current && canvasRef.current) {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      const context = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0);
-      const imageUrl = canvas.toDataURL('image/jpeg');
-      const photo = {
-        file: null,
-        url: imageUrl,
-        name: `拍照_${Date.now()}.jpg`,
-        type: 'camera'
-      };
-      setSelectedImages(prev => [...prev, photo]);
-      closeCamera();
-      toast({
-        title: "拍照成功",
-        description: "照片已添加到对话中"
-      });
-    }
-  };
-
-  // 处理文件选择
-  const handleFileSelect = event => {
+  // 处理图片上传
+  const handleImageUpload = event => {
     const files = Array.from(event.target.files);
     const newImages = files.map(file => ({
       file,
@@ -330,8 +262,24 @@ export default function AIChat(props) {
     setSelectedImages(prev => [...prev, ...newImages].slice(0, 3));
   };
 
-  // 删除图片
-  const removeImage = index => {
+  // 处理拍照
+  const handleCameraCapture = () => {
+    // 模拟拍照功能
+    const mockImage = {
+      file: null,
+      url: 'https://images.unsplash.com/photo-1560066985-274c6a8a3f5a?w=300&h=400&fit=crop',
+      name: 'camera-photo.jpg',
+      type: 'camera'
+    };
+    setSelectedImages(prev => [...prev, mockImage].slice(0, 3));
+    toast({
+      title: "拍照成功",
+      description: "照片已添加到对话中"
+    });
+  };
+
+  // 处理图片删除
+  const handleImageRemove = index => {
     setSelectedImages(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -372,201 +320,200 @@ export default function AIChat(props) {
       description: `正在加载：${history.title}`
     });
   };
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
-      <div className="flex flex-col h-screen">
-        {/* 头部 */}
-        <div className="bg-white border-b border-gray-200 px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-semibold text-gray-800">AI色彩助手</h1>
-                <p className="text-xs text-gray-500">智能色彩对话 • 个性化推荐</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <button onClick={() => setShowHistory(!showHistory)} className="p-2 hover:bg-gray-100 rounded-lg">
-                <History className="w-5 h-5 text-gray-600" />
-              </button>
-              <button onClick={() => setShowSettings(!showSettings)} className="p-2 hover:bg-gray-100 rounded-lg">
-                <Settings className="w-5 h-5 text-gray-600" />
-              </button>
-            </div>
+
+  // 格式化录音时间
+  const formatRecordingTime = seconds => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // 渲染消息组件
+  const renderMessage = message => {
+    const isUser = message.type === 'user';
+    return <div key={message.id} className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
+        <div className={`flex ${isUser ? 'flex-row-reverse' : 'flex-row'} items-start space-x-2 max-w-[80%]`}>
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isUser ? 'bg-purple-600 ml-2' : 'bg-gray-200'}`}>
+            {isUser ? <span className="text-white text-sm">我</span> : <Bot className="w-4 h-4 text-gray-600" />}
           </div>
-        </div>
-
-        {/* 聊天区域 */}
-        <div className="flex-1 overflow-y-auto px-4 py-4">
-          {/* 快速操作 */}
-          {showQuickActions && messages.length === 1 && <div className="mb-6">
-              <div className="text-center mb-4">
-                <Sparkles className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                <p className="text-sm text-gray-600">选择您需要的服务</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {quickActions.map((action, index) => {
-              const Icon = action.icon;
-              return <button key={index} onClick={() => handleQuickAction(action)} className={`flex items-center justify-center space-x-2 p-3 rounded-lg ${action.color} hover:opacity-80 transition-opacity`}>
-                    <Icon className="w-4 h-4" />
-                    <span className="text-sm font-medium">{action.text}</span>
-                  </button>;
-            })}
-              </div>
-            </div>}
-
-          {/* 消息列表 */}
-          <div className="space-y-4">
-            {messages.map(message => <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-xs lg:max-w-md ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-                  <div className={`flex items-center space-x-2 mb-1 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    {message.type === 'bot' && <div className="w-6 h-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                        <Bot className="w-3 h-3 text-white" />
-                      </div>}
-                    <span className="text-xs text-gray-500">
-                      {message.timestamp.toLocaleTimeString()}
-                    </span>
-                  </div>
-                  
-                  <div className={`rounded-2xl px-4 py-3 ${message.type === 'user' ? 'bg-purple-600 text-white' : 'bg-white border border-gray-200'}`}>
-                    <p className="text-sm whitespace-pre-line">{message.content}</p>
-                    
-                    {/* 图片展示 */}
-                    {message.images && message.images.length > 0 && <div className="mt-2 grid grid-cols-2 gap-2">
-                        {message.images.map((image, index) => <div key={index} className="relative">
-                            <img src={image.url} alt={image.alt} className="w-full h-24 object-cover rounded-lg cursor-pointer" onClick={() => handleImageClick(image)} />
-                          </div>)}
-                      </div>}
-                    
-                    {/* 色彩推荐 */}
-                    {message.colors && <div className="mt-3">
-                        <p className="text-xs font-medium mb-2">推荐色彩：</p>
-                        <div className="flex flex-wrap gap-2">
-                          {message.colors.map((color, index) => <button key={index} onClick={() => handleColorSelect(color)} className="flex items-center space-x-1 px-2 py-1 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
-                              <div className="w-4 h-4 rounded-full border border-gray-300" style={{
-                        backgroundColor: color.hex
-                      }}></div>
-                              <span className="text-xs">{color.name}</span>
-                            </button>)}
-                        </div>
-                      </div>}
-                    
-                    {/* 配方推荐 */}
-                    {message.formulas && <div className="mt-3 space-y-2">
-                        <p className="text-xs font-medium">推荐配方：</p>
-                        {message.formulas.map((formula, index) => <div key={index} className="bg-gray-50 rounded-lg p-2">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center space-x-2">
-                                <div className="w-3 h-3 rounded-full" style={{
-                          backgroundColor: formula.hex
-                        }}></div>
-                                <span className="text-xs font-medium">{formula.name}</span>
-                              </div>
-                              <span className="text-xs text-gray-500">匹配度 {formula.match}%</span>
-                            </div>
-                          </div>)}
-                      </div>}
-                  </div>
-                </div>
-              </div>)}
+          <div className={`rounded-2xl px-4 py-3 ${isUser ? 'bg-purple-600 text-white' : 'bg-white border border-gray-200'}`}>
+            {message.content && <p className="text-sm whitespace-pre-line">{message.content}</p>}
             
-            {/* 加载状态 */}
-            {isLoading && <div className="flex justify-start">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-gray-600" />
-                  </div>
-                  <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{
-                    animationDelay: '0.1s'
-                  }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{
-                    animationDelay: '0.2s'
-                  }}></div>
-                    </div>
-                  </div>
+            {/* 图片展示 */}
+            {message.images && message.images.length > 0 && <div className="grid grid-cols-2 gap-2 mt-2">
+                {message.images.map((img, index) => <div key={index} className="relative">
+                    <img src={img.url} alt={img.alt} className="w-24 h-24 object-cover rounded-lg cursor-pointer" onClick={() => handleImageClick(img)} />
+                  </div>)}
+              </div>}
+            
+            {/* 语音消息 */}
+            {message.voiceUrl && <div className="flex items-center space-x-2 mt-2">
+                <button onClick={() => setShowVoicePlayer(!showVoicePlayer)} className="p-2 bg-white/20 rounded-full hover:bg-white/30">
+                  <Volume2 className="w-4 h-4" />
+                </button>
+                <span className="text-xs">{formatRecordingTime(message.duration || 0)}</span>
+              </div>}
+            
+            {/* 色彩推荐 */}
+            {message.colors && message.colors.length > 0 && <div className="mt-3">
+                <p className="text-xs font-medium mb-2">推荐色彩：</p>
+                <div className="flex flex-wrap gap-2">
+                  {message.colors.map((color, index) => <button key={index} onClick={() => handleColorSelect(color)} className="flex items-center space-x-1 px-2 py-1 bg-white/20 rounded-full hover:bg-white/30">
+                      <div className="w-4 h-4 rounded-full border border-white/50" style={{
+                  backgroundColor: color.hex
+                }}></div>
+                      <span className="text-xs">{color.name}</span>
+                    </button>)}
                 </div>
               </div>}
             
-            <div ref={messagesEndRef} />
+            {/* 配方推荐 */}
+            {message.formulas && message.formulas.length > 0 && <div className="mt-3 space-y-2">
+                <p className="text-xs font-medium">推荐配方：</p>
+                {message.formulas.map((formula, index) => <div key={index} className="flex items-center justify-between p-2 bg-white/10 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 rounded-full" style={{
+                  backgroundColor: formula.hex
+                }}></div>
+                      <span className="text-xs">{formula.name}</span>
+                    </div>
+                    <span className="text-xs">匹配度 {formula.match}%</span>
+                  </div>)}
+              </div>}
+            
+            <p className="text-xs mt-1 opacity-70">
+              {message.timestamp.toLocaleTimeString()}
+            </p>
           </div>
         </div>
+      </div>;
+  };
+  return <>
+      <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
+        <div className="flex flex-col h-screen">
+          {/* 头部 */}
+          <div className="bg-white border-b border-gray-200 px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                  <Bot className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-semibold text-gray-800">AI色彩助手</h1>
+                  <p className="text-xs text-gray-500">智能色彩对话 • 个性化推荐</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <button onClick={() => setShowHistory(!showHistory)} className="p-2 hover:bg-gray-100 rounded-lg">
+                  <History className="w-5 h-5 text-gray-600" />
+                </button>
+                <button onClick={() => setShowSettings(!showSettings)} className="p-2 hover:bg-gray-100 rounded-lg">
+                  <Settings className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+            </div>
+          </div>
 
-        {/* 输入区域 */}
-        <div className="bg-white border-t border-gray-200 px-4 py-3">
-          {/* 图片上传区域 */}
-          {selectedImages.length > 0 && <div className="mb-3">
-              <div className="flex flex-wrap gap-2">
+          {/* 聊天区域 */}
+          <div className="flex-1 overflow-y-auto px-4 py-4">
+            {/* 快速操作 */}
+            {showQuickActions && messages.length === 1 && <div className="mb-6">
+                <div className="text-center mb-4">
+                  <Sparkles className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                  <p className="text-sm text-gray-600">选择您需要的服务</p>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {quickActions.map((action, index) => {
+                const Icon = action.icon;
+                return <button key={index} onClick={() => handleQuickAction(action)} className={`flex items-center justify-center space-x-2 p-3 rounded-lg ${action.color} hover:opacity-80 transition-opacity`}>
+                      <Icon className="w-4 h-4" />
+                      <span className="text-sm font-medium">{action.text}</span>
+                    </button>;
+              })}
+                </div>
+              </div>}
+
+            {/* 消息列表 */}
+            <div className="space-y-4">
+              {messages.map(message => renderMessage(message))}
+              
+              {/* 加载状态 */}
+              {isLoading && <div className="flex justify-start">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <Bot className="w-4 h-4 text-gray-600" />
+                    </div>
+                    <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{
+                      animationDelay: '0.1s'
+                    }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{
+                      animationDelay: '0.2s'
+                    }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>}
+              
+              <div ref={messagesEndRef} />
+            </div>
+          </div>
+
+          {/* 输入区域 */}
+          <div className="bg-white border-t border-gray-200 px-4 py-3">
+            {/* 图片预览 */}
+            {selectedImages.length > 0 && <div className="mb-3 flex flex-wrap gap-2">
                 {selectedImages.map((image, index) => <div key={index} className="relative">
                     <img src={image.url} alt={image.name} className="w-16 h-16 object-cover rounded-lg" />
-                    <button onClick={() => removeImage(index)} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center">
+                    <button onClick={() => handleImageRemove(index)} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center">
                       <X className="w-3 h-3" />
                     </button>
                   </div>)}
-              </div>
-            </div>}
+              </div>}
 
-          <div className="flex items-end space-x-2">
-            {/* 文本输入 */}
-            <div className="flex-1">
-              <textarea ref={inputRef} value={inputText} onChange={e => setInputText(e.target.value)} onKeyPress={e => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSendText();
-              }
-            }} placeholder="输入您的问题..." className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-purple-500" rows={1} />
+            <div className="flex items-end space-x-2">
+              {/* 文本输入 */}
+              <div className="flex-1">
+                <textarea ref={inputRef} value={inputText} onChange={e => setInputText(e.target.value)} onKeyPress={e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendText();
+                }
+              }} placeholder="输入您的问题..." className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-purple-500" rows={1} />
+              </div>
+
+              {/* 语音录制 */}
+              <button onMouseDown={handleStartRecording} onMouseUp={handleStopRecording} onTouchStart={handleStartRecording} onTouchEnd={handleStopRecording} disabled={isLoading} className={`p-3 rounded-lg transition-colors ${isRecording ? 'bg-red-500 text-white' : 'border border-gray-300 hover:border-purple-500'} disabled:opacity-50`}>
+                {isRecording ? <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    <span className="text-xs">{formatRecordingTime(recordingTime)}</span>
+                  </div> : <Mic className="w-5 h-5 text-gray-600" />}
+              </button>
+
+              {/* 图片上传 */}
+              <button onClick={() => fileInputRef.current?.click()} disabled={isLoading} className="p-3 rounded-lg border border-gray-300 hover:border-purple-500 transition-colors disabled:opacity-50">
+                <ImageIcon className="w-5 h-5 text-gray-600" />
+              </button>
+
+              {/* 拍照 */}
+              <button onClick={handleCameraCapture} disabled={isLoading} className="p-3 rounded-lg border border-gray-300 hover:border-purple-500 transition-colors disabled:opacity-50">
+                <Camera className="w-5 h-5 text-gray-600" />
+              </button>
+
+              {/* 发送按钮 */}
+              <button onClick={handleSendText} disabled={!inputText.trim() && selectedImages.length === 0 || isLoading} className="p-3 rounded-lg bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50 transition-colors">
+                <Send className="w-5 h-5" />
+              </button>
             </div>
 
-            {/* 语音录制 */}
-            <button onClick={isRecording ? stopRecording : startRecording} disabled={isLoading} className={`p-3 rounded-lg transition-colors ${isRecording ? 'bg-red-500 text-white animate-pulse' : 'border border-gray-300 hover:border-purple-500'}`}>
-              {isRecording ? <VolumeX className="w-5 h-5" /> : <Mic className="w-5 h-5 text-gray-600" />}
-            </button>
-
-            {/* 拍照 */}
-            <button onClick={openCamera} disabled={isLoading} className="p-3 rounded-lg border border-gray-300 hover:border-purple-500 transition-colors">
-              <Camera className="w-5 h-5 text-gray-600" />
-            </button>
-
-            {/* 图片上传 */}
-            <button onClick={() => fileInputRef.current?.click()} disabled={isLoading} className="p-3 rounded-lg border border-gray-300 hover:border-purple-500 transition-colors">
-              <ImageIcon className="w-5 h-5 text-gray-600" />
-            </button>
-
-            {/* 发送按钮 */}
-            <button onClick={handleSendText} disabled={!inputText.trim() && selectedImages.length === 0 || isLoading} className="p-3 rounded-lg bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50 transition-colors">
-              <Send className="w-5 h-5" />
-            </button>
+            {/* 隐藏的文件上传输入 */}
+            <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
           </div>
-
-          {/* 隐藏的文件上传输入 */}
-          <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleFileSelect} className="hidden" />
         </div>
       </div>
-
-      {/* 相机弹窗 */}
-      {showCamera && <div className="fixed inset-0 bg-black z-50">
-          <div className="relative h-full">
-            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
-            <canvas ref={canvasRef} className="hidden" />
-            
-            {/* 相机控制栏 */}
-            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4">
-              <div className="flex items-center justify-center space-x-4">
-                <button onClick={closeCamera} className="p-3 bg-white bg-opacity-20 rounded-full">
-                  <X className="w-6 h-6 text-white" />
-                </button>
-                <button onClick={takePhoto} className="p-4 bg-white rounded-full">
-                  <Camera className="w-6 h-6 text-gray-800" />
-                </button>
-                <div className="w-12"></div>
-              </div>
-            </div>
-          </div>
-        </div>}
 
       {/* 历史记录侧边栏 */}
       {showHistory && <div className="fixed inset-0 bg-black/50 z-50">
@@ -643,5 +590,5 @@ export default function AIChat(props) {
         params: {}
       });
     }} />
-    </div>;
+    </>;
 }
