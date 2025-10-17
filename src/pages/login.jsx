@@ -6,8 +6,6 @@ import { Button, Card, CardContent, useToast } from '@/components/ui';
 import { Phone, Lock, Eye, EyeOff, Mail, User, ArrowLeft, CheckCircle, AlertCircle, Shield, Smartphone, MessageCircle } from 'lucide-react';
 
 // @ts-ignore;
-import { useI18n } from '@/lib/i18n';
-// @ts-ignore;
 import { TabBar } from '@/components/TabBar';
 export default function Login(props) {
   const {
@@ -17,9 +15,6 @@ export default function Login(props) {
   const {
     toast
   } = useToast();
-  const {
-    t
-  } = useI18n();
 
   // 状态管理
   const [currentView, setCurrentView] = useState('login'); // login, register, forgot
