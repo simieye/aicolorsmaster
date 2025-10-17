@@ -6,8 +6,6 @@ import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/co
 import { Globe, Search, Check, Star, Download, Upload, Settings, BarChart3, Users, TrendingUp, ChevronRight, Volume2, Eye, Edit, Trash2, Plus, Filter } from 'lucide-react';
 
 // @ts-ignore;
-import { useI18n } from '@/lib/i18n';
-// @ts-ignore;
 import { TabBar } from '@/components/TabBar';
 export default function LanguageSettings(props) {
   const {
@@ -17,9 +15,6 @@ export default function LanguageSettings(props) {
   const {
     toast
   } = useToast();
-  const {
-    t
-  } = useI18n();
 
   // 状态管理
   const [activeTab, setActiveTab] = useState('selection');
