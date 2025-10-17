@@ -3,18 +3,12 @@ import React, { useState, useEffect, useRef } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Send, Bot, Sparkles, Palette, Camera, Mic, Image as ImageIcon, History, Settings, HelpCircle, ChevronDown } from 'lucide-react';
+import { Send, Bot, Sparkles, Palette, Camera, Mic, Image as ImageIcon, History, Settings, HelpCircle, ChevronDown, Volume2, VolumeX, Upload, X, CheckCircle, AlertCircle } from 'lucide-react';
 
 // @ts-ignore;
 import { useI18n } from '@/lib/i18n';
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
-// @ts-ignore;
-import { ChatMessage } from '@/components/ChatMessage';
-// @ts-ignore;
-import { VoiceRecorder } from '@/components/VoiceRecorder';
-// @ts-ignore;
-import { ImageUploader } from '@/components/ImageUploader';
 export default function AIChat(props) {
   const {
     $w,
@@ -35,8 +29,16 @@ export default function AIChat(props) {
   const [showQuickActions, setShowQuickActions] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const [cameraStream, setCameraStream] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
   // 初始化欢迎消息
   useEffect(() => {
@@ -65,6 +67,19 @@ export default function AIChat(props) {
       behavior: 'smooth'
     });
   }, [messages]);
+
+  // 录音计时器
+  useEffect(() => {
+    let interval;
+    if (isRecording) {
+      interval = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+    } else {
+      setRecordingTime(0);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
 
   // 快速操作选项
   const quickActions = [{
@@ -178,23 +193,43 @@ export default function AIChat(props) {
     };
   };
 
-  // 处理语音录制完成
-  const handleVoiceRecorded = async audioData => {
-    setIsLoading(true);
+  // 开始录音
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true
+      });
+      setIsRecording(true);
+      toast({
+        title: "开始录音",
+        description: "正在录制您的语音..."
+      });
+    } catch (error) {
+      toast({
+        title: "录音失败",
+        description: "无法访问麦克风，请检查权限设置",
+        variant: "destructive"
+      });
+    }
+  };
 
-    // 模拟语音识别和AI回复
+  // 停止录音
+  const stopRecording = () => {
+    setIsRecording(false);
+    const voiceMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: `🎤 语音消息 (${formatTime(recordingTime)})`,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, voiceMessage]);
+
+    // 模拟AI回复
     setTimeout(() => {
-      const voiceMessage = {
-        id: Date.now(),
-        type: 'user',
-        content: '🎤 语音消息：我想了解一下今年流行的发色',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, voiceMessage]);
       const botResponse = {
         id: Date.now() + 1,
         type: 'bot',
-        content: '我听到了您的语音！今年特别流行这些色彩：',
+        content: '我听到了您的语音！根据您的需求，我为您推荐了以下色彩方案：',
         colors: [{
           name: '樱花粉',
           hex: '#FFB6C1'
@@ -217,8 +252,87 @@ export default function AIChat(props) {
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botResponse]);
-      setIsLoading(false);
     }, 2000);
+  };
+
+  // 格式化时间
+  const formatTime = seconds => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // 打开相机
+  const openCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'environment'
+        }
+      });
+      setCameraStream(stream);
+      setShowCamera(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      toast({
+        title: "相机打开失败",
+        description: "无法访问相机，请检查权限设置",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // 关闭相机
+  const closeCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
+    setShowCamera(false);
+  };
+
+  // 拍照
+  const takePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0);
+      const imageUrl = canvas.toDataURL('image/jpeg');
+      const photo = {
+        file: null,
+        url: imageUrl,
+        name: `拍照_${Date.now()}.jpg`,
+        type: 'camera'
+      };
+      setSelectedImages(prev => [...prev, photo]);
+      closeCamera();
+      toast({
+        title: "拍照成功",
+        description: "照片已添加到对话中"
+      });
+    }
+  };
+
+  // 处理文件选择
+  const handleFileSelect = event => {
+    const files = Array.from(event.target.files);
+    const newImages = files.map(file => ({
+      file,
+      url: URL.createObjectURL(file),
+      name: file.name,
+      type: 'upload'
+    }));
+    setSelectedImages(prev => [...prev, ...newImages].slice(0, 3));
+  };
+
+  // 删除图片
+  const removeImage = index => {
+    setSelectedImages(prev => prev.filter((_, i) => i !== index));
   };
 
   // 处理快速操作
@@ -305,7 +419,58 @@ export default function AIChat(props) {
 
           {/* 消息列表 */}
           <div className="space-y-4">
-            {messages.map(message => <ChatMessage key={message.id} message={message} onImageClick={handleImageClick} onColorSelect={handleColorSelect} />)}
+            {messages.map(message => <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-xs lg:max-w-md ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                  <div className={`flex items-center space-x-2 mb-1 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    {message.type === 'bot' && <div className="w-6 h-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                        <Bot className="w-3 h-3 text-white" />
+                      </div>}
+                    <span className="text-xs text-gray-500">
+                      {message.timestamp.toLocaleTimeString()}
+                    </span>
+                  </div>
+                  
+                  <div className={`rounded-2xl px-4 py-3 ${message.type === 'user' ? 'bg-purple-600 text-white' : 'bg-white border border-gray-200'}`}>
+                    <p className="text-sm whitespace-pre-line">{message.content}</p>
+                    
+                    {/* 图片展示 */}
+                    {message.images && message.images.length > 0 && <div className="mt-2 grid grid-cols-2 gap-2">
+                        {message.images.map((image, index) => <div key={index} className="relative">
+                            <img src={image.url} alt={image.alt} className="w-full h-24 object-cover rounded-lg cursor-pointer" onClick={() => handleImageClick(image)} />
+                          </div>)}
+                      </div>}
+                    
+                    {/* 色彩推荐 */}
+                    {message.colors && <div className="mt-3">
+                        <p className="text-xs font-medium mb-2">推荐色彩：</p>
+                        <div className="flex flex-wrap gap-2">
+                          {message.colors.map((color, index) => <button key={index} onClick={() => handleColorSelect(color)} className="flex items-center space-x-1 px-2 py-1 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+                              <div className="w-4 h-4 rounded-full border border-gray-300" style={{
+                        backgroundColor: color.hex
+                      }}></div>
+                              <span className="text-xs">{color.name}</span>
+                            </button>)}
+                        </div>
+                      </div>}
+                    
+                    {/* 配方推荐 */}
+                    {message.formulas && <div className="mt-3 space-y-2">
+                        <p className="text-xs font-medium">推荐配方：</p>
+                        {message.formulas.map((formula, index) => <div key={index} className="bg-gray-50 rounded-lg p-2">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-2">
+                                <div className="w-3 h-3 rounded-full" style={{
+                          backgroundColor: formula.hex
+                        }}></div>
+                                <span className="text-xs font-medium">{formula.name}</span>
+                              </div>
+                              <span className="text-xs text-gray-500">匹配度 {formula.match}%</span>
+                            </div>
+                          </div>)}
+                      </div>}
+                  </div>
+                </div>
+              </div>)}
             
             {/* 加载状态 */}
             {isLoading && <div className="flex justify-start">
@@ -335,7 +500,14 @@ export default function AIChat(props) {
         <div className="bg-white border-t border-gray-200 px-4 py-3">
           {/* 图片上传区域 */}
           {selectedImages.length > 0 && <div className="mb-3">
-              <ImageUploader onImagesSelected={setSelectedImages} maxImages={3} />
+              <div className="flex flex-wrap gap-2">
+                {selectedImages.map((image, index) => <div key={index} className="relative">
+                    <img src={image.url} alt={image.name} className="w-16 h-16 object-cover rounded-lg" />
+                    <button onClick={() => removeImage(index)} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>)}
+              </div>
             </div>}
 
           <div className="flex items-end space-x-2">
@@ -350,10 +522,17 @@ export default function AIChat(props) {
             </div>
 
             {/* 语音录制 */}
-            <VoiceRecorder onRecordingComplete={handleVoiceRecorded} disabled={isLoading} />
+            <button onClick={isRecording ? stopRecording : startRecording} disabled={isLoading} className={`p-3 rounded-lg transition-colors ${isRecording ? 'bg-red-500 text-white animate-pulse' : 'border border-gray-300 hover:border-purple-500'}`}>
+              {isRecording ? <VolumeX className="w-5 h-5" /> : <Mic className="w-5 h-5 text-gray-600" />}
+            </button>
+
+            {/* 拍照 */}
+            <button onClick={openCamera} disabled={isLoading} className="p-3 rounded-lg border border-gray-300 hover:border-purple-500 transition-colors">
+              <Camera className="w-5 h-5 text-gray-600" />
+            </button>
 
             {/* 图片上传 */}
-            <button onClick={() => document.getElementById('image-upload').click()} disabled={isLoading} className="p-3 rounded-lg border border-gray-300 hover:border-purple-500 transition-colors disabled:opacity-50">
+            <button onClick={() => fileInputRef.current?.click()} disabled={isLoading} className="p-3 rounded-lg border border-gray-300 hover:border-purple-500 transition-colors">
               <ImageIcon className="w-5 h-5 text-gray-600" />
             </button>
 
@@ -363,19 +542,31 @@ export default function AIChat(props) {
             </button>
           </div>
 
-          {/* 隐藏的图片上传输入 */}
-          <input id="image-upload" type="file" accept="image/*" multiple onChange={e => {
-          const files = Array.from(e.target.files);
-          const newImages = files.map(file => ({
-            file,
-            url: URL.createObjectURL(file),
-            name: file.name,
-            type: 'upload'
-          }));
-          setSelectedImages(prev => [...prev, ...newImages].slice(0, 3));
-        }} className="hidden" />
+          {/* 隐藏的文件上传输入 */}
+          <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleFileSelect} className="hidden" />
         </div>
       </div>
+
+      {/* 相机弹窗 */}
+      {showCamera && <div className="fixed inset-0 bg-black z-50">
+          <div className="relative h-full">
+            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
+            <canvas ref={canvasRef} className="hidden" />
+            
+            {/* 相机控制栏 */}
+            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4">
+              <div className="flex items-center justify-center space-x-4">
+                <button onClick={closeCamera} className="p-3 bg-white bg-opacity-20 rounded-full">
+                  <X className="w-6 h-6 text-white" />
+                </button>
+                <button onClick={takePhoto} className="p-4 bg-white rounded-full">
+                  <Camera className="w-6 h-6 text-gray-800" />
+                </button>
+                <div className="w-12"></div>
+              </div>
+            </div>
+          </div>
+        </div>}
 
       {/* 历史记录侧边栏 */}
       {showHistory && <div className="fixed inset-0 bg-black/50 z-50">

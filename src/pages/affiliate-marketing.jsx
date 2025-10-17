@@ -596,7 +596,7 @@ export default function AffiliateMarketing(props) {
             <CardContent className="p-6">
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-2">团队总人数</p>
-                <p className="text-2xl font-bold text-blue-600">{affiliateData?.teamSize || 0}</p>
+                <p className="text-2xl font-bold text-gray-800">{affiliateData?.teamSize || 0}</p>
                 <p className="text-xs text-green-600">+3 本月新增</p>
               </div>
             </CardContent>

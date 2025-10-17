@@ -3,12 +3,8 @@ import React, { useState, useEffect } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
 // @ts-ignore;
-import { FlaskConical, Droplet, Play, Pause, RotateCcw, Save, Share2, Download, Eye, Settings, Sliders, Zap, TrendingUp } from 'lucide-react';
+import { Beaker, Clock, Zap, Play, Pause, RotateCcw, CheckCircle, Droplets } from 'lucide-react';
 
-// @ts-ignore;
-import { useI18n } from '@/lib/i18n';
-// @ts-ignore;
-import { TabBar } from '@/components/TabBar';
 export default function MixingSimulation(props) {
   const {
     $w,
@@ -17,389 +13,336 @@ export default function MixingSimulation(props) {
   const {
     toast
   } = useToast();
-  const {
-    t
-  } = useI18n();
-
-  // 状态管理
-  const [isSimulating, setIsSimulating] = useState(false);
-  const [simulationProgress, setSimulationProgress] = useState(0);
-  const [selectedColors, setSelectedColors] = useState([]);
-  const [mixingRatio, setMixingRatio] = useState({});
-  const [simulationResult, setSimulationResult] = useState(null);
-  const [simulationHistory, setSimulationHistory] = useState([]);
-
-  // 预设颜色
-  const presetColors = [{
-    id: 1,
-    name: '自然黑',
-    code: '#000000',
-    type: 'base'
+  const [isMixing, setIsMixing] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(50);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const mixingSteps = [{
+    name: '初始化系统',
+    duration: 5,
+    description: 'MixColor Agent 启动硬件设备'
   }, {
-    id: 2,
-    name: '深棕',
-    code: '#4A2C2A',
-    type: 'base'
+    name: '准备原料',
+    duration: 10,
+    description: '12原色气罐准备就绪'
   }, {
-    id: 3,
-    name: '巧克力',
-    code: '#3B2F2F',
-    type: 'base'
+    name: '精确配比',
+    duration: 20,
+    description: '0.2g精度控制，99%挤出率'
   }, {
-    id: 4,
-    name: '铜色',
-    code: '#B87333',
-    type: 'accent'
+    name: '混合搅拌',
+    duration: 10,
+    description: '智能搅拌，确保均匀'
   }, {
-    id: 5,
-    name: '金色',
-    code: '#FFD700',
-    type: 'accent'
-  }, {
-    id: 6,
-    name: '玫瑰金',
-    code: '#B76E79',
-    type: 'accent'
-  }, {
-    id: 7,
-    name: '雾霾蓝',
-    code: '#778899',
-    type: 'trend'
-  }, {
-    id: 8,
-    name: '薄荷绿',
-    code: '#98FB98',
-    type: 'trend'
+    name: '完成出料',
+    duration: 5,
+    description: '染膏调配完成'
   }];
+  const formula = {
+    name: '微潮紫',
+    proportions: {
+      '紫色剂': 60,
+      '漂染霜': 25,
+      '护色素': 10,
+      '营养精华': 5
+    },
+    totalAmount: 100
+  };
+  useEffect(() => {
+    let interval;
+    if (isMixing && !isPaused && !completed) {
+      interval = setInterval(() => {
+        setProgress(prev => {
+          const newProgress = prev + 2;
+          if (newProgress >= 100) {
+            setCompleted(true);
+            setIsMixing(false);
+            return 100;
+          }
+          return newProgress;
+        });
+        setTimeRemaining(prev => {
+          const newTime = Math.max(0, prev - 1);
+          if (newTime === 0) {
+            setCompleted(true);
+            setIsMixing(false);
+          }
+          return newTime;
+        });
 
-  // 添加颜色到混合
-  const addColorToMix = color => {
-    if (selectedColors.find(c => c.id === color.id)) {
-      toast({
-        title: "颜色已存在",
-        description: "该颜色已在混合列表中",
-        variant: "destructive"
-      });
-      return;
+        // 更新当前步骤
+        const stepProgress = 100 / mixingSteps.length;
+        const newStep = Math.min(Math.floor(progress / stepProgress), mixingSteps.length - 1);
+        setCurrentStep(newStep);
+      }, 1000);
     }
-    if (selectedColors.length >= 4) {
-      toast({
-        title: "达到上限",
-        description: "最多只能混合4种颜色",
-        variant: "destructive"
-      });
-      return;
-    }
-    setSelectedColors(prev => [...prev, color]);
-    setMixingRatio(prev => ({
-      ...prev,
-      [color.id]: 25
-    }));
-  };
-
-  // 移除颜色
-  const removeColorFromMix = colorId => {
-    setSelectedColors(prev => prev.filter(c => c.id !== colorId));
-    setMixingRatio(prev => {
-      const newRatio = {
-        ...prev
-      };
-      delete newRatio[colorId];
-      return newRatio;
-    });
-  };
-
-  // 调整混合比例
-  const adjustMixingRatio = (colorId, ratio) => {
-    setMixingRatio(prev => ({
-      ...prev,
-      [colorId]: ratio
-    }));
-  };
-
-  // 开始模拟
-  const startSimulation = async () => {
-    if (selectedColors.length < 2) {
-      toast({
-        title: "颜色不足",
-        description: "请至少选择2种颜色进行混合",
-        variant: "destructive"
-      });
-      return;
-    }
-    setIsSimulating(true);
-    setSimulationProgress(0);
-    try {
-      // 模拟混合过程
-      for (let i = 0; i <= 100; i += 10) {
-        await new Promise(resolve => setTimeout(resolve, 200));
-        setSimulationProgress(i);
-      }
-
-      // 生成模拟结果
-      const mockResult = {
-        id: Date.now(),
-        finalColor: '#8B4513',
-        colorName: '混合棕色',
-        rgb: 'rgb(139, 69, 19)',
-        hsl: 'hsl(30, 76%, 31%)',
-        ingredients: selectedColors.map(color => ({
-          ...color,
-          ratio: mixingRatio[color.id] || 25
-        })),
-        properties: {
-          vibrancy: 75,
-          longevity: 85,
-          coverage: 90,
-          naturalness: 80
-        },
-        recommendations: ['建议在自然光下观察最终效果', '可适当增加暖色调提升自然感', '建议使用护发产品保护发质']
-      };
-      setSimulationResult(mockResult);
-      setSimulationHistory(prev => [mockResult, ...prev.slice(0, 9)]);
-      toast({
-        title: "模拟完成",
-        description: "颜色混合模拟成功"
-      });
-    } catch (error) {
-      toast({
-        title: "模拟失败",
-        description: "请重试",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSimulating(false);
-      setSimulationProgress(0);
-    }
-  };
-
-  // 重置模拟
-  const resetSimulation = () => {
-    setSelectedColors([]);
-    setMixingRatio({});
-    setSimulationResult(null);
-    setSimulationProgress(0);
-    setIsSimulating(false);
-  };
-
-  // 保存模拟结果
-  const saveSimulation = () => {
-    if (!simulationResult) return;
+    return () => clearInterval(interval);
+  }, [isMixing, isPaused, progress, completed]);
+  const startMixing = () => {
+    setIsMixing(true);
+    setIsPaused(false);
+    setProgress(0);
+    setTimeRemaining(50);
+    setCurrentStep(0);
+    setCompleted(false);
     toast({
-      title: "保存成功",
-      description: "模拟结果已保存"
+      title: "调配开始",
+      description: "MixColor Agent 正在执行精准调配"
     });
   };
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
-      <div className="container mx-auto px-4 py-6">
-        {/* 头部 */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">
-            {t('mixingSimulation.title', '混合模拟')}
-          </h1>
-          <p className="text-gray-600">
-            {t('mixingSimulation.subtitle', '虚拟混合颜色，预览染发效果')}
-          </p>
+  const pauseMixing = () => {
+    setIsPaused(!isPaused);
+    toast({
+      title: isPaused ? "继续调配" : "暂停调配",
+      description: isPaused ? "调配已继续" : "调配已暂停"
+    });
+  };
+  const resetMixing = () => {
+    setIsMixing(false);
+    setIsPaused(false);
+    setProgress(0);
+    setTimeRemaining(50);
+    setCurrentStep(0);
+    setCompleted(false);
+    toast({
+      title: "重置完成",
+      description: "调配器已重置到初始状态"
+    });
+  };
+  const formatTime = seconds => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* 页面标题 */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">智能调配模拟</h1>
+          <p className="text-gray-600">MixColor Agent 50秒精准调配，0.2g误差控制</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 颜色选择 */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* 左侧：配方信息 */}
           <div className="lg:col-span-1">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Droplet className="w-5 h-5 mr-2" />
-                  颜色选择
+                  <Beaker className="mr-2" />
+                  当前配方
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {['base', 'accent', 'trend'].map(type => <div key={type}>
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">
-                        {type === 'base' ? '基础色' : type === 'accent' ? '强调色' : '流行色'}
-                      </h3>
-                      <div className="grid grid-cols-2 gap-2">
-                        {presetColors.filter(color => color.type === type).map(color => <button key={color.id} onClick={() => addColorToMix(color)} className={`relative group p-3 rounded-lg border-2 transition-all ${selectedColors.find(c => c.id === color.id) ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-gray-300'}`}>
-                            <div className="w-full h-12 rounded mb-2" style={{
-                        backgroundColor: color.code
-                      }} />
-                            <p className="text-xs font-medium">{color.name}</p>
-                            {selectedColors.find(c => c.id === color.id) && <div className="absolute top-1 right-1 w-4 h-4 bg-purple-600 rounded-full flex items-center justify-center">
-                                <div className="w-2 h-2 bg-white rounded-full" />
-                              </div>}
-                          </button>)}
-                      </div>
-                    </div>)}
+                  <div className="text-center p-4 bg-purple-50 rounded-lg">
+                    <h3 className="font-semibold text-lg">{formula.name}</h3>
+                    <p className="text-sm text-gray-600">总用量: {formula.totalAmount}g</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold mb-3">配方比例</h4>
+                    {Object.entries(formula.proportions).map(([ingredient, percentage]) => <div key={ingredient} className="mb-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm">{ingredient}</span>
+                          <span className="text-sm font-semibold">
+                            {(formula.totalAmount * percentage / 100).toFixed(1)}g
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500" style={{
+                        width: `${percentage}%`
+                      }}></div>
+                        </div>
+                      </div>)}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 控制面板 */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle>控制面板</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {!isMixing && !completed && <Button onClick={startMixing} className="w-full bg-purple-600 hover:bg-purple-700">
+                      <Play className="mr-2 w-4 h-4" />
+                      开始调配
+                    </Button>}
+                  
+                  {isMixing && <Button onClick={pauseMixing} className="w-full bg-yellow-600 hover:bg-yellow-700">
+                      {isPaused ? <>
+                          <Play className="mr-2 w-4 h-4" />
+                          继续
+                        </> : <>
+                          <Pause className="mr-2 w-4 h-4" />
+                          暂停
+                        </>}
+                    </Button>}
+                  
+                  <Button onClick={resetMixing} variant="outline" className="w-full">
+                    <RotateCcw className="mr-2 w-4 h-4" />
+                    重置
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* 混合控制 */}
+          {/* 中间：调配动画 */}
           <div className="lg:col-span-1">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Sliders className="w-5 h-5 mr-2" />
-                  混合控制
+                  <Zap className="mr-2" />
+                  调配状态
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {selectedColors.length === 0 ? <div className="text-center py-8">
-                    <FlaskConical className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">请选择要混合的颜色</p>
-                  </div> : <>
-                    {selectedColors.map(color => <div key={color.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                        <div className="w-8 h-8 rounded" style={{
-                    backgroundColor: color.code
-                  }} />
-                        <div className="flex-1">
-                          <p className="font-medium text-sm">{color.name}</p>
-                          <div className="flex items-center space-x-2">
-                            <input type="range" min="0" max="100" value={mixingRatio[color.id] || 25} onChange={e => adjustMixingRatio(color.id, parseInt(e.target.value))} className="flex-1" />
-                            <span className="text-sm font-mono w-12">{mixingRatio[color.id] || 25}%</span>
-                          </div>
-                        </div>
-                        <button onClick={() => removeColorFromMix(color.id)} className="text-red-500 hover:text-red-700">
-                          ×
-                        </button>
-                      </div>)}
+              <CardContent>
+                <div className="space-y-6">
+                  {/* 时间显示 */}
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-purple-600 mb-2">
+                      {formatTime(timeRemaining)}
+                    </div>
+                    <p className="text-gray-600">剩余时间</p>
+                  </div>
 
-                    <div className="pt-4 border-t">
-                      <div className="flex space-x-2">
-                        <Button onClick={startSimulation} disabled={isSimulating || selectedColors.length < 2} className="flex-1">
-                          {isSimulating ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-                          {isSimulating ? '模拟中...' : '开始模拟'}
-                        </Button>
-                        <Button variant="outline" onClick={resetSimulation}>
-                          <RotateCcw className="w-4 h-4" />
-                        </Button>
+                  {/* 进度条 */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-gray-600">调配进度</span>
+                      <span className="text-sm font-semibold">{progress}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-4">
+                      <div className="bg-gradient-to-r from-purple-600 to-pink-600 h-4 rounded-full transition-all duration-1000" style={{
+                      width: `${progress}%`
+                    }}></div>
+                    </div>
+                  </div>
+
+                  {/* 调配器动画 */}
+                  <div className="relative h-48 bg-gradient-to-b from-purple-100 to-purple-50 rounded-lg overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative">
+                        {/* 调配器主体 */}
+                        <div className="w-32 h-32 bg-white rounded-full shadow-lg flex items-center justify-center">
+                          {isMixing && !isPaused ? <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-purple-600"></div> : completed ? <CheckCircle className="w-16 h-16 text-green-600" /> : <Beaker className="w-16 h-16 text-gray-400" />}
+                        </div>
+                        
+                        {/* 液体动画 */}
+                        {isMixing && <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                            <div className="flex space-x-1">
+                              <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce"></div>
+                              <div className="w-2 h-2 bg-pink-600 rounded-full animate-bounce" style={{
+                            animationDelay: '0.1s'
+                          }}></div>
+                              <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{
+                            animationDelay: '0.2s'
+                          }}></div>
+                            </div>
+                          </div>}
                       </div>
                     </div>
+                    
+                    {/* 状态文字 */}
+                    <div className="absolute bottom-4 left-0 right-0 text-center">
+                      <p className="text-sm font-semibold text-purple-700">
+                        {completed ? '调配完成' : isMixing ? '正在调配...' : '等待开始'}
+                      </p>
+                    </div>
+                  </div>
 
-                    {/* 进度条 */}
-                    {isSimulating && <div className="mt-4">
-                        <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-                          <span>模拟进度</span>
-                          <span>{simulationProgress}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-purple-600 h-2 rounded-full transition-all duration-300" style={{
-                      width: `${simulationProgress}%`
-                    }} />
-                        </div>
-                      </div>}
-                  </>}
+                  {/* 当前步骤 */}
+                  <div>
+                    <h4 className="font-semibold mb-2">当前步骤</h4>
+                    <div className="space-y-2">
+                      {mixingSteps.map((step, index) => <div key={index} className={`p-3 rounded-lg border-2 transition-all ${index === currentStep && isMixing ? 'border-purple-500 bg-purple-50' : index < currentStep ? 'border-green-500 bg-green-50' : 'border-gray-200'}`}>
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-sm">{step.name}</span>
+                            <span className="text-xs text-gray-600">{step.duration}s</span>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-1">{step.description}</p>
+                        </div>)}
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* 模拟结果 */}
+          {/* 右侧：实时数据 */}
           <div className="lg:col-span-1">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Eye className="w-5 h-5 mr-2" />
-                  模拟结果
+                  <Droplets className="mr-2" />
+                  实时数据
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {simulationResult ? <div className="space-y-4">
-                    {/* 最终颜色 */}
-                    <div className="text-center">
-                      <div className="w-24 h-24 rounded-full mx-auto mb-4 shadow-inner" style={{
-                    backgroundColor: simulationResult.finalColor
-                  }} />
-                      <h3 className="font-semibold">{simulationResult.colorName}</h3>
-                      <p className="text-sm text-gray-600">{simulationResult.code}</p>
-                      <p className="text-xs text-gray-500">{simulationResult.rgb}</p>
-                      <p className="text-xs text-gray-500">{simulationResult.hsl}</p>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 p-3 rounded-lg">
+                      <p className="text-xs text-blue-600 mb-1">精度控制</p>
+                      <p className="text-lg font-bold text-blue-700">±0.2g</p>
                     </div>
+                    <div className="bg-green-50 p-3 rounded-lg">
+                      <p className="text-xs text-green-600 mb-1">挤出率</p>
+                      <p className="text-lg font-bold text-green-700">99%</p>
+                    </div>
+                    <div className="bg-purple-50 p-3 rounded-lg">
+                      <p className="text-xs text-purple-600 mb-1">节约成本</p>
+                      <p className="text-lg font-bold text-purple-700">20%+</p>
+                    </div>
+                    <div className="bg-orange-50 p-3 rounded-lg">
+                      <p className="text-xs text-orange-600 mb-1">效率提升</p>
+                      <p className="text-lg font-bold text-orange-700">2x</p>
+                    </div>
+                  </div>
 
-                    {/* 属性评分 */}
-                    <div>
-                      <h4 className="font-medium mb-3">属性评分</h4>
-                      <div className="space-y-2">
-                        {Object.entries(simulationResult.properties).map(([key, value]) => <div key={key} className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600">
-                              {key === 'vibrancy' ? '鲜艳度' : key === 'longevity' ? '持久度' : key === 'coverage' ? '遮盖度' : '自然度'}
-                            </span>
-                            <div className="flex items-center space-x-2">
-                              <div className="w-20 bg-gray-200 rounded-full h-2">
-                                <div className="bg-purple-600 h-2 rounded-full" style={{
-                            width: `${value}%`
-                          }} />
-                              </div>
-                              <span className="text-sm font-medium">{value}%</span>
-                            </div>
-                          </div>)}
+                  <div className="border-t pt-4">
+                    <h4 className="font-semibold mb-3">系统状态</h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">MQTT连接</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">正常</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">硬件状态</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">在线</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">温度监控</span>
+                        <span className="text-sm font-semibold">35.2°C</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">压力监控</span>
+                        <span className="text-sm font-semibold">2.1 bar</span>
                       </div>
                     </div>
+                  </div>
 
-                    {/* 建议 */}
-                    <div>
-                      <h4 className="font-medium mb-3">专业建议</h4>
-                      <div className="space-y-2">
-                        {simulationResult.recommendations.map((rec, index) => <div key={index} className="flex items-start space-x-2">
-                            <div className="w-2 h-2 bg-purple-600 rounded-full mt-2" />
-                            <p className="text-sm text-gray-600">{rec}</p>
-                          </div>)}
+                  {completed && <div className="border-t pt-4">
+                      <div className="bg-gradient-to-r from-green-100 to-blue-100 p-4 rounded-lg">
+                        <h4 className="font-semibold text-green-800 mb-2">调配完成！</h4>
+                        <p className="text-sm text-gray-700 mb-3">
+                          染膏已精准调配完成，可以开始染发流程
+                        </p>
+                        <Button className="w-full bg-green-600 hover:bg-green-700">
+                          <CheckCircle className="mr-2 w-4 h-4" />
+                          开始染发
+                        </Button>
                       </div>
-                    </div>
-
-                    {/* 操作按钮 */}
-                    <div className="flex space-x-2 pt-4 border-t">
-                      <Button variant="outline" size="sm" onClick={saveSimulation} className="flex-1">
-                        <Save className="w-4 h-4 mr-1" />
-                        保存
-                      </Button>
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <Share2 className="w-4 h-4 mr-1" />
-                        分享
-                      </Button>
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <Download className="w-4 h-4 mr-1" />
-                        下载
-                      </Button>
-                    </div>
-                  </div> : <div className="text-center py-8">
-                    <Eye className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">等待模拟结果</p>
-                  </div>}
+                    </div>}
+                </div>
               </CardContent>
             </Card>
           </div>
         </div>
-
-        {/* 历史记录 */}
-        {simulationHistory.length > 0 && <div className="mt-8">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2" />
-                  模拟历史
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                  {simulationHistory.map(result => <div key={result.id} className="text-center">
-                      <div className="w-16 h-16 rounded-full mx-auto mb-2 shadow-inner" style={{
-                  backgroundColor: result.finalColor
-                }} />
-                      <p className="text-xs font-medium">{result.colorName}</p>
-                    </div>)}
-                </div>
-              </CardContent>
-            </Card>
-          </div>}
       </div>
-
-      {/* 底部导航 */}
-      <TabBar currentPage="mixing-simulation" onPageChange={pageId => {
-      $w.utils.navigateTo({
-        pageId: pageId,
-        params: {}
-      });
-    }} />
     </div>;
 }

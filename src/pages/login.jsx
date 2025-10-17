@@ -1,9 +1,9 @@
 // @ts-ignore;
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 // @ts-ignore;
-import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
+import { Button, Card, CardContent, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Phone, MessageSquare, Eye, EyeOff, User, Lock, ArrowRight, Wechat, Shield, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import { Eye, EyeOff, Phone, Lock, MessageCircle, User, ArrowRight, Shield, CheckCircle } from 'lucide-react';
 
 // @ts-ignore;
 import { useI18n } from '@/lib/i18n';
@@ -24,16 +24,14 @@ export default function Login(props) {
   // 状态管理
   const [loginType, setLoginType] = useState('phone'); // phone, wechat
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [countdown, setCountdown] = useState(0);
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [loginStep, setLoginStep] = useState('input'); // input, verify
-  const inputRefs = useRef([]);
+  const [countdown, setCountdown] = useState(0);
+  const [verificationCode, setVerificationCode] = useState('');
 
-  // 验证码倒计时
+  // 倒计时效果
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
@@ -41,46 +39,17 @@ export default function Login(props) {
     }
   }, [countdown]);
 
-  // 手机号验证
-  const validatePhone = phone => {
-    const phoneRegex = /^1[3-9]\d{9}$/;
-    return phoneRegex.test(phone);
-  };
-
-  // 发送验证码
-  const sendVerificationCode = async () => {
-    if (!validatePhone(phoneNumber)) {
-      toast({
-        title: "手机号格式错误",
-        description: "请输入正确的手机号码",
-        variant: "destructive"
-      });
-      return;
-    }
-    setIsLoading(true);
-    try {
-      // 模拟发送验证码
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setCountdown(60);
-      setLoginStep('verify');
-      toast({
-        title: "验证码已发送",
-        description: `验证码已发送至 ${phoneNumber}`
-      });
-    } catch (error) {
-      toast({
-        title: "发送失败",
-        description: "验证码发送失败，请重试",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // 手机号登录
+  // 处理手机号登录
   const handlePhoneLogin = async () => {
-    if (!validatePhone(phoneNumber)) {
+    if (!phoneNumber || !password) {
+      toast({
+        title: "请填写完整信息",
+        description: "手机号和密码不能为空",
+        variant: "destructive"
+      });
+      return;
+    }
+    if (!/^1[3-9]\d{9}$/.test(phoneNumber)) {
       toast({
         title: "手机号格式错误",
         description: "请输入正确的手机号码",
@@ -88,29 +57,13 @@ export default function Login(props) {
       });
       return;
     }
-    if (loginStep === 'input') {
-      await sendVerificationCode();
-      return;
-    }
-    if (verificationCode.length !== 6) {
-      toast({
-        title: "验证码错误",
-        description: "请输入6位验证码",
-        variant: "destructive"
-      });
-      return;
-    }
     setIsLoading(true);
-    try {
-      // 模拟登录验证
-      await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // 保存登录状态
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userInfo', JSON.stringify({
-        phone: phoneNumber,
-        loginTime: new Date().toISOString()
-      }));
+    // 模拟登录请求
+    setTimeout(() => {
+      setIsLoading(false);
+
+      // 模拟登录成功
       toast({
         title: "登录成功",
         description: "欢迎回来！"
@@ -121,235 +74,216 @@ export default function Login(props) {
         pageId: 'home',
         params: {}
       });
-    } catch (error) {
-      toast({
-        title: "登录失败",
-        description: "验证码错误或已过期",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    }, 1500);
   };
 
-  // 微信登录
-  const handleWechatLogin = async () => {
-    setIsLoading(true);
-    try {
-      // 模拟微信授权
-      await new Promise(resolve => setTimeout(resolve, 2000));
+  // 处理微信登录
+  const handleWechatLogin = () => {
+    toast({
+      title: "微信登录",
+      description: "正在跳转到微信授权页面..."
+    });
 
-      // 保存登录状态
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userInfo', JSON.stringify({
-        loginType: 'wechat',
-        nickname: '微信用户',
-        avatar: 'https://via.placeholder.com/100',
-        loginTime: new Date().toISOString()
-      }));
+    // 模拟微信登录
+    setTimeout(() => {
       toast({
         title: "登录成功",
         description: "微信登录成功！"
       });
-
-      // 跳转到首页
       $w.utils.navigateTo({
         pageId: 'home',
         params: {}
       });
-    } catch (error) {
+    }, 2000);
+  };
+
+  // 发送验证码
+  const sendVerificationCode = () => {
+    if (!phoneNumber) {
       toast({
-        title: "登录失败",
-        description: "微信授权失败，请重试",
+        title: "请输入手机号",
+        description: "手机号不能为空",
         variant: "destructive"
       });
-    } finally {
+      return;
+    }
+    if (!/^1[3-9]\d{9}$/.test(phoneNumber)) {
+      toast({
+        title: "手机号格式错误",
+        description: "请输入正确的手机号码",
+        variant: "destructive"
+      });
+      return;
+    }
+    setCountdown(60);
+    toast({
+      title: "验证码已发送",
+      description: "验证码已发送到您的手机"
+    });
+  };
+
+  // 处理验证码登录
+  const handleCodeLogin = () => {
+    if (!phoneNumber || !verificationCode) {
+      toast({
+        title: "请填写完整信息",
+        description: "手机号和验证码不能为空",
+        variant: "destructive"
+      });
+      return;
+    }
+    setIsLoading(true);
+    setTimeout(() => {
       setIsLoading(false);
-    }
+      toast({
+        title: "登录成功",
+        description: "验证码登录成功！"
+      });
+      $w.utils.navigateTo({
+        pageId: 'home',
+        params: {}
+      });
+    }, 1500);
   };
-
-  // 验证码输入处理
-  const handleCodeInput = (index, value) => {
-    if (value.length > 1) return;
-    const newCode = verificationCode.split('');
-    newCode[index] = value;
-    setVerificationCode(newCode.join(''));
-
-    // 自动跳转到下一个输入框
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  // 验证码键盘事件处理
-  const handleCodeKeyDown = (index, e) => {
-    if (e.key === 'Backspace' && !verificationCode[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
-  // 粘贴验证码
-  const handleCodePaste = e => {
-    e.preventDefault();
-    const pastedData = e.clipboardData.getData('text').slice(0, 6);
-    if (/^\d+$/.test(pastedData)) {
-      setVerificationCode(pastedData);
-      inputRefs.current[pastedData.length - 1]?.focus();
-    }
-  };
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* 头部 */}
+  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md">
+        {/* Logo和标题 */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">{t('common.appName', 'AI染发色彩大师')}</h1>
-          <p className="text-gray-600">{t('login.subtitle', '智能色彩识别，专业配方生成')}</p>
+          <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+            <Shield className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">欢迎回来</h1>
+          <p className="text-gray-600">登录您的账户，开启色彩之旅</p>
         </div>
 
         {/* 登录卡片 */}
-        <div className="max-w-md mx-auto">
-          <Card className="shadow-xl border-0">
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl font-bold text-gray-800">
-                {loginStep === 'input' ? t('login.title', '登录账号') : t('login.verifyTitle', '输入验证码')}
-              </CardTitle>
-              <p className="text-gray-600 mt-2">
-                {loginStep === 'input' ? t('login.subtitle', '请选择登录方式') : t('login.verifySubtitle', '验证码已发送至您的手机')}
-              </p>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              {loginStep === 'input' ? <>
-                  {/* 登录方式选择 */}
-                  <div className="flex space-x-2 p-1 bg-gray-100 rounded-lg">
-                    <button onClick={() => setLoginType('phone')} className={`flex-1 py-2 px-4 rounded-md transition-all ${loginType === 'phone' ? 'bg-white shadow-sm text-purple-600 font-medium' : 'text-gray-600'}`}>
-                        <Phone className="w-4 h-4 inline mr-2" />
-                        {t('login.phoneLogin', '手机登录')}
-                      </button>
-                    <button onClick={() => setLoginType('wechat')} className={`flex-1 py-2 px-4 rounded-md transition-all ${loginType === 'wechat' ? 'bg-white shadow-sm text-purple-600 font-medium' : 'text-gray-600'}`}>
-                        <Wechat className="w-4 h-4 inline mr-2" />
-                        {t('login.wechatLogin', '微信登录')}
-                      </button>
-                  </div>
-
-                  {/* 手机号登录 */}
-                  {loginType === 'phone' && <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t('login.phoneNumber', '手机号码')}
-                        </label>
-                        <div className="relative">
-                          <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                          <input type="tel" placeholder={t('login.phonePlaceholder', '请输入手机号码')} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" maxLength={11} />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t('login.password', '密码')}
-                        </label>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                          <input type={showPassword ? 'text' : 'password'} placeholder={t('login.passwordPlaceholder', '请输入密码')} value={password} onChange={e => setPassword(e.target.value)} className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
-                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <label className="flex items-center">
-                          <input type="checkbox" checked={agreedToTerms} onChange={e => setAgreedToTerms(e.target.checked)} className="mr-2" />
-                          <span className="text-sm text-gray-600">
-                            {t('login.agreeTerms', '我已阅读并同意')}
-                            <a href="#" className="text-purple-600 hover:underline ml-1">
-                              {t('login.termsOfService', '服务条款')}
-                            </a>
-                            {t('login.and', '和')}
-                            <a href="#" className="text-purple-600 hover:underline ml-1">
-                              {t('login.privacyPolicy', '隐私政策')}
-                            </a>
-                          </span>
-                        </label>
-                      </div>
-
-                      <Button onClick={handlePhoneLogin} disabled={!agreedToTerms || isLoading} className="w-full py-3 bg-purple-600 hover:bg-purple-700">
-                        {isLoading ? <RefreshCw className="w-5 h-5 animate-spin mr-2" /> : <ArrowRight className="w-5 h-5 mr-2" />}
-                        {t('login.sendCode', '发送验证码')}
-                      </Button>
-
-                      <div className="text-center">
-                        <a href="#" className="text-purple-600 hover:underline text-sm">
-                          {t('login.forgotPassword', '忘记密码？')}
-                        </a>
-                      </div>
-                    </div>}
-
-                  {/* 微信登录 */}
-                  {loginType === 'wechat' && <div className="space-y-4">
-                      <div className="text-center py-8">
-                        <div className="w-24 h-24 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                          <Wechat className="w-12 h-12 text-white" />
-                        </div>
-                        <p className="text-gray-600 mb-6">
-                          {t('login.wechatDesc', '使用微信账号快速登录')}
-                        </p>
-                        <Button onClick={handleWechatLogin} disabled={isLoading} className="w-full py-3 bg-green-500 hover:bg-green-600">
-                          {isLoading ? <RefreshCw className="w-5 h-5 animate-spin mr-2" /> : <Wechat className="w-5 h-5 mr-2" />}
-                          {t('login.wechatLoginBtn', '微信登录')}
-                        </Button>
-                      </div>
-                    </div>}
-                </> : <>
-                  {/* 验证码输入 */}
-                  <div className="space-y-4">
-                    <div className="text-center mb-6">
-                      <p className="text-gray-600">
-                        {t('login.codeSentTo', '验证码已发送至')} {phoneNumber}
-                      </p>
-                    </div>
-
-                    <div className="flex justify-center space-x-2" onPaste={handleCodePaste}>
-                      {[0, 1, 2, 3, 4, 5].map(index => <input key={index} ref={el => inputRefs.current[index] = el} type="text" maxLength={1} value={verificationCode[index] || ''} onChange={e => handleCodeInput(index, e.target.value)} onKeyDown={e => handleCodeKeyDown(index, e)} className="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500" />)}
-                    </div>
-
-                    <div className="text-center">
-                      <button onClick={sendVerificationCode} disabled={countdown > 0} className="text-purple-600 hover:underline text-sm">
-                        {countdown > 0 ? t('login.resendCode', '重新发送') + ` (${countdown}s)` : t('login.resendCode', '重新发送')}
-                      </button>
-                    </div>
-
-                    <Button onClick={handlePhoneLogin} disabled={verificationCode.length !== 6 || isLoading} className="w-full py-3 bg-purple-600 hover:bg-purple-700">
-                      {isLoading ? <RefreshCw className="w-5 h-5 animate-spin mr-2" /> : <CheckCircle className="w-5 h-5 mr-2" />}
-                      {t('login.verifyLogin', '验证登录')}
-                    </Button>
-
-                    <button onClick={() => setLoginStep('input')} className="w-full py-2 text-gray-600 hover:text-gray-800 text-sm">
-                      {t('login.backToLogin', '返回登录')}
-                    </button>
-                  </div>
-                </>}
-
-              {/* 注册链接 */}
-              {loginStep === 'input' && <div className="text-center pt-4 border-t border-gray-200">
-                  <p className="text-gray-600">
-                    {t('login.noAccount', '还没有账号？')}
-                    <button onClick={() => $w.utils.navigateTo({
-                  pageId: 'register',
-                  params: {}
-                })} className="text-purple-600 hover:underline ml-1 font-medium">
-                      {t('login.registerNow', '立即注册')}
-                    </button>
-                  </p>
-                </div>}
-            </CardContent>
-          </Card>
-
-          {/* 安全提示 */}
-          <div className="mt-6 text-center">
-            <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-              <Shield className="w-4 h-4" />
-              <span>{t('login.securityTip', '您的信息将被安全加密保护')}</span>
+        <Card className="shadow-lg">
+          <CardContent className="p-6">
+            {/* 登录方式切换 */}
+            <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
+              <button onClick={() => setLoginType('phone')} className={`flex-1 py-2 px-4 rounded-md transition-all ${loginType === 'phone' ? 'bg-white shadow-sm text-purple-600' : 'text-gray-600'}`}>
+                <Phone className="w-4 h-4 inline mr-2" />
+                手机号登录
+              </button>
+              <button onClick={() => setLoginType('wechat')} className={`flex-1 py-2 px-4 rounded-md transition-all ${loginType === 'wechat' ? 'bg-white shadow-sm text-purple-600' : 'text-gray-600'}`}>
+                <MessageCircle className="w-4 h-4 inline mr-2" />
+                微信登录
+              </button>
             </div>
+
+            {/* 手机号登录表单 */}
+            {loginType === 'phone' && <div className="space-y-4">
+                {/* 手机号输入 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    手机号
+                  </label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="请输入手机号" className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                  </div>
+                </div>
+
+                {/* 登录方式切换 */}
+                <div className="flex space-x-2">
+                  <button onClick={() => setLoginType('phone-password')} className={`flex-1 py-2 px-4 rounded-lg border ${loginType === 'phone-password' ? 'border-purple-500 bg-purple-50 text-purple-700' : 'border-gray-300 text-gray-600'}`}>
+                    密码登录
+                  </button>
+                  <button onClick={() => setLoginType('phone-code')} className={`flex-1 py-2 px-4 rounded-lg border ${loginType === 'phone-code' ? 'border-purple-500 bg-purple-50 text-purple-700' : 'border-gray-300 text-gray-600'}`}>
+                    验证码登录
+                  </button>
+                </div>
+
+                {/* 密码登录 */}
+                {loginType === 'phone-password' && <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      密码
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="请输入密码" className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                      <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>}
+
+                {/* 验证码登录 */}
+                {loginType === 'phone-code' && <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      验证码
+                    </label>
+                    <div className="flex space-x-2">
+                      <input type="text" value={verificationCode} onChange={e => setVerificationCode(e.target.value)} placeholder="请输入验证码" className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                      <button onClick={sendVerificationCode} disabled={countdown > 0} className={`px-4 py-3 rounded-lg font-medium transition-colors ${countdown > 0 ? 'bg-gray-200 text-gray-500' : 'bg-purple-600 text-white hover:bg-purple-700'}`}>
+                        {countdown > 0 ? `${countdown}s` : '获取验证码'}
+                      </button>
+                    </div>
+                  </div>}
+
+                {/* 记住我和忘记密码 */}
+                {loginType === 'phone-password' && <div className="flex items-center justify-between">
+                    <label className="flex items-center">
+                      <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500" />
+                      <span className="ml-2 text-sm text-gray-600">记住我</span>
+                    </label>
+                    <button onClick={() => $w.utils.navigateTo({
+                pageId: 'forgot-password',
+                params: {}
+              })} className="text-sm text-purple-600 hover:text-purple-700">
+                      忘记密码？
+                    </button>
+                  </div>}
+
+                {/* 登录按钮 */}
+                <Button onClick={loginType === 'phone-password' ? handlePhoneLogin : handleCodeLogin} disabled={isLoading} className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium transition-colors disabled:opacity-50">
+                  {isLoading ? '登录中...' : '登录'}
+                </Button>
+              </div>}
+
+            {/* 微信登录 */}
+            {loginType === 'wechat' && <div className="text-center py-8">
+                <div className="w-32 h-32 bg-green-500 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                  <MessageCircle className="w-16 h-16 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">微信快速登录</h3>
+                <p className="text-gray-600 mb-6">使用微信账号一键登录</p>
+                <Button onClick={handleWechatLogin} className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-medium">
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  微信登录
+                </Button>
+              </div>}
+
+            {/* 分割线 */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">或</span>
+              </div>
+            </div>
+
+            {/* 注册链接 */}
+            <div className="text-center">
+              <p className="text-gray-600">
+                还没有账户？
+                <button onClick={() => $w.utils.navigateTo({
+                pageId: 'register',
+                params: {}
+              })} className="text-purple-600 hover:text-purple-700 font-medium">
+                  立即注册
+                </button>
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 安全提示 */}
+        <div className="mt-6 text-center">
+          <div className="flex items-center justify-center text-sm text-gray-500">
+            <Shield className="w-4 h-4 mr-1" />
+            <span>您的信息将被安全加密保护</span>
           </div>
         </div>
       </div>

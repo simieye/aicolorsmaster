@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Eye, EyeOff, Phone, Lock, User, Mail, ArrowRight, Shield, CheckCircle, AlertCircle } from 'lucide-react';
+import { Phone, Lock, ArrowLeft, ArrowRight, Shield, CheckCircle, AlertCircle, Mail, EyeOff, Eye } from 'lucide-react';
 
 // @ts-ignore;
 import { useI18n } from '@/lib/i18n';
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
-export default function Register(props) {
+export default function ForgotPassword(props) {
   const {
     $w,
     style
@@ -22,16 +22,13 @@ export default function Register(props) {
   } = useI18n();
 
   // 状态管理
-  const [step, setStep] = useState(1); // 1: 手机号验证, 2: 设置密码, 3: 完善信息
+  const [step, setStep] = useState(1); // 1: 验证手机号, 2: 重置密码, 3: 完成
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [agreed, setAgreed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -46,18 +43,18 @@ export default function Register(props) {
 
   // 密码强度检测
   useEffect(() => {
-    if (password.length === 0) {
+    if (newPassword.length === 0) {
       setPasswordStrength(0);
-    } else if (password.length < 6) {
+    } else if (newPassword.length < 6) {
       setPasswordStrength(1);
-    } else if (password.length < 10 && /[0-9]/.test(password) && /[a-zA-Z]/.test(password)) {
+    } else if (newPassword.length < 10 && /[0-9]/.test(newPassword) && /[a-zA-Z]/.test(newPassword)) {
       setPasswordStrength(2);
-    } else if (password.length >= 10 && /[0-9]/.test(password) && /[a-zA-Z]/.test(password) && /[^a-zA-Z0-9]/.test(password)) {
+    } else if (newPassword.length >= 10 && /[0-9]/.test(newPassword) && /[a-zA-Z]/.test(newPassword) && /[^a-zA-Z0-9]/.test(newPassword)) {
       setPasswordStrength(3);
     } else {
       setPasswordStrength(2);
     }
-  }, [password]);
+  }, [newPassword]);
 
   // 发送验证码
   const sendVerificationCode = () => {
@@ -110,22 +107,22 @@ export default function Register(props) {
       setStep(2);
       toast({
         title: "验证成功",
-        description: "手机号验证通过"
+        description: "手机号验证通过，请设置新密码"
       });
     }, 1500);
   };
 
-  // 设置密码
-  const setPasswordStep = () => {
-    if (!password || !confirmPassword) {
+  // 重置密码
+  const resetPassword = () => {
+    if (!newPassword || !confirmPassword) {
       toast({
         title: "请填写完整信息",
-        description: "密码和确认密码不能为空",
+        description: "新密码和确认密码不能为空",
         variant: "destructive"
       });
       return;
     }
-    if (password.length < 6) {
+    if (newPassword.length < 6) {
       toast({
         title: "密码强度不足",
         description: "密码长度至少6位",
@@ -133,7 +130,7 @@ export default function Register(props) {
       });
       return;
     }
-    if (password !== confirmPassword) {
+    if (newPassword !== confirmPassword) {
       toast({
         title: "密码不一致",
         description: "两次输入的密码不一致",
@@ -141,39 +138,23 @@ export default function Register(props) {
       });
       return;
     }
-    setStep(3);
-  };
-
-  // 完成注册
-  const completeRegister = () => {
-    if (!username) {
-      toast({
-        title: "请输入用户名",
-        description: "用户名不能为空",
-        variant: "destructive"
-      });
-      return;
-    }
-    if (!agreed) {
-      toast({
-        title: "请同意用户协议",
-        description: "请阅读并同意用户协议和隐私政策",
-        variant: "destructive"
-      });
-      return;
-    }
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      setStep(3);
       toast({
-        title: "注册成功",
-        description: "欢迎加入AI染发色彩大师！"
-      });
-      $w.utils.navigateTo({
-        pageId: 'home',
-        params: {}
+        title: "密码重置成功",
+        description: "您的密码已成功重置"
       });
     }, 1500);
+  };
+
+  // 返回登录
+  const backToLogin = () => {
+    $w.utils.navigateTo({
+      pageId: 'login',
+      params: {}
+    });
   };
 
   // 获取密码强度文本
@@ -212,13 +193,13 @@ export default function Register(props) {
         {/* Logo和标题 */}
         <div className="text-center mb-8">
           <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-            <User className="w-10 h-10 text-white" />
+            <Lock className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">创建账户</h1>
-          <p className="text-gray-600">加入我们，开启智能染发之旅</p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">重置密码</h1>
+          <p className="text-gray-600">找回您的账户密码</p>
         </div>
 
-        {/* 注册卡片 */}
+        {/* 重置密码卡片 */}
         <Card className="shadow-lg">
           <CardContent className="p-6">
             {/* 步骤指示器 */}
@@ -231,10 +212,11 @@ export default function Register(props) {
                 </div>)}
             </div>
 
-            {/* 步骤1: 手机号验证 */}
+            {/* 步骤1: 验证手机号 */}
             {step === 1 && <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-4">验证手机号</h3>
+                  <p className="text-sm text-gray-600 mb-4">请输入您的手机号以接收验证码</p>
                 </div>
 
                 {/* 手机号输入 */}
@@ -261,32 +243,39 @@ export default function Register(props) {
                   </div>
                 </div>
 
-                {/* 下一步按钮 */}
-                <Button onClick={verifyPhone} disabled={isLoading} className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium transition-colors disabled:opacity-50">
-                  {isLoading ? '验证中...' : '下一步'}
-                </Button>
+                {/* 按钮组 */}
+                <div className="flex space-x-3">
+                  <Button onClick={backToLogin} variant="outline" className="flex-1">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    返回登录
+                  </Button>
+                  <Button onClick={verifyPhone} disabled={isLoading} className="flex-1 bg-purple-600 hover:bg-purple-700">
+                    {isLoading ? '验证中...' : '下一步'}
+                  </Button>
+                </div>
               </div>}
 
-            {/* 步骤2: 设置密码 */}
+            {/* 步骤2: 重置密码 */}
             {step === 2 && <div className="space-y-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">设置密码</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">设置新密码</h3>
+                  <p className="text-sm text-gray-600 mb-4">请设置您的新密码</p>
                 </div>
 
-                {/* 密码输入 */}
+                {/* 新密码 */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    密码
+                    新密码
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="请输入密码" className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                    <input type={showPassword ? 'text' : 'password'} value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="请输入新密码" className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
                     <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                   {/* 密码强度指示器 */}
-                  {password && <div className="mt-2">
+                  {newPassword && <div className="mt-2">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-600">密码强度</span>
                         <span className={`font-medium ${passwordStrength === 1 ? 'text-red-600' : passwordStrength === 2 ? 'text-yellow-600' : 'text-green-600'}`}>
@@ -304,11 +293,11 @@ export default function Register(props) {
                 {/* 确认密码 */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    确认密码
+                    确认新密码
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="请再次输入密码" className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                    <input type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="请再次输入新密码" className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
                     <button onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
                       {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -333,80 +322,46 @@ export default function Register(props) {
                 {/* 按钮组 */}
                 <div className="flex space-x-3">
                   <Button onClick={() => setStep(1)} variant="outline" className="flex-1">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
                     上一步
                   </Button>
-                  <Button onClick={setPasswordStep} className="flex-1 bg-purple-600 hover:bg-purple-700">
-                    下一步
+                  <Button onClick={resetPassword} disabled={isLoading} className="flex-1 bg-purple-600 hover:bg-purple-700">
+                    {isLoading ? '重置中...' : '重置密码'}
                   </Button>
                 </div>
               </div>}
 
-            {/* 步骤3: 完善信息 */}
-            {step === 3 && <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">完善信息</h3>
+            {/* 步骤3: 完成 */}
+            {step === 3 && <div className="text-center py-8">
+                <div className="w-16 h-16 bg-green-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
-
-                {/* 用户名 */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    用户名
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="请输入用户名" className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">密码重置成功！</h3>
+                <p className="text-gray-600 mb-6">您的密码已成功重置，现在可以使用新密码登录</p>
+                
+                <div className="bg-green-50 p-4 rounded-lg mb-6">
+                  <div className="flex items-center text-green-800">
+                    <Shield className="w-5 h-5 mr-2" />
+                    <span className="text-sm">为了您的账户安全，建议定期更换密码</span>
                   </div>
                 </div>
 
-                {/* 邮箱（可选） */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    邮箱（可选）
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="请输入邮箱地址" className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
-                  </div>
-                </div>
-
-                {/* 用户协议 */}
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <label className="flex items-start">
-                    <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 mt-0.5" />
-                    <span className="ml-2 text-sm text-gray-700">
-                      我已阅读并同意
-                      <button className="text-purple-600 hover:text-purple-700 mx-1">用户协议</button>
-                      和
-                      <button className="text-purple-600 hover:text-purple-700 mx-1">隐私政策</button>
-                    </span>
-                  </label>
-                </div>
-
-                {/* 按钮组 */}
-                <div className="flex space-x-3">
-                  <Button onClick={() => setStep(2)} variant="outline" className="flex-1">
-                    上一步
-                  </Button>
-                  <Button onClick={completeRegister} disabled={isLoading} className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50">
-                    {isLoading ? '注册中...' : '完成注册'}
-                  </Button>
-                </div>
+                <Button onClick={backToLogin} className="w-full bg-purple-600 hover:bg-purple-700">
+                  <ArrowRight className="w-4 h-4 mr-2" />
+                  返回登录
+                </Button>
               </div>}
-
-            {/* 登录链接 */}
-            <div className="text-center mt-6 pt-6 border-t">
-              <p className="text-gray-600">
-                已有账户？
-                <button onClick={() => $w.utils.navigateTo({
-                pageId: 'login',
-                params: {}
-              })} className="text-purple-600 hover:text-purple-700 font-medium">
-                  立即登录
-                </button>
-              </p>
-            </div>
           </CardContent>
         </Card>
+
+        {/* 其他选项 */}
+        {step === 1 && <div className="mt-6 text-center">
+            <p className="text-gray-600 mb-4">其他找回方式</p>
+            <button className="text-purple-600 hover:text-purple-700 font-medium flex items-center mx-auto">
+              <Mail className="w-4 h-4 mr-2" />
+              邮箱找回
+            </button>
+          </div>}
 
         {/* 安全提示 */}
         <div className="mt-6 text-center">

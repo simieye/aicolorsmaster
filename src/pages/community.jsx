@@ -1,14 +1,10 @@
 // @ts-ignore;
 import React, { useState, useEffect } from 'react';
 // @ts-ignore;
-import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Users, MessageSquare, Heart, Star, TrendingUp, Search, Filter, Plus, Camera, Image as ImageIcon, Calendar, Eye, Share2, Bookmark, MoreHorizontal } from 'lucide-react';
+import { Users, Heart, MessageCircle, Share2, TrendingUp, Star, Camera, Filter } from 'lucide-react';
 
-// @ts-ignore;
-import { useI18n } from '@/lib/i18n';
-// @ts-ignore;
-import { TabBar } from '@/components/TabBar';
 export default function Community(props) {
   const {
     $w,
@@ -17,368 +13,266 @@ export default function Community(props) {
   const {
     toast
   } = useToast();
-  const {
-    t
-  } = useI18n();
-
-  // 状态管理
-  const [activeTab, setActiveTab] = useState('posts');
   const [posts, setPosts] = useState([]);
-  const [tutorials, setTutorials] = useState([]);
-  const [challenges, setChallenges] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [isLoading, setIsLoading] = useState(false);
-
-  // 分类选项
-  const categories = [{
-    value: 'all',
-    label: '全部'
-  }, {
-    value: 'trending',
-    label: '热门'
-  }, {
-    value: 'tutorial',
-    label: '教程'
-  }, {
-    value: 'showcase',
-    label: '作品展示'
-  }, {
-    value: 'question',
-    label: '问答'
-  }, {
-    value: 'discussion',
-    label: '讨论'
-  }];
-
-  // 模拟数据
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('trending');
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // 模拟帖子数据
-        setPosts([{
-          id: 1,
-          title: '春季玫瑰金染发教程分享',
-          author: {
-            name: '色彩达人小美',
-            avatar: 'https://picsum.photos/seed/user1/50/50',
-            level: '高级造型师'
-          },
-          content: '今天给大家分享一款超美的春季玫瑰金染发教程，这个颜色特别适合白皙皮肤...',
-          images: ['https://picsum.photos/seed/post1/300/200', 'https://picsum.photos/seed/post2/300/200'],
-          tags: ['玫瑰金', '春季', '教程'],
-          stats: {
-            likes: 234,
-            comments: 45,
-            views: 1234,
-            shares: 23
-          },
-          createdAt: '2小时前',
-          isLiked: false,
-          isBookmarked: false
-        }, {
-          id: 2,
-          title: '新手必看：家庭染发注意事项',
-          author: {
-            name: '美发师小李',
-            avatar: 'https://picsum.photos/seed/user2/50/50',
-            level: '专业美发师'
-          },
-          content: '很多朋友想在家自己染发，但是又担心效果不好。今天整理了一些家庭染发的注意事项...',
-          images: ['https://picsum.photos/seed/post3/300/200'],
-          tags: ['新手', '家庭染发', '注意事项'],
-          stats: {
-            likes: 189,
-            comments: 32,
-            views: 892,
-            shares: 15
-          },
-          createdAt: '5小时前',
-          isLiked: true,
-          isBookmarked: false
-        }, {
-          id: 3,
-          title: '2024年流行色彩趋势预测',
-          author: {
-            name: '时尚造型师Tony',
-            avatar: 'https://picsum.photos/seed/user3/50/50',
-            level: '资深造型师'
-          },
-          content: '根据国际色彩机构的预测，2024年将会有哪些流行色彩趋势呢？让我来为大家详细分析...',
-          images: ['https://picsum.photos/seed/post4/300/200', 'https://picsum.photos/seed/post5/300/200', 'https://picsum.photos/seed/post6/300/200'],
-          tags: ['2024', '流行趋势', '色彩预测'],
-          stats: {
-            likes: 456,
-            comments: 78,
-            views: 2341,
-            shares: 67
-          },
-          createdAt: '1天前',
-          isLiked: false,
-          isBookmarked: true
-        }]);
-
-        // 模拟教程数据
-        setTutorials([{
-          id: 1,
-          title: '渐变染发完整教程',
-          author: '专业美发学院',
-          duration: '45分钟',
-          difficulty: '中等',
-          rating: 4.8,
-          students: 1234,
-          image: 'https://picsum.photos/seed/tutorial1/300/200'
-        }, {
-          id: 2,
-          title: '挑染技巧入门指南',
-          author: '美发培训中心',
-          duration: '30分钟',
-          difficulty: '简单',
-          rating: 4.6,
-          students: 892,
-          image: 'https://picsum.photos/seed/tutorial2/300/200'
-        }]);
-
-        // 模拟挑战数据
-        setChallenges([{
-          id: 1,
-          title: '春季色彩创作挑战',
-          description: '以"春日花开"为主题创作染发作品',
-          prize: '价值500元染发产品套装',
-          participants: 234,
-          daysLeft: 7,
-          image: 'https://picsum.photos/seed/challenge1/300/200'
-        }, {
-          id: 2,
-          title: '复古风格重现挑战',
-          description: '重现经典复古染发风格',
-          prize: '专业美发工具套装',
-          participants: 156,
-          daysLeft: 14,
-          image: 'https://picsum.photos/seed/challenge2/300/200'
-        }]);
-      } catch (error) {
-        toast({
-          title: "加载失败",
-          description: "请检查网络连接",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadData();
-  }, [toast]);
-
-  // 点赞处理
+    // 模拟加载社区数据
+    const mockPosts = [{
+      id: 1,
+      author: '雅米',
+      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+      role: '资深发型师',
+      title: '微潮紫染发教程分享',
+      beforeImage: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300&h=400&fit=crop',
+      afterImage: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=300&h=400&fit=crop',
+      color: '微潮紫',
+      category: '微潮色系',
+      likes: 2341,
+      comments: 156,
+      shares: 89,
+      rating: 4.8,
+      description: '使用Agentic HairAI调配的微潮紫，效果很棒！客户非常满意',
+      tags: ['微潮紫', '春季流行', '显白'],
+      kolRating: '很OK',
+      createdAt: '2小时前'
+    }, {
+      id: 2,
+      author: 'Tony老师',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+      role: '创意总监',
+      title: '樱花粉日系风格',
+      beforeImage: 'https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=300&h=400&fit=crop',
+      afterImage: 'https://images.unsplash.com/photo-1562352263-3e9a9c35b4a3?w=300&h=400&fit=crop',
+      color: '樱花粉',
+      category: '日系色',
+      likes: 1892,
+      comments: 98,
+      shares: 67,
+      rating: 4.9,
+      description: '日系樱花粉搭配空气刘海，甜美可爱风',
+      tags: ['樱花粉', '日系', '甜美'],
+      kolRating: '推荐',
+      createdAt: '5小时前'
+    }, {
+      id: 3,
+      author: 'Lisa造型师',
+      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
+      role: '高级造型师',
+      title: '薄荷绿夏日清新',
+      beforeImage: 'https://images.unsplash.com/photo-1559598351-9ca162612bc0?w=300&h=400&fit=crop',
+      afterImage: 'https://images.unsplash.com/photo-1534534573828-da4a8dc8b49c?w=300&h=400&fit=crop',
+      color: '薄荷绿',
+      category: '潮色系',
+      likes: 1567,
+      comments: 76,
+      shares: 45,
+      rating: 4.7,
+      description: '夏日薄荷绿，清爽自然，回头率超高',
+      tags: ['薄荷绿', '夏日', '清新'],
+      kolRating: '不错',
+      createdAt: '1天前'
+    }];
+    setPosts(mockPosts);
+  }, []);
   const handleLike = postId => {
-    setPosts(prev => prev.map(post => post.id === postId ? {
+    setPosts(posts.map(post => post.id === postId ? {
       ...post,
-      isLiked: !post.isLiked,
-      stats: {
-        ...post.stats,
-        likes: post.isLiked ? post.stats.likes - 1 : post.stats.likes + 1
-      }
+      likes: post.likes + 1
     } : post));
-  };
-
-  // 收藏处理
-  const handleBookmark = postId => {
-    setPosts(prev => prev.map(post => post.id === postId ? {
-      ...post,
-      isBookmarked: !post.isBookmarked
-    } : post));
-  };
-
-  // 分享处理
-  const handleShare = postId => {
     toast({
-      title: "分享成功",
-      description: "链接已复制到剪贴板"
+      title: "点赞成功",
+      description: "您已为这个作品点赞"
     });
   };
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
-      <div className="container mx-auto px-4 py-6">
-        {/* 头部 */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">
-            {t('community.title', '社区')}
-          </h1>
-          <p className="text-gray-600">
-            {t('community.subtitle', '分享作品，交流经验，共同成长')}
-          </p>
+  const handleShare = post => {
+    toast({
+      title: "分享成功",
+      description: `已分享${post.author}的作品到社区`
+    });
+  };
+  const filteredPosts = posts.filter(post => {
+    if (filterCategory === 'all') return true;
+    return post.category === filterCategory;
+  });
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    if (sortBy === 'trending') return b.likes - a.likes;
+    if (sortBy === 'rating') return b.rating - a.rating;
+    if (sortBy === 'recent') return 0; // 简化处理
+    return 0;
+  });
+  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* 页面标题 */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">社区分享</h1>
+          <p className="text-gray-600">Share Agent 连接1000万美业者，展示您的创意作品</p>
         </div>
 
-        {/* 搜索和筛选 */}
-        <div className="mb-6 flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input type="text" placeholder="搜索帖子、教程或用户..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+        {/* 筛选和排序 */}
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="flex-1">
+            <Select value={filterCategory} onValueChange={setFilterCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="选择色系" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部分类</SelectItem>
+                <SelectItem value="日系色">日系色</SelectItem>
+                <SelectItem value="潮色系">潮色系</SelectItem>
+                <SelectItem value="微潮色系">微潮色系</SelectItem>
+                <SelectItem value="生活色系">生活色系</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <div className="flex gap-2">
-            <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-              {categories.map(category => <option key={category.value} value={category.value}>
-                  {category.label}
-                </option>)}
-            </select>
-            <Button variant="outline">
-              <Filter className="w-4 h-4 mr-2" />
-              筛选
-            </Button>
+          <div className="flex-1">
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger>
+                <SelectValue placeholder="排序方式" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="trending">热门推荐</SelectItem>
+                <SelectItem value="rating">评分最高</SelectItem>
+                <SelectItem value="recent">最新发布</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button className="bg-purple-600 hover:bg-purple-700">
+            <Camera className="mr-2 w-4 h-4" />
+            发布作品
+          </Button>
+        </div>
+
+        {/* 统计信息 */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <Users className="w-8 h-8 text-purple-600 mr-3" />
+              <div>
+                <p className="text-2xl font-bold">1000万+</p>
+                <p className="text-sm text-gray-600">美业者</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <Heart className="w-8 h-8 text-red-500 mr-3" />
+              <div>
+                <p className="text-2xl font-bold">50万+</p>
+                <p className="text-sm text-gray-600">作品</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <TrendingUp className="w-8 h-8 text-green-600 mr-3" />
+              <div>
+                <p className="text-2xl font-bold">33%</p>
+                <p className="text-sm text-gray-600">复购提升</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="flex items-center">
+              <Star className="w-8 h-8 text-yellow-500 mr-3" />
+              <div>
+                <p className="text-2xl font-bold">4.8</p>
+                <p className="text-sm text-gray-600">平均评分</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* 标签页 */}
-        <div className="mb-6">
-          <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-            {[{
-            id: 'posts',
-            name: '帖子',
-            icon: MessageSquare
-          }, {
-            id: 'tutorials',
-            name: '教程',
-            icon: Star
-          }, {
-            id: 'challenges',
-            name: '挑战',
-            icon: TrendingUp
-          }].map(tab => {
-            const Icon = tab.icon;
-            return <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex-1 flex items-center justify-center py-2 px-4 rounded-md transition-all ${activeTab === tab.id ? 'bg-white shadow-sm text-purple-600 font-medium' : 'text-gray-600'}`}>
-                  <Icon className="w-4 h-4 mr-2" />
-                  {tab.name}
-                </button>;
-          })}
-          </div>
-        </div>
-
-        {/* 内容区域 */}
-        {activeTab === 'posts' && <div className="space-y-6">
-            {posts.map(post => <Card key={post.id}>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <img src={post.author.avatar} alt={post.author.name} className="w-10 h-10 rounded-full" />
-                      <div>
-                        <p className="font-medium">{post.author.name}</p>
-                        <p className="text-sm text-gray-600">{post.author.level} · {post.createdAt}</p>
-                      </div>
+        {/* 作品展示 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortedPosts.map(post => <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              {/* 作者信息 */}
+              <div className="p-4 pb-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <img src={post.avatar} alt={post.author} className="w-10 h-10 rounded-full mr-3" />
+                    <div>
+                      <p className="font-semibold">{post.author}</p>
+                      <p className="text-xs text-gray-600">{post.role}</p>
                     </div>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <h3 className="font-semibold mb-2">{post.title}</h3>
-                  <p className="text-gray-600 mb-4">{post.content}</p>
-                  
-                  {/* 图片 */}
-                  {post.images.length > 0 && <div className={`grid gap-2 mb-4 ${post.images.length === 1 ? 'grid-cols-1' : post.images.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
-                      {post.images.map((image, index) => <img key={index} src={image} alt={`${post.title} ${index + 1}`} className="w-full h-48 object-cover rounded-lg" />)}
-                    </div>}
-                  
-                  {/* 标签 */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {post.tags.map(tag => <span key={tag} className="px-3 py-1 bg-purple-100 text-purple-600 text-sm rounded-full">
-                        {tag}
-                      </span>)}
-                  </div>
-                  
-                  {/* 互动按钮 */}
-                  <div className="flex items-center justify-between pt-4 border-t">
-                    <div className="flex items-center space-x-4">
-                      <button onClick={() => handleLike(post.id)} className={`flex items-center space-x-1 ${post.isLiked ? 'text-red-500' : 'text-gray-600'} hover:text-red-500`}>
-                        <Heart className={`w-5 h-5 ${post.isLiked ? 'fill-current' : ''}`} />
-                        <span className="text-sm">{post.stats.likes}</span>
-                      </button>
-                      <button className="flex items-center space-x-1 text-gray-600 hover:text-purple-600">
-                        <MessageSquare className="w-5 h-5" />
-                        <span className="text-sm">{post.stats.comments}</span>
-                      </button>
-                      <button onClick={() => handleShare(post.id)} className="flex items-center space-x-1 text-gray-600 hover:text-purple-600">
-                        <Share2 className="w-5 h-5" />
-                        <span className="text-sm">{post.stats.shares}</span>
-                      </button>
+                  <div className="text-right">
+                    <div className="flex items-center text-yellow-500">
+                      <Star className="w-4 h-4 fill-current" />
+                      <span className="text-sm ml-1">{post.rating}</span>
                     </div>
-                    <button onClick={() => handleBookmark(post.id)} className={`flex items-center space-x-1 ${post.isBookmarked ? 'text-purple-600' : 'text-gray-600'} hover:text-purple-600`}>
-                      <Bookmark className={`w-5 h-5 ${post.isBookmarked ? 'fill-current' : ''}`} />
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>)}
-          </div>}
-
-        {activeTab === 'tutorials' && <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tutorials.map(tutorial => <Card key={tutorial.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative">
-                  <img src={tutorial.image} alt={tutorial.title} className="w-full h-48 object-cover" />
-                  <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-sm">
-                    {tutorial.duration}
+                    <p className="text-xs text-gray-600">{post.createdAt}</p>
                   </div>
                 </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold mb-2">{tutorial.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{tutorial.author}</p>
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center space-x-2">
-                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                      <span>{tutorial.rating}</span>
-                    </div>
-                    <span className="text-gray-600">{tutorial.students} 学生</span>
-                  </div>
-                  <div className="mt-3">
-                    <span className={`px-2 py-1 text-xs rounded ${tutorial.difficulty === '简单' ? 'bg-green-100 text-green-600' : tutorial.difficulty === '中等' ? 'bg-yellow-100 text-yellow-600' : 'bg-red-100 text-red-600'}`}>
-                      {tutorial.difficulty}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>)}
-          </div>}
+              </div>
 
-        {activeTab === 'challenges' && <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {challenges.map(challenge => <Card key={challenge.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <img src={challenge.image} alt={challenge.title} className="w-full h-48 object-cover" />
-                <CardContent className="p-4">
-                  <h3 className="font-semibold mb-2">{challenge.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{challenge.description}</p>
-                  <div className="flex items-center justify-between text-sm mb-3">
-                    <div className="flex items-center space-x-2">
-                      <Users className="w-4 h-4 text-purple-600" />
-                      <span>{challenge.participants} 参与者</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Calendar className="w-4 h-4 text-orange-600" />
-                      <span>{challenge.daysLeft} 天后结束</span>
+              {/* 对比图片 */}
+              <div className="relative h-64">
+                <div className="absolute inset-0 flex">
+                  <div className="w-1/2 relative">
+                    <img src={post.beforeImage} alt="染发前" className="w-full h-full object-cover" />
+                    <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                      染发前
                     </div>
                   </div>
-                  <div className="bg-purple-50 p-3 rounded-lg mb-3">
-                    <p className="text-sm font-medium text-purple-800">奖品</p>
-                    <p className="text-sm text-purple-600">{challenge.prize}</p>
+                  <div className="w-1/2 relative">
+                    <img src={post.afterImage} alt="染发后" className="w-full h-full object-cover" />
+                    <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                      染发后
+                    </div>
                   </div>
-                  <Button className="w-full">
-                    参与挑战
-                  </Button>
-                </CardContent>
-              </Card>)}
-          </div>}
+                </div>
+                <div className="absolute top-2 left-2 bg-purple-600 text-white px-3 py-1 rounded-full text-sm">
+                  {post.color}
+                </div>
+              </div>
 
-        {/* 发布按钮 */}
-        <button className="fixed bottom-24 right-6 w-14 h-14 bg-purple-600 text-white rounded-full shadow-lg hover:bg-purple-700 transition-colors flex items-center justify-center">
-          <Plus className="w-6 h-6" />
-        </button>
+              {/* 内容 */}
+              <CardContent className="p-4">
+                <h3 className="font-semibold mb-2">{post.title}</h3>
+                <p className="text-sm text-gray-600 mb-3">{post.description}</p>
+                
+                {/* 标签 */}
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {post.tags.map((tag, index) => <span key={index} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                      #{tag}
+                    </span>)}
+                </div>
+
+                {/* KOL评价 */}
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-3 rounded-lg mb-3">
+                  <div className="flex items-center">
+                    <Star className="w-4 h-4 text-yellow-600 mr-2" />
+                    <span className="text-sm font-semibold">KOL评价：</span>
+                    <span className="text-sm text-orange-600 ml-1">"{post.kolRating}"</span>
+                  </div>
+                </div>
+
+                {/* 互动按钮 */}
+                <div className="flex items-center justify-between pt-3 border-t">
+                  <button onClick={() => handleLike(post.id)} className="flex items-center text-gray-600 hover:text-red-500 transition-colors">
+                    <Heart className="w-4 h-4 mr-1" />
+                    <span className="text-sm">{post.likes}</span>
+                  </button>
+                  <button className="flex items-center text-gray-600 hover:text-blue-500 transition-colors">
+                    <MessageCircle className="w-4 h-4 mr-1" />
+                    <span className="text-sm">{post.comments}</span>
+                  </button>
+                  <button onClick={() => handleShare(post)} className="flex items-center text-gray-600 hover:text-green-500 transition-colors">
+                    <Share2 className="w-4 h-4 mr-1" />
+                    <span className="text-sm">{post.shares}</span>
+                  </button>
+                </div>
+              </CardContent>
+            </Card>)}
+        </div>
+
+        {/* 加载更多 */}
+        <div className="text-center mt-8">
+          <Button variant="outline" className="px-8">
+            加载更多作品
+          </Button>
+        </div>
       </div>
-
-      {/* 底部导航 */}
-      <TabBar currentPage="community" onPageChange={pageId => {
-      $w.utils.navigateTo({
-        pageId: pageId,
-        params: {}
-      });
-    }} />
     </div>;
 }
