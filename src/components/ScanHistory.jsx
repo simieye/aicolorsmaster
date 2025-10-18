@@ -1,266 +1,231 @@
 // @ts-ignore;
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 // @ts-ignore;
-import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
+import { Search, Filter, Clock, QrCode, Barcode, Trash2, Eye, Calendar, Tag } from 'lucide-react';
 // @ts-ignore;
-import { Search, Filter, Clock, Link, Tag, Trash2, Share2, Eye, Calendar, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui';
 
 export function ScanHistory({
-  onScanSelect,
-  onClose
+  history,
+  onDeleteItem,
+  selectedLanguage
 }) {
-  const {
-    toast
-  } = useToast();
-  const [history, setHistory] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
-  const [sortBy, setSortBy] = useState('time');
-  useEffect(() => {
-    loadHistory();
-  }, []);
-  const loadHistory = () => {
-    const savedHistory = localStorage.getItem('scanHistory');
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
-    } else {
-      // 模拟历史数据
-      const mockHistory = [{
-        id: 1,
-        raw: 'https://aihair.com/product/12345',
-        type: 'product',
-        data: {
-          url: 'https://aihair.com/product/12345',
-          productId: '12345',
-          type: 'product'
-        },
-        timestamp: new Date('2024-01-15T10:30:00'),
-        title: '微潮紫染发剂',
-        description: '热门产品 - 微潮紫色系'
-      }, {
-        id: 2,
-        raw: 'https://aihair.com/promo/spring2024',
-        type: 'promotion',
-        data: {
-          url: 'https://aihair.com/promo/spring2024',
-          promoCode: 'spring2024',
-          type: 'promotion'
-        },
-        timestamp: new Date('2024-01-14T15:20:00'),
-        title: '春季促销活动',
-        description: '限时优惠 - 全场8折'
-      }, {
-        id: 3,
-        raw: 'AIHAIR-PRODUCT-001',
-        type: 'product',
-        data: {
-          code: 'AIHAIR-PRODUCT-001',
-          productId: '001',
-          type: 'product'
-        },
-        timestamp: new Date('2024-01-13T09:15:00'),
-        title: '樱花粉染发剂',
-        description: '新品推荐 - 日系色系'
-      }, {
-        id: 4,
-        raw: 'https://aihair.com/user/invite?code=ABC123',
-        type: 'invite',
-        data: {
-          url: 'https://aihair.com/user/invite?code=ABC123',
-          inviteCode: 'ABC123',
-          type: 'invite'
-        },
-        timestamp: new Date('2024-01-12T14:45:00'),
-        title: '邀请码',
-        description: '用户邀请 - ABC123'
-      }];
-      setHistory(mockHistory);
+  const [filterDate, setFilterDate] = useState('all');
+  const getText = key => {
+    const texts = {
+      'zh-CN': {
+        searchPlaceholder: '搜索扫码记录...',
+        filterByType: '按类型筛选',
+        filterByDate: '按日期筛选',
+        allTypes: '全部类型',
+        allDates: '全部日期',
+        today: '今天',
+        yesterday: '昨天',
+        thisWeek: '本周',
+        thisMonth: '本月',
+        qrCode: '二维码',
+        barcode: '条形码',
+        dataMatrix: 'Data Matrix',
+        actions: '操作',
+        view: '查看',
+        delete: '删除',
+        noHistory: '暂无扫码记录',
+        startFirstScan: '开始您的第一次扫码',
+        scanTime: '扫码时间',
+        scanContent: '扫码内容'
+      },
+      'en-US': {
+        searchPlaceholder: 'Search scan records...',
+        filterByType: 'Filter by Type',
+        filterByDate: 'Filter by Date',
+        allTypes: 'All Types',
+        allDates: 'All Dates',
+        today: 'Today',
+        yesterday: 'Yesterday',
+        thisWeek: 'This Week',
+        thisMonth: 'This Month',
+        qrCode: 'QR Code',
+        barcode: 'Barcode',
+        dataMatrix: 'Data Matrix',
+        actions: 'Actions',
+        view: 'View',
+        delete: 'Delete',
+        noHistory: 'No scan records',
+        startFirstScan: 'Start your first scan',
+        scanTime: 'Scan Time',
+        scanContent: 'Scan Content'
+      },
+      'ja-JP': {
+        searchPlaceholder: 'スキャン記録を検索...',
+        filterByType: 'タイプで絞り込み',
+        filterByDate: '日付で絞り込み',
+        allTypes: 'すべてのタイプ',
+        allDates: 'すべての日付',
+        today: '今日',
+        yesterday: '昨日',
+        thisWeek: '今週',
+        thisMonth: '今月',
+        qrCode: 'QRコード',
+        barcode: 'バーコード',
+        dataMatrix: 'データマトリックス',
+        actions: 'アクション',
+        view: '表示',
+        delete: '削除',
+        noHistory: 'スキャン記録がありません',
+        startFirstScan: '最初のスキャンを開始',
+        scanTime: 'スキャン時間',
+        scanContent: 'スキャン内容'
+      },
+      'ko-KR': {
+        searchPlaceholder: '스캔 기록 검색...',
+        filterByType: '유형별 필터',
+        filterByDate: '날짜별 필터',
+        allTypes: '모든 유형',
+        allDates: '모든 날짜',
+        today: '오늘',
+        yesterday: '어제',
+        thisWeek: '이번 주',
+        thisMonth: '이번 달',
+        qrCode: 'QR코드',
+        barcode: '바코드',
+        dataMatrix: '데이터 매트릭스',
+        actions: '작업',
+        view: '보기',
+        delete: '삭제',
+        noHistory: '스캔 기록이 없습니다',
+        startFirstScan: '첫 번째 스캔을 시작하세요',
+        scanTime: '스캔 시간',
+        scanContent: '스캔 내용'
+      }
+    };
+    return texts[selectedLanguage]?.[key] || texts['zh-CN'][key];
+  };
+  const filteredHistory = useMemo(() => {
+    let filtered = history;
+
+    // 搜索过滤
+    if (searchTerm) {
+      filtered = filtered.filter(item => item.content.toLowerCase().includes(searchTerm.toLowerCase()));
     }
-  };
-  const saveHistory = newHistory => {
-    localStorage.setItem('scanHistory', JSON.stringify(newHistory));
-    setHistory(newHistory);
-  };
-  const deleteHistoryItem = id => {
-    const newHistory = history.filter(item => item.id !== id);
-    saveHistory(newHistory);
-    toast({
-      title: "删除成功",
-      description: "已删除扫描记录"
-    });
-  };
-  const clearAllHistory = () => {
-    if (window.confirm('确定要清空所有扫描记录吗？')) {
-      saveHistory([]);
-      toast({
-        title: "清空成功",
-        description: "已清空所有扫描记录"
-      });
+
+    // 类型过滤
+    if (filterType !== 'all') {
+      filtered = filtered.filter(item => item.type === filterType);
     }
-  };
-  const shareHistoryItem = item => {
-    if (navigator.share) {
-      navigator.share({
-        title: item.title || '扫描结果',
-        text: item.description || item.raw,
-        url: item.data.url || item.raw
+
+    // 日期过滤
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const thisWeek = new Date(today);
+    thisWeek.setDate(thisWeek.getDate() - 7);
+    const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    if (filterDate === 'today') {
+      filtered = filtered.filter(item => new Date(item.timestamp) >= today);
+    } else if (filterDate === 'yesterday') {
+      filtered = filtered.filter(item => {
+        const date = new Date(item.timestamp);
+        return date >= yesterday && date < today;
       });
-    } else {
-      navigator.clipboard.writeText(item.raw);
-      toast({
-        title: "复制成功",
-        description: "已复制到剪贴板"
-      });
+    } else if (filterDate === 'thisWeek') {
+      filtered = filtered.filter(item => new Date(item.timestamp) >= thisWeek);
+    } else if (filterDate === 'thisMonth') {
+      filtered = filtered.filter(item => new Date(item.timestamp) >= thisMonth);
     }
-  };
+    return filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  }, [history, searchTerm, filterType, filterDate]);
   const getTypeIcon = type => {
     switch (type) {
-      case 'product':
-        return <Tag className="w-4 h-4 text-purple-600" />;
-      case 'promotion':
-        return <TrendingUp className="w-4 h-4 text-green-600" />;
-      case 'invite':
-        return <Link className="w-4 h-4 text-blue-600" />;
+      case 'qr':
+        return <QrCode className="w-4 h-4" />;
+      case 'barcode':
+        return <Barcode className="w-4 h-4" />;
       default:
-        return <Link className="w-4 h-4 text-gray-600" />;
+        return <Tag className="w-4 h-4" />;
     }
   };
-  const getTypeLabel = type => {
-    switch (type) {
-      case 'product':
-        return '产品';
-      case 'promotion':
-        return '促销';
-      case 'invite':
-        return '邀请';
-      default:
-        return '其他';
-    }
-  };
-  const formatDate = date => {
+  const formatTime = timestamp => {
+    const date = new Date(timestamp);
     const now = new Date();
-    const diff = now - date;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor(diff / (1000 * 60));
-    if (days > 0) {
-      return `${days}天前`;
-    } else if (hours > 0) {
-      return `${hours}小时前`;
-    } else if (minutes > 0) {
-      return `${minutes}分钟前`;
-    } else {
-      return '刚刚';
-    }
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    if (diffMins < 1) return '刚刚';
+    if (diffMins < 60) return `${diffMins}分钟前`;
+    if (diffHours < 24) return `${diffHours}小时前`;
+    if (diffDays < 7) return `${diffDays}天前`;
+    return date.toLocaleDateString();
   };
-  const filteredHistory = history.filter(item => {
-    const matchesSearch = item.raw.toLowerCase().includes(searchTerm.toLowerCase()) || item.title && item.title.toLowerCase().includes(searchTerm.toLowerCase()) || item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterType === 'all' || item.type === filterType;
-    return matchesSearch && matchesFilter;
-  }).sort((a, b) => {
-    switch (sortBy) {
-      case 'time':
-        return new Date(b.timestamp) - new Date(a.timestamp);
-      case 'type':
-        return a.type.localeCompare(b.type);
-      default:
-        return 0;
-    }
-  });
-  return <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
-        {/* 头部 */}
-        <div className="p-4 border-b border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">扫描历史</h2>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              ✕
-            </Button>
-          </div>
-
-          {/* 搜索和筛选 */}
-          <div className="flex space-x-2">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input type="text" placeholder="搜索扫描记录..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
-            </div>
-            
-            <select value={filterType} onChange={e => setFilterType(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-              <option value="all">全部类型</option>
-              <option value="product">产品</option>
-              <option value="promotion">促销</option>
-              <option value="invite">邀请</option>
-            </select>
-
-            <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-              <option value="time">按时间</option>
-              <option value="type">按类型</option>
-            </select>
-          </div>
+  if (history.length === 0) {
+    return <div className="text-center py-12">
+        <Clock className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+        <h3 className="text-lg font-medium text-gray-600 mb-2">{getText('noHistory')}</h3>
+        <p className="text-gray-500">{getText('startFirstScan')}</p>
+      </div>;
+  }
+  return <div className="space-y-4">
+      {/* 搜索和筛选 */}
+      <div className="space-y-3">
+        {/* 搜索框 */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input type="text" placeholder={getText('searchPlaceholder')} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
 
-        {/* 历史记录列表 */}
-        <div className="flex-1 overflow-y-auto p-4">
-          {filteredHistory.length === 0 ? <div className="text-center py-8">
-              <Clock className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-500">暂无扫描记录</p>
-            </div> : <div className="space-y-3">
-              {filteredHistory.map(item => <Card key={item.id} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          {getTypeIcon(item.type)}
-                          <span className="text-sm font-medium text-gray-600">
-                            {getTypeLabel(item.type)}
-                          </span>
-                          <span className="text-xs text-gray-400">
-                            {formatDate(new Date(item.timestamp))}
-                          </span>
-                        </div>
-                        
-                        {item.title && <h4 className="font-medium text-gray-800 mb-1">
-                            {item.title}
-                          </h4>}
-                        
-                        {item.description && <p className="text-sm text-gray-600 mb-2">
-                            {item.description}
-                          </p>}
-                        
-                        <div className="text-xs text-gray-500 font-mono bg-gray-50 p-2 rounded break-all">
-                          {item.raw}
-                        </div>
-                      </div>
-                      
-                      <div className="flex space-x-1 ml-4">
-                        <Button variant="ghost" size="sm" onClick={() => onScanSelect && onScanSelect(item)} className="text-blue-600 hover:text-blue-800">
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={() => shareHistoryItem(item)} className="text-green-600 hover:text-green-800">
-                          <Share2 className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={() => deleteHistoryItem(item.id)} className="text-red-600 hover:text-red-800">
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>)}
-            </div>}
-        </div>
+        {/* 筛选器 */}
+        <div className="flex space-x-3">
+          <select value={filterType} onChange={e => setFilterType(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <option value="all">{getText('allTypes')}</option>
+            <option value="qr">{getText('qrCode')}</option>
+            <option value="barcode">{getText('barcode')}</option>
+            <option value="datamatrix">{getText('dataMatrix')}</option>
+          </select>
 
-        {/* 底部操作 */}
-        {history.length > 0 && <div className="p-4 border-t border-gray-200">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">
-                共 {filteredHistory.length} 条记录
-              </span>
-              <Button variant="outline" size="sm" onClick={clearAllHistory} className="text-red-600 border-red-600 hover:bg-red-50">
-                清空历史
-              </Button>
-            </div>
-          </div>}
+          <select value={filterDate} onChange={e => setFilterDate(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <option value="all">{getText('allDates')}</option>
+            <option value="today">{getText('today')}</option>
+            <option value="yesterday">{getText('yesterday')}</option>
+            <option value="thisWeek">{getText('thisWeek')}</option>
+            <option value="thisMonth">{getText('thisMonth')}</option>
+          </select>
+        </div>
       </div>
+
+      {/* 历史记录列表 */}
+      <div className="space-y-2">
+        {filteredHistory.map((item, index) => <div key={index} className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center mb-2">
+                  {getTypeIcon(item.type)}
+                  <span className="ml-2 text-sm font-medium text-gray-600">
+                    {item.type.toUpperCase()}
+                  </span>
+                  <span className="ml-auto text-sm text-gray-500">
+                    {formatTime(item.timestamp)}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-800 truncate">{item.content}</p>
+              </div>
+              
+              <div className="flex space-x-2 ml-4">
+                <Button size="sm" variant="ghost" className="text-blue-600 hover:text-blue-800">
+                  <Eye className="w-4 h-4" />
+                </Button>
+                <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-800" onClick={() => onDeleteItem(index)}>
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>)}
+      </div>
+
+      {filteredHistory.length === 0 && <div className="text-center py-8">
+          <p className="text-gray-500">没有找到匹配的记录</p>
+        </div>}
     </div>;
 }
-export default ScanHistory;
