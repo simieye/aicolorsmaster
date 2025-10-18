@@ -1,14 +1,16 @@
 // @ts-ignore;
 import React, { useState, useEffect } from 'react';
 // @ts-ignore;
-import { Home, Package, Bot, Users, User, BarChart3, TrendingUp, ShoppingCart, Star, Clock, Eye, Heart, MessageSquare, Settings, LogOut, Bell, Search, Filter, Grid, List, Store } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, Button, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
+import { Home, Package, Bot, Users, TrendingUp, Star, ShoppingCart, Eye, Heart, MessageCircle, Share2, BarChart3, Zap, Shield, Award } from 'lucide-react';
 
 // @ts-ignore;
-import { TabBar } from '@/components/TabBar';
-// @ts-ignore;
 import { useAuth } from '@/components/AuthProvider';
+// @ts-ignore;
+import { useData } from '@/components/DataManager';
+// @ts-ignore;
+import { TabBar } from '@/components/TabBar';
 export default function HomePage(props) {
   const {
     $w,
@@ -16,391 +18,326 @@ export default function HomePage(props) {
   } = props;
   const {
     user,
-    logout,
-    hasPermission
+    isAuthenticated
   } = useAuth();
+  const {
+    products,
+    formulas,
+    colors,
+    loading
+  } = useData();
   const {
     toast
   } = useToast();
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [popularFormulas, setPopularFormulas] = useState([]);
+  const [trendingColors, setTrendingColors] = useState([]);
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalFormulas: 0,
     totalColors: 0,
-    totalStores: 0
+    totalUsers: 0
   });
-  const [recentProducts, setRecentProducts] = useState([]);
-  const [popularFormulas, setPopularFormulas] = useState([]);
-  const [recentColors, setRecentColors] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState('grid');
 
   // 加载数据
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
+    if (!loading) {
+      // 设置特色产品
+      setFeaturedProducts(products.slice(0, 3));
 
-        // 加载统计数据
-        const [productsResult, formulasResult, colorsResult, storesResult] = await Promise.all([$w.cloud.callDataSource({
-          dataSourceName: 'products',
-          methodName: 'wedaGetRecordsV2',
-          params: {
-            select: {
-              $master: true
-            },
-            getCount: true,
-            pageSize: 1
-          }
-        }), $w.cloud.callDataSource({
-          dataSourceName: 'formulas',
-          methodName: 'wedaGetRecordsV2',
-          params: {
-            select: {
-              $master: true
-            },
-            getCount: true,
-            pageSize: 1
-          }
-        }), $w.cloud.callDataSource({
-          dataSourceName: 'colors',
-          methodName: 'wedaGetRecordsV2',
-          params: {
-            select: {
-              $master: true
-            },
-            getCount: true,
-            pageSize: 1
-          }
-        }), $w.cloud.callDataSource({
-          dataSourceName: 'stores',
-          methodName: 'wedaGetRecordsV2',
-          params: {
-            select: {
-              $master: true
-            },
-            getCount: true,
-            pageSize: 1
-          }
-        })]);
-        setStats({
-          totalProducts: productsResult.total || 0,
-          totalFormulas: formulasResult.total || 0,
-          totalColors: colorsResult.total || 0,
-          totalStores: storesResult.total || 0
-        });
+      // 设置热门配方
+      setPopularFormulas(formulas.slice(0, 3));
 
-        // 加载最近产品
-        const recentProductsResult = await $w.cloud.callDataSource({
-          dataSourceName: 'products',
-          methodName: 'wedaGetRecordsV2',
-          params: {
-            select: {
-              $master: true
-            },
-            orderBy: [{
-              createdAt: 'desc'
-            }],
-            pageSize: 6
-          }
-        });
-        setRecentProducts(recentProductsResult.records || []);
+      // 设置流行色彩
+      setTrendingColors(colors.slice(0, 6));
 
-        // 加载热门配方
-        const popularFormulasResult = await $w.cloud.callDataSource({
-          dataSourceName: 'formulas',
-          methodName: 'wedaGetRecordsV2',
-          params: {
-            select: {
-              $master: true
-            },
-            orderBy: [{
-              likes: 'desc'
-            }],
-            pageSize: 4
-          }
-        });
-        setPopularFormulas(popularFormulasResult.records || []);
+      // 设置统计数据
+      setStats({
+        totalProducts: products.length,
+        totalFormulas: formulas.length,
+        totalColors: colors.length,
+        totalUsers: 128 // 模拟数据
+      });
+    }
+  }, [products, formulas, colors, loading]);
 
-        // 加载最新颜色
-        const recentColorsResult = await $w.cloud.callDataSource({
-          dataSourceName: 'colors',
-          methodName: 'wedaGetRecordsV2',
-          params: {
-            select: {
-              $master: true
-            },
-            orderBy: [{
-              createdAt: 'desc'
-            }],
-            pageSize: 8
-          }
-        });
-        setRecentColors(recentColorsResult.records || []);
-      } catch (error) {
-        console.error('加载数据失败:', error);
+  // 处理产品点击
+  const handleProductClick = product => {
+    if ($w.utils && $w.utils.navigateTo) {
+      $w.utils.navigateTo({
+        pageId: 'products',
+        params: {
+          productId: product.id
+        }
+      });
+    }
+  };
+
+  // 处理配方点击
+  const handleFormulaClick = formula => {
+    if ($w.utils && $w.utils.navigateTo) {
+      $w.utils.navigateTo({
+        pageId: 'formula-management',
+        params: {
+          formulaId: formula.id
+        }
+      });
+    }
+  };
+
+  // 处理色彩点击
+  const handleColorClick = color => {
+    if ($w.utils && $w.utils.navigateTo) {
+      $w.utils.navigateTo({
+        pageId: 'color-library',
+        params: {
+          colorId: color.id
+        }
+      });
+    }
+  };
+
+  // 快速操作
+  const handleQuickAction = action => {
+    switch (action) {
+      case 'ai-chat':
+        if ($w.utils && $w.utils.navigateTo) {
+          $w.utils.navigateTo({
+            pageId: 'ai-chat',
+            params: {}
+          });
+        }
+        break;
+      case 'qr-scanner':
+        if ($w.utils && $w.utils.navigateTo) {
+          $w.utils.navigateTo({
+            pageId: 'qr-scanner',
+            params: {}
+          });
+        }
+        break;
+      case 'color-recognition':
+        if ($w.utils && $w.utils.navigateTo) {
+          $w.utils.navigateTo({
+            pageId: 'color-recognition',
+            params: {}
+          });
+        }
+        break;
+      case 'formula-generation':
+        if ($w.utils && $w.utils.navigateTo) {
+          $w.utils.navigateTo({
+            pageId: 'formula-generation',
+            params: {}
+          });
+        }
+        break;
+      default:
         toast({
-          title: "加载失败",
-          description: "无法加载首页数据",
-          variant: "destructive"
+          title: "功能开发中",
+          description: "该功能正在开发中，敬请期待"
         });
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
-
-  // 处理用户登出
-  const handleLogout = () => {
-    logout();
-    if ($w.utils && $w.utils.navigateTo) {
-      $w.utils.navigateTo({
-        pageId: 'login',
-        params: {}
-      });
     }
-  };
-
-  // 导航到页面
-  const navigateTo = pageId => {
-    if ($w.utils && $w.utils.navigateTo) {
-      $w.utils.navigateTo({
-        pageId: pageId,
-        params: {}
-      });
-    }
-  };
-
-  // 格式化日期
-  const formatDate = dateString => {
-    return new Date(dateString).toLocaleDateString('zh-CN');
   };
   if (loading) {
     return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white">加载中...</p>
+        <div className="text-white text-center">
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p>加载中...</p>
         </div>
       </div>;
   }
   return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
-      {/* 头部导航 */}
+      {/* 头部欢迎区域 */}
       <header className="bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Home className="w-8 h-8 text-white" />
-              <div>
-                <h1 className="text-xl font-bold text-white">智能涂料管理系统</h1>
-                <p className="text-sm text-white/80">欢迎回来，{user?.username || '用户'}</p>
-              </div>
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">
+                {isAuthenticated ? `欢迎回来，${user?.name}！` : '欢迎来到智能调色系统'}
+              </h1>
+              <p className="text-white/80">
+                {isAuthenticated ? '探索智能调色的无限可能' : '登录以体验完整功能'}
+              </p>
             </div>
             
-            <div className="flex items-center space-x-4">
-              {/* 通知按钮 */}
-              <Button variant="ghost" className="text-white hover:bg-white/20 relative">
-                <Bell className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-              </Button>
-              
-              {/* 设置按钮 */}
-              <Button variant="ghost" className="text-white hover:bg-white/20" onClick={() => navigateTo('user-management')}>
-                <Settings className="w-5 h-5" />
-              </Button>
-              
-              {/* 用户菜单 */}
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-white text-sm">{user?.username}</span>
-                <Button variant="ghost" className="text-white hover:bg-white/20" onClick={handleLogout}>
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+            {isAuthenticated && <div className="text-right">
+                <p className="text-white/60 text-sm">上次登录</p>
+                <p className="text-white">{new Date(user?.lastLogin || Date.now()).toLocaleDateString()}</p>
+              </div>}
           </div>
         </div>
       </header>
 
       {/* 主内容区 */}
-      <main className="container mx-auto px-4 py-6 pb-24">
-        {/* 统计卡片 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <main className="container mx-auto px-4 py-8 pb-24">
+        {/* 统计数据卡片 */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm">产品总数</p>
-                  <p className="text-2xl font-bold text-white">{stats.totalProducts}</p>
-                </div>
-                <Package className="w-8 h-8 text-blue-400" />
-              </div>
+            <CardContent className="p-4 text-center">
+              <Package className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">{stats.totalProducts}</div>
+              <div className="text-sm text-white/80">产品总数</div>
             </CardContent>
           </Card>
-
+          
           <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm">配方总数</p>
-                  <p className="text-2xl font-bold text-white">{stats.totalFormulas}</p>
-                </div>
-                <BarChart3 className="w-8 h-8 text-green-400" />
-              </div>
+            <CardContent className="p-4 text-center">
+              <BarChart3 className="w-8 h-8 text-green-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">{stats.totalFormulas}</div>
+              <div className="text-sm text-white/80">配方总数</div>
             </CardContent>
           </Card>
-
+          
           <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm">颜色总数</p>
-                  <p className="text-2xl font-bold text-white">{stats.totalColors}</p>
-                </div>
-                <div className="w-8 h-8 bg-gradient-to-r from-red-400 to-blue-400 rounded-full"></div>
-              </div>
+            <CardContent className="p-4 text-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-red-400 to-yellow-400 rounded-full mx-auto mb-2"></div>
+              <div className="text-2xl font-bold text-white">{stats.totalColors}</div>
+              <div className="text-sm text-white/80">色彩总数</div>
             </CardContent>
           </Card>
-
+          
           <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm">门店总数</p>
-                  <p className="text-2xl font-bold text-white">{stats.totalStores}</p>
-                </div>
-                <Store className="w-8 h-8 text-orange-400" />
-              </div>
+            <CardContent className="p-4 text-center">
+              <Users className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">{stats.totalUsers}</div>
+              <div className="text-sm text-white/80">用户总数</div>
             </CardContent>
           </Card>
         </div>
 
-        {/* 快捷操作 */}
-        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6">
+        {/* 快速操作 */}
+        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-8">
           <CardHeader>
-            <CardTitle className="text-white">快捷操作</CardTitle>
+            <CardTitle className="text-white flex items-center">
+              <Zap className="w-5 h-5 mr-2" />
+              快速操作
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Button onClick={() => navigateTo('products')} className="bg-blue-500 hover:bg-blue-600 text-white h-20 flex flex-col">
-                <Package className="w-6 h-6 mb-2" />
-                <span>产品管理</span>
-              </Button>
-              
-              <Button onClick={() => navigateTo('formula-management')} className="bg-green-500 hover:bg-green-600 text-white h-20 flex flex-col">
-                <BarChart3 className="w-6 h-6 mb-2" />
-                <span>配方管理</span>
-              </Button>
-              
-              <Button onClick={() => navigateTo('color-library')} className="bg-purple-500 hover:bg-purple-600 text-white h-20 flex flex-col">
-                <div className="w-6 h-6 bg-gradient-to-r from-red-400 to-blue-400 rounded-full mb-2"></div>
-                <span>色彩库</span>
-              </Button>
-              
-              <Button onClick={() => navigateTo('ai-chat')} className="bg-orange-500 hover:bg-orange-600 text-white h-20 flex flex-col">
+              <Button onClick={() => handleQuickAction('ai-chat')} className="bg-white/20 hover:bg-white/30 text-white border border-white/30 h-20 flex flex-col">
                 <Bot className="w-6 h-6 mb-2" />
-                <span>AI助手</span>
+                <span className="text-sm">AI助手</span>
+              </Button>
+              
+              <Button onClick={() => handleQuickAction('qr-scanner')} className="bg-white/20 hover:bg-white/30 text-white border border-white/30 h-20 flex flex-col">
+                <div className="w-6 h-6 bg-white rounded mb-2"></div>
+                <span className="text-sm">扫码识别</span>
+              </Button>
+              
+              <Button onClick={() => handleQuickAction('color-recognition')} className="bg-white/20 hover:bg-white/30 text-white border border-white/30 h-20 flex flex-col">
+                <div className="w-6 h-6 bg-gradient-to-r from-red-400 to-blue-400 rounded mb-2"></div>
+                <span className="text-sm">色彩识别</span>
+              </Button>
+              
+              <Button onClick={() => handleQuickAction('formula-generation')} className="bg-white/20 hover:bg-white/30 text-white border border-white/30 h-20 flex flex-col">
+                <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-yellow-400 rounded mb-2"></div>
+                <span className="text-sm">配方生成</span>
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* 内容区域 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 最近产品 */}
-          <Card className="bg-white/10 backdrop-blur-md border-white/20 lg:col-span-2">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-white">最近产品</CardTitle>
-              <div className="flex space-x-2">
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20" onClick={() => setViewMode('grid')}>
-                  <Grid className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20" onClick={() => setViewMode('list')}>
-                  <List className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20" onClick={() => navigateTo('products')}>
-                  查看全部
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {viewMode === 'grid' ? <div className="grid grid-cols-2 gap-4">
-                  {recentProducts.map(product => <div key={product._id} className="bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-colors cursor-pointer" onClick={() => navigateTo('products')}>
-                      <div className="aspect-square bg-white/20 rounded-lg mb-2 flex items-center justify-center">
-                        <Package className="w-8 h-8 text-white/60" />
-                      </div>
-                      <h4 className="text-white font-medium text-sm truncate">{product.name}</h4>
-                      <p className="text-white/60 text-xs">{product.brand}</p>
-                      <p className="text-white font-bold text-sm">¥{product.price}</p>
-                    </div>)}
-                </div> : <div className="space-y-3">
-                  {recentProducts.map(product => <div key={product._id} className="bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-colors cursor-pointer" onClick={() => navigateTo('products')}>
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                          <Package className="w-6 h-6 text-white/60" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-white font-medium">{product.name}</h4>
-                          <p className="text-white/60 text-sm">{product.brand} • ¥{product.price}</p>
-                        </div>
-                        <div className="text-right">
-                          <div className="flex items-center text-white/60 text-sm">
-                            <Star className="w-4 h-4 mr-1" />
-                            {product.rating}
-                          </div>
-                          <p className="text-white/60 text-xs">{formatDate(product.createdAt)}</p>
-                        </div>
-                      </div>
-                    </div>)}
-                </div>}
-            </CardContent>
-          </Card>
-
-          {/* 热门配方 */}
-          <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-white">热门配方</CardTitle>
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/20" onClick={() => navigateTo('formula-management')}>
+        {/* 特色产品 */}
+        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-8">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center justify-between">
+              <span className="flex items-center">
+                <Star className="w-5 h-5 mr-2" />
+                特色产品
+              </span>
+              <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo({
+              pageId: 'products',
+              params: {}
+            })}>
                 查看全部
               </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {popularFormulas.map(formula => <div key={formula._id} className="bg-white/10 rounded-lg p-3 hover:bg-white/20 transition-colors cursor-pointer" onClick={() => navigateTo('formula-management')}>
-                    <h4 className="text-white font-medium text-sm truncate">{formula.name}</h4>
-                    <p className="text-white/60 text-xs truncate">{formula.description}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <div className="flex items-center text-white/60 text-xs">
-                        <Heart className="w-3 h-3 mr-1" />
-                        {formula.likes}
-                      </div>
-                      <div className="flex items-center text-white/60 text-xs">
-                        <Eye className="w-3 h-3 mr-1" />
-                        {formula.views}
-                      </div>
-                    </div>
-                  </div>)}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* 最新颜色 */}
-        <Card className="bg-white/10 backdrop-blur-md border-white/20 mt-6">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-white">最新颜色</CardTitle>
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20" onClick={() => navigateTo('color-library')}>
-              查看全部
-            </Button>
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
-              {recentColors.map(color => <div key={color._id} className="text-center cursor-pointer group" onClick={() => navigateTo('color-library')}>
-                  <div className="aspect-square rounded-lg mb-1 transition-transform group-hover:scale-110" style={{
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {featuredProducts.map(product => <div key={product.id} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer" onClick={() => handleProductClick(product)}>
+                  <div className="aspect-video bg-white/10 rounded-lg mb-4 overflow-hidden">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-2">{product.name}</h3>
+                  <p className="text-white/60 text-sm mb-3 line-clamp-2">{product.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white font-bold">¥{product.price.toLocaleString()}</span>
+                    <div className="flex items-center text-yellow-400">
+                      <Star className="w-4 h-4 fill-current" />
+                      <span className="text-sm ml-1">{product.rating}</span>
+                    </div>
+                  </div>
+                </div>)}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 热门配方 */}
+        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-8">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center justify-between">
+              <span className="flex items-center">
+                <TrendingUp className="w-5 h-5 mr-2" />
+                热门配方
+              </span>
+              <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo({
+              pageId: 'formula-management',
+              params: {}
+            })}>
+                查看全部
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {popularFormulas.map(formula => <div key={formula.id} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer" onClick={() => handleFormulaClick(formula)}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 rounded-lg border-2 border-white/20" style={{
+                    backgroundColor: formula.color
+                  }}></div>
+                      <div>
+                        <h4 className="text-white font-semibold">{formula.name}</h4>
+                        <p className="text-white/60 text-sm">{formula.type}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-white font-bold">¥{formula.cost}</div>
+                      <div className="text-white/60 text-sm">使用 {formula.usage} 次</div>
+                    </div>
+                  </div>
+                </div>)}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 流行色彩 */}
+        <Card className="bg-white/10 backdrop-blur-md border-white/20">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center justify-between">
+              <span className="flex items-center">
+                <div className="w-5 h-5 bg-gradient-to-r from-red-400 via-yellow-400 to-blue-400 rounded-full mr-2"></div>
+                流行色彩
+              </span>
+              <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo({
+              pageId: 'color-library',
+              params: {}
+            })}>
+                查看全部
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+              {trendingColors.map(color => <div key={color.id} className="text-center cursor-pointer group" onClick={() => handleColorClick(color)}>
+                  <div className="w-full aspect-square rounded-lg border-2 border-white/20 mb-2 group-hover:scale-105 transition-transform" style={{
                 backgroundColor: color.hex
               }}></div>
-                  <p className="text-white text-xs truncate">{color.name}</p>
+                  <p className="text-white text-sm font-medium">{color.name}</p>
+                  <p className="text-white/60 text-xs">{color.hex}</p>
                 </div>)}
             </div>
           </CardContent>

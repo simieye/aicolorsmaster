@@ -18,81 +18,69 @@ export const AuthProvider = ({
     toast
   } = useToast();
   const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [permissions, setPermissions] = useState([]);
 
-  // 权限配置
-  const rolePermissions = {
-    admin: ['read', 'write', 'delete', 'manage_users', 'manage_stores', 'manage_products', 'manage_formulas', 'manage_colors'],
-    manager: ['read', 'write', 'manage_stores', 'manage_products', 'manage_formulas'],
-    technician: ['read', 'write', 'manage_formulas', 'manage_colors'],
-    user: ['read']
-  };
-
-  // 初始化认证状态
+  // 检查本地存储的用户信息
   useEffect(() => {
-    const initAuth = async () => {
+    const savedUser = localStorage.getItem('user');
+    const savedToken = localStorage.getItem('token');
+    if (savedUser && savedToken) {
       try {
-        const token = localStorage.getItem('auth_token');
-        const userData = localStorage.getItem('user_data');
-        if (token && userData) {
-          const parsedUser = JSON.parse(userData);
-          setUser(parsedUser);
-          setPermissions(rolePermissions[parsedUser.role] || []);
-        }
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+        setIsAuthenticated(true);
+        setPermissions(userData.permissions || []);
       } catch (error) {
-        console.error('初始化认证失败:', error);
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user_data');
-      } finally {
-        setLoading(false);
+        console.error('解析用户数据失败:', error);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
       }
-    };
-    initAuth();
+    }
+    setLoading(false);
   }, []);
 
   // 登录函数
   const login = async credentials => {
     try {
       setLoading(true);
-
-      // 调用云函数进行登录验证
-      const result = await window.$w.cloud.callFunction({
-        name: 'userLogin',
-        data: credentials
-      });
-      if (result.success) {
+      // 模拟API调用
+      const response = await mockLoginAPI(credentials);
+      if (response.success) {
         const {
           user: userData,
           token
-        } = result.data;
+        } = response.data;
 
-        // 保存认证信息
-        localStorage.setItem('auth_token', token);
-        localStorage.setItem('user_data', JSON.stringify(userData));
+        // 保存到本地存储
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('token', token);
+
+        // 更新状态
         setUser(userData);
-        setPermissions(rolePermissions[userData.role] || []);
+        setIsAuthenticated(true);
+        setPermissions(userData.permissions || []);
         toast({
           title: "登录成功",
-          description: `欢迎回来，${userData.username}！`
+          description: `欢迎回来，${userData.name}！`
         });
         return {
           success: true,
           user: userData
         };
       } else {
-        throw new Error(result.message || '登录失败');
+        throw new Error(response.message || '登录失败');
       }
     } catch (error) {
-      console.error('登录失败:', error);
       toast({
         title: "登录失败",
-        description: error.message || "用户名或密码错误",
+        description: error.message,
         variant: "destructive"
       });
       return {
         success: false,
-        message: error.message
+        error: error.message
       };
     } finally {
       setLoading(false);
@@ -103,33 +91,28 @@ export const AuthProvider = ({
   const register = async userData => {
     try {
       setLoading(true);
-
-      // 调用云函数进行注册
-      const result = await window.$w.cloud.callFunction({
-        name: 'userRegister',
-        data: userData
-      });
-      if (result.success) {
+      // 模拟API调用
+      const response = await mockRegisterAPI(userData);
+      if (response.success) {
         toast({
           title: "注册成功",
-          description: "账户创建成功，请登录"
+          description: "请使用您的账号登录"
         });
         return {
           success: true
         };
       } else {
-        throw new Error(result.message || '注册失败');
+        throw new Error(response.message || '注册失败');
       }
     } catch (error) {
-      console.error('注册失败:', error);
       toast({
         title: "注册失败",
-        description: error.message || "创建账户失败",
+        description: error.message,
         variant: "destructive"
       });
       return {
         success: false,
-        message: error.message
+        error: error.message
       };
     } finally {
       setLoading(false);
@@ -138,78 +121,113 @@ export const AuthProvider = ({
 
   // 登出函数
   const logout = () => {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_data');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     setUser(null);
+    setIsAuthenticated(false);
     setPermissions([]);
     toast({
       title: "已退出登录",
-      description: "您已成功退出登录"
+      description: "期待您的再次访问"
     });
   };
 
   // 检查权限
   const hasPermission = permission => {
-    return permissions.includes(permission);
-  };
-
-  // 检查角色
-  const hasRole = role => {
-    return user?.role === role;
+    return permissions.includes(permission) || permissions.includes('admin');
   };
 
   // 更新用户信息
-  const updateUser = async userData => {
-    try {
-      const result = await window.$w.cloud.callFunction({
-        name: 'updateUser',
+  const updateUser = userData => {
+    const updatedUser = {
+      ...user,
+      ...userData
+    };
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
+  // 模拟登录API
+  const mockLoginAPI = async credentials => {
+    // 模拟网络延迟
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // 模拟用户数据
+    const users = [{
+      id: 1,
+      username: 'admin',
+      password: 'admin123',
+      email: 'admin@example.com',
+      name: '管理员',
+      role: 'admin',
+      permissions: ['admin', 'product:read', 'product:write', 'user:read', 'user:write'],
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
+    }, {
+      id: 2,
+      username: 'user',
+      password: 'user123',
+      email: 'user@example.com',
+      name: '普通用户',
+      role: 'user',
+      permissions: ['product:read', 'user:read'],
+      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face'
+    }];
+    const user = users.find(u => u.username === credentials.username && u.password === credentials.password);
+    if (user) {
+      const {
+        password,
+        ...userWithoutPassword
+      } = user;
+      return {
+        success: true,
         data: {
-          userId: user._id,
-          ...userData
+          user: userWithoutPassword,
+          token: 'mock-jwt-token-' + Date.now()
         }
-      });
-      if (result.success) {
-        const updatedUser = {
-          ...user,
-          ...result.data
-        };
-        setUser(updatedUser);
-        localStorage.setItem('user_data', JSON.stringify(updatedUser));
-        toast({
-          title: "更新成功",
-          description: "用户信息已更新"
-        });
-        return {
-          success: true,
-          user: updatedUser
-        };
-      } else {
-        throw new Error(result.message || '更新失败');
-      }
-    } catch (error) {
-      console.error('更新用户信息失败:', error);
-      toast({
-        title: "更新失败",
-        description: error.message || "更新用户信息失败",
-        variant: "destructive"
-      });
+      };
+    } else {
       return {
         success: false,
-        message: error.message
+        message: '用户名或密码错误'
       };
     }
   };
+
+  // 模拟注册API
+  const mockRegisterAPI = async userData => {
+    // 模拟网络延迟
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // 模拟验证
+    if (userData.password !== userData.confirmPassword) {
+      return {
+        success: false,
+        message: '两次输入的密码不一致'
+      };
+    }
+
+    // 模拟用户名检查
+    if (userData.username === 'admin' || userData.username === 'user') {
+      return {
+        success: false,
+        message: '用户名已存在'
+      };
+    }
+    return {
+      success: true,
+      message: '注册成功'
+    };
+  };
   const value = {
     user,
+    isAuthenticated,
     loading,
     permissions,
     login,
     register,
     logout,
     hasPermission,
-    hasRole,
-    updateUser,
-    isAuthenticated: !!user
+    updateUser
   };
   return <AuthContext.Provider value={value}>
       {children}
