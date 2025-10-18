@@ -1,9 +1,9 @@
 // @ts-ignore;
 import React, { useState, useEffect, useRef } from 'react';
 // @ts-ignore;
-import { Button, Card, CardContent, useToast, CardHeader, CardTitle } from '@/components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Camera, Image as ImageIcon, History, Settings, Search, Filter, Download, Upload, X, CheckCircle, AlertCircle, Clock, Star, Trash2, Eye, Copy, Share2, ExternalLink, QrCode, Barcode, Zap, Grid3x3, List, ChevronDown, Plus, Minus, Globe } from 'lucide-react';
+import { Camera, QrCode, Scan, History, Settings, Download, Upload, X, CheckCircle, AlertCircle, Clock, MapPin, Phone, Mail, Globe, Search, Filter, Copy, Share2, Trash2, Eye, Edit, RefreshCw, Zap, Shield, Smartphone, Monitor, Tablet, ArrowRight, ChevronRight, Info, HelpCircle, Star, TrendingUp, BarChart3, Users, Package, ShoppingCart, DollarSign, Target, Award, Gift, Bell, Menu, Home, Palette, FlaskConical, Beaker, Users2, Store, BookOpen, Megaphone, UserCog, Database, FileText } from 'lucide-react';
 
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
@@ -22,18 +22,7 @@ export default function QRScanner(props) {
   const [scanResult, setScanResult] = useState(null);
   const [scanHistory, setScanHistory] = useState([]);
   const [showResult, setShowResult] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // grid, list
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('all'); // all, qr, barcode
-  const [showSettings, setShowSettings] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('zh-CN');
-  const [scanSettings, setScanSettings] = useState({
-    autoSave: true,
-    soundEnabled: true,
-    vibrateEnabled: true,
-    autoCopy: false,
-    showPreview: true
-  });
 
   // 支持的语言列表
   const languages = [{
@@ -58,322 +47,500 @@ export default function QRScanner(props) {
   const getText = key => {
     const texts = {
       'zh-CN': {
-        title: '智能扫码',
-        subtitle: '快速识别二维码和条形码',
-        scanner: '扫码',
-        history: '历史',
-        settings: '设置',
-        smartScan: '智能扫码',
-        description: '支持二维码、条形码快速识别',
-        scanning: '扫码中...',
-        cameraScan: '相机扫码',
-        albumSelect: '相册选择',
+        title: '智能扫码系统',
+        subtitle: '快速识别二维码，获取产品信息',
+        scanner: '扫码识别',
+        history: '扫码历史',
+        settings: '扫码设置',
+        startScanning: '开始扫码',
+        stopScanning: '停止扫码',
+        scanResult: '扫码结果',
+        scanHistory: '扫码历史',
+        noHistory: '暂无扫码记录',
+        scanSuccess: '扫码成功',
+        scanFailed: '扫码失败',
+        copySuccess: '复制成功',
+        shareSuccess: '分享成功',
+        deleteSuccess: '删除成功',
+        productInfo: '产品信息',
+        productName: '产品名称',
+        productCode: '产品编码',
+        category: '分类',
+        price: '价格',
+        stock: '库存',
+        description: '描述',
+        manufacturer: '制造商',
+        productionDate: '生产日期',
+        expiryDate: '有效期',
+        batchNumber: '批次号',
+        ingredients: '成分',
+        usage: '使用方法',
+        warnings: '注意事项',
+        storage: '储存条件',
         qrCode: '二维码',
-        barcode: '条形码',
-        quickRecognize: '快速识别',
-        productRecognize: '商品识别',
-        viewHistory: '查看历史',
-        scanSettings: '扫码设置',
-        scanningResult: '扫码结果',
+        scanTime: '扫码时间',
+        scanType: '扫码类型',
+        actions: '操作',
+        view: '查看',
         copy: '复制',
         share: '分享',
-        openLink: '打开链接',
-        saveToHistory: '保存到历史',
-        totalRecords: '总记录',
-        favorite: '收藏',
-        searchHistory: '搜索历史记录...',
-        all: '全部',
-        noHistory: '暂无历史记录',
-        view: '查看',
         delete: '删除',
-        autoSave: '自动保存',
-        autoSaveDesc: '扫码后自动保存到历史记录',
-        soundAlert: '声音提示',
-        soundAlertDesc: '扫码成功时播放提示音',
-        vibrateFeedback: '震动反馈',
-        vibrateFeedbackDesc: '扫码成功时震动提醒',
-        autoCopy: '自动复制',
-        autoCopyDesc: '扫码后自动复制内容',
-        previewResult: '预览结果',
-        previewResultDesc: '扫码后显示结果预览',
-        dataManagement: '数据管理',
-        exportHistory: '导出历史记录',
-        exportHistoryDesc: '将历史记录导出为文件',
-        importHistory: '导入历史记录',
-        importHistoryDesc: '从文件导入历史记录',
-        clearHistory: '清空历史记录',
-        clearHistoryDesc: '删除所有历史记录',
-        export: '导出',
-        import: '导入',
-        clear: '清空',
-        scanSuccess: '扫码成功',
-        scanSuccessDesc: '已识别',
-        copySuccess: '复制成功',
-        copySuccessDesc: '内容已复制到剪贴板',
-        shareDesc: '正在打开分享界面...',
-        openLinkDesc: '正在跳转到网页...',
-        saveSuccess: '保存成功',
-        saveSuccessDesc: '已保存到历史记录',
-        deleteSuccess: '删除成功',
-        deleteSuccessDesc: '已删除该记录',
-        selectImage: '选择图片',
-        selectImageDesc: '正在打开相册...',
-        recognizing: '正在识别...',
-        clickStartScan: '点击下方按钮开始扫码',
-        scanComplete: '扫码完成',
-        rescan: '重新扫码'
+        clearHistory: '清空历史',
+        confirmDelete: '确认删除',
+        cancel: '取消',
+        confirm: '确认',
+        search: '搜索',
+        filter: '筛选',
+        allTypes: '全部类型',
+        productQR: '产品二维码',
+        websiteQR: '网址二维码',
+        textQR: '文本二维码',
+        contactQR: '联系方式二维码',
+        wifiQR: 'WiFi二维码',
+        locationQR: '位置二维码',
+        eventQR: '活动二维码',
+        paymentQR: '支付二维码',
+        otherQR: '其他',
+        scanSettings: '扫码设置',
+        autoFocus: '自动对焦',
+        flashLight: '闪光灯',
+        soundEffect: '音效',
+        vibrate: '震动',
+        saveHistory: '保存历史',
+        autoRecognize: '自动识别',
+        scanSpeed: '扫码速度',
+        quality: '识别质量',
+        fast: '快速',
+        normal: '正常',
+        accurate: '精确',
+        high: '高',
+        medium: '中',
+        low: '低',
+        on: '开启',
+        off: '关闭',
+        saveSettings: '保存设置',
+        resetSettings: '重置设置',
+        scanningTips: '扫码提示',
+        tip1: '将二维码对准扫描框',
+        tip2: '保持手机稳定，避免抖动',
+        tip3: '确保光线充足，二维码清晰',
+        tip4: '支持多种二维码格式',
+        tip5: '扫码失败请重试',
+        recentScans: '最近扫码',
+        today: '今天',
+        yesterday: '昨天',
+        thisWeek: '本周',
+        thisMonth: '本月',
+        older: '更早',
+        totalScans: '总扫码次数',
+        successRate: '成功率',
+        avgScanTime: '平均扫码时间',
+        popularTypes: '热门类型',
+        scanStatistics: '扫码统计',
+        noResults: '暂无结果',
+        tryAgain: '请重试',
+        invalidQR: '无效的二维码',
+        unsupportedQR: '不支持的二维码类型',
+        networkError: '网络错误',
+        permissionDenied: '权限被拒绝',
+        cameraError: '相机错误',
+        loading: '加载中...',
+        processing: '处理中...',
+        completed: '完成',
+        failed: '失败',
+        pending: '待处理',
+        success: '成功',
+        error: '错误',
+        warning: '警告',
+        info: '信息'
       },
       'en-US': {
-        title: 'Smart Scanner',
-        subtitle: 'Quick recognition of QR codes and barcodes',
+        title: 'Smart QR Scanner',
+        subtitle: 'Quickly recognize QR codes and get product information',
         scanner: 'Scanner',
         history: 'History',
         settings: 'Settings',
-        smartScan: 'Smart Scan',
-        description: 'Support QR code and barcode quick recognition',
-        scanning: 'Scanning...',
-        cameraScan: 'Camera Scan',
-        albumSelect: 'Album Select',
+        startScanning: 'Start Scanning',
+        stopScanning: 'Stop Scanning',
+        scanResult: 'Scan Result',
+        scanHistory: 'Scan History',
+        noHistory: 'No scan history',
+        scanSuccess: 'Scan Successful',
+        scanFailed: 'Scan Failed',
+        copySuccess: 'Copy Successful',
+        shareSuccess: 'Share Successful',
+        deleteSuccess: 'Delete Successful',
+        productInfo: 'Product Information',
+        productName: 'Product Name',
+        productCode: 'Product Code',
+        category: 'Category',
+        price: 'Price',
+        stock: 'Stock',
+        description: 'Description',
+        manufacturer: 'Manufacturer',
+        productionDate: 'Production Date',
+        expiryDate: 'Expiry Date',
+        batchNumber: 'Batch Number',
+        ingredients: 'Ingredients',
+        usage: 'Usage',
+        warnings: 'Warnings',
+        storage: 'Storage',
         qrCode: 'QR Code',
-        barcode: 'Barcode',
-        quickRecognize: 'Quick Recognize',
-        productRecognize: 'Product Recognize',
-        viewHistory: 'View History',
-        scanSettings: 'Scan Settings',
-        scanningResult: 'Scan Result',
+        scanTime: 'Scan Time',
+        scanType: 'Scan Type',
+        actions: 'Actions',
+        view: 'View',
         copy: 'Copy',
         share: 'Share',
-        openLink: 'Open Link',
-        saveToHistory: 'Save to History',
-        totalRecords: 'Total Records',
-        favorite: 'Favorite',
-        searchHistory: 'Search history...',
-        all: 'All',
-        noHistory: 'No history records',
-        view: 'View',
         delete: 'Delete',
-        autoSave: 'Auto Save',
-        autoSaveDesc: 'Automatically save to history after scanning',
-        soundAlert: 'Sound Alert',
-        soundAlertDesc: 'Play alert sound when scan successful',
-        vibrateFeedback: 'Vibrate Feedback',
-        vibrateFeedbackDesc: 'Vibrate when scan successful',
-        autoCopy: 'Auto Copy',
-        autoCopyDesc: 'Automatically copy content after scanning',
-        previewResult: 'Preview Result',
-        previewResultDesc: 'Show result preview after scanning',
-        dataManagement: 'Data Management',
-        exportHistory: 'Export History',
-        exportHistoryDesc: 'Export history records to file',
-        importHistory: 'Import History',
-        importHistoryDesc: 'Import history records from file',
         clearHistory: 'Clear History',
-        clearHistoryDesc: 'Delete all history records',
-        export: 'Export',
-        import: 'Import',
-        clear: 'Clear',
-        scanSuccess: 'Scan Successful',
-        scanSuccessDesc: 'Recognized',
-        copySuccess: 'Copy Successful',
-        copySuccessDesc: 'Content copied to clipboard',
-        shareDesc: 'Opening share interface...',
-        openLinkDesc: 'Jumping to webpage...',
-        saveSuccess: 'Save Successful',
-        saveSuccessDesc: 'Saved to history',
-        deleteSuccess: 'Delete Successful',
-        deleteSuccessDesc: 'Record deleted',
-        selectImage: 'Select Image',
-        selectImageDesc: 'Opening album...',
-        recognizing: 'Recognizing...',
-        clickStartScan: 'Click button below to start scanning',
-        scanComplete: 'Scan Complete',
-        rescan: 'Rescan'
+        confirmDelete: 'Confirm Delete',
+        cancel: 'Cancel',
+        confirm: 'Confirm',
+        search: 'Search',
+        filter: 'Filter',
+        allTypes: 'All Types',
+        productQR: 'Product QR',
+        websiteQR: 'Website QR',
+        textQR: 'Text QR',
+        contactQR: 'Contact QR',
+        wifiQR: 'WiFi QR',
+        locationQR: 'Location QR',
+        eventQR: 'Event QR',
+        paymentQR: 'Payment QR',
+        otherQR: 'Other',
+        scanSettings: 'Scan Settings',
+        autoFocus: 'Auto Focus',
+        flashLight: 'Flash Light',
+        soundEffect: 'Sound Effect',
+        vibrate: 'Vibrate',
+        saveHistory: 'Save History',
+        autoRecognize: 'Auto Recognize',
+        scanSpeed: 'Scan Speed',
+        quality: 'Quality',
+        fast: 'Fast',
+        normal: 'Normal',
+        accurate: 'Accurate',
+        high: 'High',
+        medium: 'Medium',
+        low: 'Low',
+        on: 'On',
+        off: 'Off',
+        saveSettings: 'Save Settings',
+        resetSettings: 'Reset Settings',
+        scanningTips: 'Scanning Tips',
+        tip1: 'Align QR code with scanning frame',
+        tip2: 'Keep phone stable, avoid shaking',
+        tip3: 'Ensure sufficient light and clear QR code',
+        tip4: 'Support multiple QR code formats',
+        tip5: 'Retry if scan fails',
+        recentScans: 'Recent Scans',
+        today: 'Today',
+        yesterday: 'Yesterday',
+        thisWeek: 'This Week',
+        thisMonth: 'This Month',
+        older: 'Older',
+        totalScans: 'Total Scans',
+        successRate: 'Success Rate',
+        avgScanTime: 'Average Scan Time',
+        popularTypes: 'Popular Types',
+        scanStatistics: 'Scan Statistics',
+        noResults: 'No Results',
+        tryAgain: 'Try Again',
+        invalidQR: 'Invalid QR Code',
+        unsupportedQR: 'Unsupported QR Code Type',
+        networkError: 'Network Error',
+        permissionDenied: 'Permission Denied',
+        cameraError: 'Camera Error',
+        loading: 'Loading...',
+        processing: 'Processing...',
+        completed: 'Completed',
+        failed: 'Failed',
+        pending: 'Pending',
+        success: 'Success',
+        error: 'Error',
+        warning: 'Warning',
+        info: 'Information'
       },
       'ja-JP': {
-        title: 'スマートスキャン',
-        subtitle: 'QRコードとバーコードの高速認識',
-        scanner: 'スキャン',
+        title: 'スマートQRスキャナー',
+        subtitle: 'QRコードを素早く認識し、製品情報を取得',
+        scanner: 'スキャナー',
         history: '履歴',
         settings: '設定',
-        smartScan: 'スマートスキャン',
-        description: 'QRコードとバーコードの高速認識をサポート',
-        scanning: 'スキャン中...',
-        cameraScan: 'カメラスキャン',
-        albumSelect: 'アルバム選択',
+        startScanning: 'スキャン開始',
+        stopScanning: 'スキャン停止',
+        scanResult: 'スキャン結果',
+        scanHistory: 'スキャン履歴',
+        noHistory: 'スキャン履歴なし',
+        scanSuccess: 'スキャン成功',
+        scanFailed: 'スキャン失敗',
+        copySuccess: 'コピー成功',
+        shareSuccess: '共有成功',
+        deleteSuccess: '削除成功',
+        productInfo: '製品情報',
+        productName: '製品名',
+        productCode: '製品コード',
+        category: 'カテゴリ',
+        price: '価格',
+        stock: '在庫',
+        description: '説明',
+        manufacturer: '製造元',
+        productionDate: '製造日',
+        expiryDate: '有効期限',
+        batchNumber: 'バッチ番号',
+        ingredients: '成分',
+        usage: '使用方法',
+        warnings: '注意事項',
+        storage: '保管条件',
         qrCode: 'QRコード',
-        barcode: 'バーコード',
-        quickRecognize: '高速認識',
-        productRecognize: '商品認識',
-        viewHistory: '履歴表示',
-        scanSettings: 'スキャン設定',
-        scanningResult: 'スキャン結果',
+        scanTime: 'スキャン時間',
+        scanType: 'スキャンタイプ',
+        actions: 'アクション',
+        view: '表示',
         copy: 'コピー',
         share: '共有',
-        openLink: 'リンクを開く',
-        saveToHistory: '履歴に保存',
-        totalRecords: '総記録数',
-        favorite: 'お気に入り',
-        searchHistory: '履歴を検索...',
-        all: 'すべて',
-        noHistory: '履歴がありません',
-        view: '表示',
         delete: '削除',
-        autoSave: '自動保存',
-        autoSaveDesc: 'スキャン後に自動的に履歴に保存',
-        soundAlert: '音声アラート',
-        soundAlertDesc: 'スキャン成功時にアラート音を再生',
-        vibrateFeedback: 'バイブレーションフィードバック',
-        vibrateFeedbackDesc: 'スキャン成功時にバイブレーション',
-        autoCopy: '自動コピー',
-        autoCopyDesc: 'スキャン後に自動的に内容をコピー',
-        previewResult: '結果プレビュー',
-        previewResultDesc: 'スキャン後に結果プレビューを表示',
-        dataManagement: 'データ管理',
-        exportHistory: '履歴をエクスポート',
-        exportHistoryDesc: '履歴記録をファイルにエクスポート',
-        importHistory: '履歴をインポート',
-        importHistoryDesc: 'ファイルから履歴記録をインポート',
         clearHistory: '履歴をクリア',
-        clearHistoryDesc: 'すべての履歴記録を削除',
-        export: 'エクスポート',
-        import: 'インポート',
-        clear: 'クリア',
-        scanSuccess: 'スキャン成功',
-        scanSuccessDesc: '認識完了',
-        copySuccess: 'コピー成功',
-        copySuccessDesc: '内容をクリップボードにコピー',
-        shareDesc: '共有インターフェースを開いています...',
-        openLinkDesc: 'ウェブページにジャンプしています...',
-        saveSuccess: '保存成功',
-        saveSuccessDesc: '履歴に保存しました',
-        deleteSuccess: '削除成功',
-        deleteSuccessDesc: '記録を削除しました',
-        selectImage: '画像を選択',
-        selectImageDesc: 'アルバムを開いています...',
-        recognizing: '認識中...',
-        clickStartScan: '下のボタンをクリックしてスキャンを開始',
-        scanComplete: 'スキャン完了',
-        rescan: '再スキャン'
+        confirmDelete: '削除確認',
+        cancel: 'キャンセル',
+        confirm: '確認',
+        search: '検索',
+        filter: 'フィルター',
+        allTypes: 'すべてのタイプ',
+        productQR: '製品QR',
+        websiteQR: 'ウェブサイトQR',
+        textQR: 'テキストQR',
+        contactQR: '連絡先QR',
+        wifiQR: 'WiFi QR',
+        locationQR: '位置QR',
+        eventQR: 'イベントQR',
+        paymentQR: '支払いQR',
+        otherQR: 'その他',
+        scanSettings: 'スキャン設定',
+        autoFocus: 'オートフォーカス',
+        flashLight: 'フラッシュライト',
+        soundEffect: '音響効果',
+        vibrate: 'バイブレーション',
+        saveHistory: '履歴保存',
+        autoRecognize: '自動認識',
+        scanSpeed: 'スキャン速度',
+        quality: '品質',
+        fast: '高速',
+        normal: '通常',
+        accurate: '高精度',
+        high: '高',
+        medium: '中',
+        low: '低',
+        on: 'オン',
+        off: 'オフ',
+        saveSettings: '設定保存',
+        resetSettings: '設定リセット',
+        scanningTips: 'スキャンのヒント',
+        tip1: 'QRコードをスキャンフレームに合わせる',
+        tip2: '携帯電話を安定させ、揺れを避ける',
+        tip3: '十分な光と明確なQRコードを確保する',
+        tip4: '複数のQRコードフォーマットをサポート',
+        tip5: 'スキャン失敗時は再試行',
+        recentScans: '最近のスキャン',
+        today: '今日',
+        yesterday: '昨日',
+        thisWeek: '今週',
+        thisMonth: '今月',
+        older: 'それ以前',
+        totalScans: '総スキャン回数',
+        successRate: '成功率',
+        avgScanTime: '平均スキャン時間',
+        popularTypes: '人気タイプ',
+        scanStatistics: 'スキャン統計',
+        noResults: '結果なし',
+        tryAgain: '再試行',
+        invalidQR: '無効なQRコード',
+        unsupportedQR: 'サポートされていないQRコードタイプ',
+        networkError: 'ネットワークエラー',
+        permissionDenied: '権限拒否',
+        cameraError: 'カメラエラー',
+        loading: '読み込み中...',
+        processing: '処理中...',
+        completed: '完了',
+        failed: '失敗',
+        pending: '保留中',
+        success: '成功',
+        error: 'エラー',
+        warning: '警告',
+        info: '情報'
       },
       'ko-KR': {
-        title: '스마트 스캔',
-        subtitle: 'QR코드 및 바코드 빠른 인식',
-        scanner: '스캔',
+        title: '스마트 QR 스캐너',
+        subtitle: 'QR 코드를 빠르게 인식하고 제품 정보 얻기',
+        scanner: '스캐너',
         history: '기록',
         settings: '설정',
-        smartScan: '스마트 스캔',
-        description: 'QR코드 및 바코드 빠른 인식 지원',
-        scanning: '스캔 중...',
-        cameraScan: '카메라 스캔',
-        albumSelect: '앨범 선택',
-        qrCode: 'QR코드',
-        barcode: '바코드',
-        quickRecognize: '빠른 인식',
-        productRecognize: '제품 인식',
-        viewHistory: '기록 보기',
-        scanSettings: '스캔 설정',
-        scanningResult: '스캔 결과',
+        startScanning: '스캔 시작',
+        stopScanning: '스캔 중지',
+        scanResult: '스캔 결과',
+        scanHistory: '스캔 기록',
+        noHistory: '스캔 기록 없음',
+        scanSuccess: '스캔 성공',
+        scanFailed: '스캔 실패',
+        copySuccess: '복사 성공',
+        shareSuccess: '공유 성공',
+        deleteSuccess: '삭제 성공',
+        productInfo: '제품 정보',
+        productName: '제품명',
+        productCode: '제품 코드',
+        category: '카테고리',
+        price: '가격',
+        stock: '재고',
+        description: '설명',
+        manufacturer: '제조업체',
+        productionDate: '생산일',
+        expiryDate: '유효기간',
+        batchNumber: '배치 번호',
+        ingredients: '성분',
+        usage: '사용법',
+        warnings: '주의사항',
+        storage: '보관 조건',
+        qrCode: 'QR 코드',
+        scanTime: '스캔 시간',
+        scanType: '스캔 유형',
+        actions: '작업',
+        view: '보기',
         copy: '복사',
         share: '공유',
-        openLink: '링크 열기',
-        saveToHistory: '기록에 저장',
-        totalRecords: '총 기록 수',
-        favorite: '즐겨찾기',
-        searchHistory: '기록 검색...',
-        all: '전체',
-        noHistory: '기록이 없습니다',
-        view: '보기',
         delete: '삭제',
-        autoSave: '자동 저장',
-        autoSaveDesc: '스캔 후 자동으로 기록에 저장',
-        soundAlert: '소리 알림',
-        soundAlertDesc: '스캔 성공 시 알림음 재생',
-        vibrateFeedback: '진동 피드백',
-        vibrateFeedbackDesc: '스캔 성공 시 진동',
-        autoCopy: '자동 복사',
-        autoCopyDesc: '스캔 후 자동으로 내용 복사',
-        previewResult: '결과 미리보기',
-        previewResultDesc: '스캔 후 결과 미리보기 표시',
-        dataManagement: '데이터 관리',
-        exportHistory: '기록 내보내기',
-        exportHistoryDesc: '기록을 파일로 내보내기',
-        importHistory: '기록 가져오기',
-        importHistoryDesc: '파일에서 기록 가져오기',
         clearHistory: '기록 지우기',
-        clearHistoryDesc: '모든 기록 삭제',
-        export: '내보내기',
-        import: '가져오기',
-        clear: '지우기',
-        scanSuccess: '스캔 성공',
-        scanSuccessDesc: '인식됨',
-        copySuccess: '복사 성공',
-        copySuccessDesc: '내용이 클립보드에 복사됨',
-        shareDesc: '공유 인터페이스 열기 중...',
-        openLinkDesc: '웹페이지로 이동 중...',
-        saveSuccess: '저장 성공',
-        saveSuccessDesc: '기록에 저장됨',
-        deleteSuccess: '삭제 성공',
-        deleteSuccessDesc: '기록이 삭제됨',
-        selectImage: '이미지 선택',
-        selectImageDesc: '앨범 열기 중...',
-        recognizing: '인식 중...',
-        clickStartScan: '아래 버튼을 클릭하여 스캔 시작',
-        scanComplete: '스캔 완료',
-        rescan: '재스캔'
+        confirmDelete: '삭제 확인',
+        cancel: '취소',
+        confirm: '확인',
+        search: '검색',
+        filter: '필터',
+        allTypes: '모든 유형',
+        productQR: '제품 QR',
+        websiteQR: '웹사이트 QR',
+        textQR: '텍스트 QR',
+        contactQR: '연락처 QR',
+        wifiQR: 'WiFi QR',
+        locationQR: '위치 QR',
+        eventQR: '이벤트 QR',
+        paymentQR: '결제 QR',
+        otherQR: '기타',
+        scanSettings: '스캔 설정',
+        autoFocus: '자동 초점',
+        flashLight: '플래시라이트',
+        soundEffect: '음향 효과',
+        vibrate: '진동',
+        saveHistory: '기록 저장',
+        autoRecognize: '자동 인식',
+        scanSpeed: '스캔 속도',
+        quality: '품질',
+        fast: '빠름',
+        normal: '보통',
+        accurate: '정확함',
+        high: '높음',
+        medium: '보통',
+        low: '낮음',
+        on: '켜기',
+        off: '끄기',
+        saveSettings: '설정 저장',
+        resetSettings: '설정 재설정',
+        scanningTips: '스캔 팁',
+        tip1: 'QR 코드를 스캔 프레임에 맞추기',
+        tip2: '휴대폰을 안정적으로 유지하고 흔들림 피하기',
+        tip3: '충분한 조명과 명확한 QR 코드 확인',
+        tip4: '다양한 QR 코드 형식 지원',
+        tip5: '스캔 실패 시 재시도',
+        recentScans: '최근 스캔',
+        today: '오늘',
+        yesterday: '어제',
+        thisWeek: '이번 주',
+        thisMonth: '이번 달',
+        older: '이전',
+        totalScans: '총 스캔 횟수',
+        successRate: '성공률',
+        avgScanTime: '평균 스캔 시간',
+        popularTypes: '인기 유형',
+        scanStatistics: '스캔 통계',
+        noResults: '결과 없음',
+        tryAgain: '다시 시도',
+        invalidQR: '잘못된 QR 코드',
+        unsupportedQR: '지원되지 않는 QR 코드 유형',
+        networkError: '네트워크 오류',
+        permissionDenied: '권한 거부',
+        cameraError: '카메라 오류',
+        loading: '로딩 중...',
+        processing: '처리 중...',
+        completed: '완료됨',
+        failed: '실패함',
+        pending: '보류 중',
+        success: '성공',
+        error: '오류',
+        warning: '경고',
+        info: '정보'
       }
     };
     return texts[selectedLanguage]?.[key] || texts['zh-CN'][key] || key;
   };
 
-  // 初始化历史记录
+  // 初始化数据
   useEffect(() => {
-    const mockHistory = [{
+    // 模拟扫码历史数据
+    setScanHistory([{
       id: 1,
-      type: 'qr',
-      content: 'https://www.aihair.com/product/123',
-      title: 'AI染发产品页面',
-      timestamp: new Date('2024-01-15 14:30:00'),
-      category: 'product',
-      favorite: true,
-      image: 'https://images.unsplash.com/photo-1560066985-274c6a8a3f5a?w=100&h=100&fit=crop'
+      type: 'product',
+      content: 'AI染发色彩大师 - 微潮紫染发剂',
+      result: {
+        productName: '微潮紫染发剂',
+        productCode: 'AI-HAIR-001',
+        category: '染发剂',
+        price: '¥128.00',
+        stock: 45,
+        description: '时尚潮流的微潮紫色染发剂，适合追求个性的年轻人',
+        manufacturer: 'AI染发科技有限公司',
+        productionDate: '2024-01-01',
+        expiryDate: '2025-01-01',
+        batchNumber: 'BATCH001',
+        ingredients: '氨水、过氧化氢、紫色色素、护发成分',
+        usage: '1. 将染发剂与显色剂按1:1比例混合\n2. 均匀涂抹在干燥的头发上\n3. 等待30-45分钟\n4. 彻底冲洗干净',
+        warnings: '1. 使用前请进行皮肤过敏测试\n2. 避免接触眼睛\n3. 请戴手套操作',
+        storage: '请存放在阴凉干燥处，避免阳光直射'
+      },
+      scanTime: '2024-01-15 14:30:25',
+      status: 'success'
     }, {
       id: 2,
-      type: 'barcode',
-      content: '6901234567890',
-      title: '微潮紫染发剂',
-      timestamp: new Date('2024-01-15 10:20:00'),
-      category: 'product',
-      favorite: false,
-      image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=100&h=100&fit=crop'
+      type: 'website',
+      content: 'https://www.aihair.com/products',
+      result: {
+        url: 'https://www.aihair.com/products',
+        title: 'AI染发色彩大师 - 产品中心',
+        description: '查看我们的全系列产品，包括染发剂、护理产品、造型用品等'
+      },
+      scanTime: '2024-01-15 13:15:10',
+      status: 'success'
     }, {
       id: 3,
-      type: 'qr',
-      content: 'WIFI:T:WPA;S:AIHair_Shop;P:password123;;',
-      title: '店铺WiFi',
-      timestamp: new Date('2024-01-14 16:45:00'),
-      category: 'wifi',
-      favorite: true,
-      image: null
+      type: 'contact',
+      content: '客服热线：400-123-4567',
+      result: {
+        phone: '400-123-4567',
+        email: 'service@aihair.com',
+        address: '北京市朝阳区科技园区AI大厦',
+        workingHours: '周一至周日 9:00-21:00'
+      },
+      scanTime: '2024-01-15 11:45:30',
+      status: 'success'
     }, {
       id: 4,
-      type: 'qr',
-      content: 'tel:13812345678',
-      title: '客服电话',
-      timestamp: new Date('2024-01-14 09:15:00'),
-      category: 'contact',
-      favorite: false,
-      image: null
-    }, {
-      id: 5,
-      type: 'barcode',
-      content: '1234567890123',
-      title: '深层护理套装',
-      timestamp: new Date('2024-01-13 15:30:00'),
-      category: 'product',
-      favorite: false,
-      image: 'https://images.unsplash.com/photo-1559568495-17e4a6ca8c0f?w=100&h=100&fit=crop'
-    }];
-    setScanHistory(mockHistory);
+      type: 'text',
+      content: '欢迎使用AI染发色彩大师！',
+      result: {
+        text: '欢迎使用AI染发色彩大师！',
+        timestamp: '2024-01-15 10:20:15'
+      },
+      scanTime: '2024-01-15 10:20:15',
+      status: 'success'
+    }]);
   }, []);
 
   // 处理扫码
@@ -381,126 +548,76 @@ export default function QRScanner(props) {
     setIsScanning(true);
     // 模拟扫码过程
     setTimeout(() => {
-      const mockResults = [{
-        type: 'qr',
-        content: 'https://www.aihair.com/special-offer',
-        title: '限时优惠活动',
-        category: 'promotion'
-      }, {
-        type: 'barcode',
-        content: '6901234567891',
-        title: '樱花粉染发剂',
-        category: 'product'
-      }, {
-        type: 'qr',
-        content: 'WIFI:T:WPA;S:AIHair_Guest;P:guest123;;',
-        title: '访客WiFi',
-        category: 'wifi'
-      }];
-      const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)];
-      setScanResult({
-        ...randomResult,
-        timestamp: new Date(),
-        id: Date.now()
-      });
+      const mockResult = {
+        id: Date.now(),
+        type: 'product',
+        content: 'AI染发色彩大师 - 樱花粉染发剂',
+        result: {
+          productName: '樱花粉染发剂',
+          productCode: 'AI-HAIR-002',
+          category: '染发剂',
+          price: '¥118.00',
+          stock: 32,
+          description: '温柔甜美的樱花粉色染发剂，适合春季氛围',
+          manufacturer: 'AI染发科技有限公司',
+          productionDate: '2024-01-05',
+          expiryDate: '2025-01-05',
+          batchNumber: 'BATCH002',
+          ingredients: '氨水、过氧化氢、粉色色素、护发成分',
+          usage: '1. 将染发剂与显色剂按1:1比例混合\n2. 均匀涂抹在干燥的头发上\n3. 等待25-35分钟\n4. 彻底冲洗干净',
+          warnings: '1. 使用前请进行皮肤过敏测试\n2. 避免接触眼睛\n3. 请戴手套操作',
+          storage: '请存放在阴凉干燥处，避免阳光直射'
+        },
+        scanTime: new Date().toLocaleString(),
+        status: 'success'
+      };
+      setScanResult(mockResult);
+      setScanHistory(prev => [mockResult, ...prev]);
       setIsScanning(false);
       setShowResult(true);
-
-      // 自动保存到历史记录
-      if (scanSettings.autoSave) {
-        setScanHistory(prev => [randomResult, ...prev].slice(0, 50));
-      }
-
-      // 震动反馈
-      if (scanSettings.vibrateEnabled && navigator.vibrate) {
-        navigator.vibrate(200);
-      }
       toast({
         title: getText('scanSuccess'),
-        description: `${getText('scanSuccessDesc')}${randomResult.type === 'qr' ? getText('qrCode') : getText('barcode')}`
+        description: mockResult.content
       });
     }, 2000);
   };
 
-  // 处理相册选择
-  const handleImageSelect = () => {
-    // 模拟相册选择
+  // 处理复制
+  const handleCopy = text => {
+    navigator.clipboard.writeText(text);
     toast({
-      title: getText('selectImage'),
-      description: getText('selectImageDesc')
+      title: getText('copySuccess'),
+      description: "内容已复制到剪贴板"
     });
-    setTimeout(() => {
-      handleScan();
-    }, 1000);
   };
 
-  // 处理结果操作
-  const handleResultAction = action => {
-    switch (action) {
-      case 'copy':
-        navigator.clipboard.writeText(scanResult.content);
-        toast({
-          title: getText('copySuccess'),
-          description: getText('copySuccessDesc')
-        });
-        break;
-      case 'share':
-        toast({
-          title: getText('share'),
-          description: getText('shareDesc')
-        });
-        break;
-      case 'open':
-        if (scanResult.content.startsWith('http')) {
-          toast({
-            title: getText('openLink'),
-            description: getText('openLinkDesc')
-          });
-        }
-        break;
-      case 'save':
-        setScanHistory(prev => [scanResult, ...prev].slice(0, 50));
-        toast({
-          title: getText('saveSuccess'),
-          description: getText('saveSuccessDesc')
-        });
-        break;
+  // 处理分享
+  const handleShare = result => {
+    toast({
+      title: getText('shareSuccess'),
+      description: "正在分享扫码结果"
+    });
+  };
+
+  // 处理删除
+  const handleDelete = id => {
+    setScanHistory(prev => prev.filter(item => item.id !== id));
+    toast({
+      title: getText('deleteSuccess'),
+      description: "记录已删除"
+    });
+  };
+
+  // 处理清空历史
+  const handleClearHistory = () => {
+    if (window.confirm(getText('confirmDelete'))) {
+      setScanHistory([]);
+      toast({
+        title: getText('deleteSuccess'),
+        description: "历史记录已清空"
+      });
     }
   };
-
-  // 处理历史记录操作
-  const handleHistoryAction = (id, action) => {
-    switch (action) {
-      case 'favorite':
-        setScanHistory(prev => prev.map(item => item.id === id ? {
-          ...item,
-          favorite: !item.favorite
-        } : item));
-        break;
-      case 'delete':
-        setScanHistory(prev => prev.filter(item => item.id !== id));
-        toast({
-          title: getText('deleteSuccess'),
-          description: getText('deleteSuccessDesc')
-        });
-        break;
-      case 'rescan':
-        const item = scanHistory.find(h => h.id === id);
-        if (item) {
-          setScanResult(item);
-          setShowResult(true);
-          setActiveTab('scanner');
-        }
-        break;
-    }
-  };
-
-  // 过滤历史记录
-  const filteredHistory = scanHistory.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) || item.content.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterType === 'all' || item.type === filterType;
-    return matchesSearch && matchesFilter;
-  });
 
   // 渲染扫码界面
   const renderScanner = () => {
@@ -508,253 +625,257 @@ export default function QRScanner(props) {
         {/* 扫码区域 */}
         <Card>
           <CardContent className="p-6">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">{getText('smartScan')}</h2>
-              <p className="text-gray-600">{getText('description')}</p>
-            </div>
-
-            {/* 扫码预览区 */}
-            <div className="relative mb-6">
-              <div className="w-full h-64 bg-gray-900 rounded-lg overflow-hidden relative">
-                {isScanning ? <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              {!isScanning ? <div className="space-y-6">
+                  <div className="w-64 h-64 mx-auto border-4 border-dashed border-gray-300 rounded-2xl flex items-center justify-center bg-gray-50">
                     <div className="text-center">
-                      <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                      <p className="text-white">{getText('recognizing')}</p>
+                      <QrCode className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600 mb-4">{getText('startScanning')}</p>
+                      <Button onClick={handleScan} className="bg-purple-600 hover:bg-purple-700">
+                        <Camera className="w-4 h-4 mr-2" />
+                        {getText('startScanning')}
+                      </Button>
                     </div>
-                  </div> : <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <QrCode className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                      <p className="text-gray-400">{getText('clickStartScan')}</p>
-                    </div>
-                  </div>}
-                
-                {/* 扫码框 */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-48 h-48 border-2 border-purple-500 rounded-lg">
-                    <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-purple-500 rounded-tl-lg"></div>
-                    <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-purple-500 rounded-tr-lg"></div>
-                    <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-purple-500 rounded-bl-lg"></div>
-                    <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-purple-500 rounded-br-lg"></div>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 扫码按钮 */}
-            <div className="flex space-x-4">
-              <Button onClick={handleScan} disabled={isScanning} className="flex-1 bg-purple-600 hover:bg-purple-700">
-                <Camera className="w-5 h-5 mr-2" />
-                {isScanning ? getText('scanning') : getText('cameraScan')}
-              </Button>
-              <Button onClick={handleImageSelect} variant="outline" className="flex-1">
-                <ImageIcon className="w-5 h-5 mr-2" />
-                {getText('albumSelect')}
-              </Button>
+                  
+                  {/* 扫码提示 */}
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <h4 className="font-medium text-blue-800 mb-2">{getText('scanningTips')}</h4>
+                    <div className="space-y-1 text-sm text-blue-700">
+                      <p>• {getText('tip1')}</p>
+                      <p>• {getText('tip2')}</p>
+                      <p>• {getText('tip3')}</p>
+                      <p>• {getText('tip4')}</p>
+                      <p>• {getText('tip5')}</p>
+                    </div>
+                  </div>
+                </div> : <div className="space-y-6">
+                  <div className="w-64 h-64 mx-auto border-4 border-purple-600 rounded-2xl flex items-center justify-center bg-purple-50 relative overflow-hidden">
+                    {/* 扫描动画 */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-200 to-transparent animate-pulse"></div>
+                    <div className="relative text-center">
+                      <Camera className="w-16 h-16 text-purple-600 mx-auto mb-4 animate-pulse" />
+                      <p className="text-purple-600 font-medium">{getText('scanning')}...</p>
+                    </div>
+                  </div>
+                  
+                  <Button onClick={() => setIsScanning(false)} variant="outline">
+                    <X className="w-4 h-4 mr-2" />
+                    {getText('stopScanning')}
+                  </Button>
+                </div>}
             </div>
           </CardContent>
         </Card>
 
-        {/* 快捷功能 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-            <CardContent className="p-4 text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-full mx-auto mb-2 flex items-center justify-center">
-                <QrCode className="w-6 h-6 text-blue-600" />
+        {/* 扫码结果 */}
+        {showResult && scanResult && <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
+                {getText('scanResult')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-lg">{scanResult.content}</h3>
+                    <p className="text-sm text-gray-600">{scanResult.scanTime}</p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button onClick={() => handleCopy(scanResult.content)} variant="outline" size="sm">
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                    <Button onClick={() => handleShare(scanResult)} variant="outline" size="sm">
+                      <Share2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                {scanResult.type === 'product' && <div className="border-t pt-4">
+                    <h4 className="font-medium mb-3">{getText('productInfo')}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-gray-600">{getText('productName')}</p>
+                        <p className="font-medium">{scanResult.result.productName}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">{getText('productCode')}</p>
+                        <p className="font-medium">{scanResult.result.productCode}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">{getText('category')}</p>
+                        <p className="font-medium">{scanResult.result.category}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">{getText('price')}</p>
+                        <p className="font-medium">{scanResult.result.price}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">{getText('stock')}</p>
+                        <p className="font-medium">{scanResult.result.stock}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">{getText('manufacturer')}</p>
+                        <p className="font-medium">{scanResult.result.manufacturer}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-600 mb-2">{getText('description')}</p>
+                      <p className="text-sm">{scanResult.result.description}</p>
+                    </div>
+                  </div>}
+                
+                {scanResult.type === 'website' && <div className="border-t pt-4">
+                    <h4 className="font-medium mb-3">网站信息</h4>
+                    <div className="space-y-2">
+                      <div>
+                        <p className="text-sm text-gray-600">URL</p>
+                        <p className="font-medium text-blue-600">{scanResult.result.url}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">标题</p>
+                        <p className="font-medium">{scanResult.result.title}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">描述</p>
+                        <p className="text-sm">{scanResult.result.description}</p>
+                      </div>
+                    </div>
+                  </div>}
+                
+                {scanResult.type === 'contact' && <div className="border-t pt-4">
+                    <h4 className="font-medium mb-3">联系方式</h4>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <Phone className="w-4 h-4 text-gray-400" />
+                        <span>{scanResult.result.phone}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Mail className="w-4 h-4 text-gray-400" />
+                        <span>{scanResult.result.email}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <MapPin className="w-4 h-4 text-gray-400" />
+                        <span>{scanResult.result.address}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-gray-400" />
+                        <span>{scanResult.result.workingHours}</span>
+                      </div>
+                    </div>
+                  </div>}
+                
+                {scanResult.type === 'text' && <div className="border-t pt-4">
+                    <h4 className="font-medium mb-3">文本内容</h4>
+                    <p className="text-sm bg-gray-50 p-3 rounded">{scanResult.result.text}</p>
+                  </div>}
               </div>
-              <h3 className="font-medium text-sm">{getText('qrCode')}</h3>
-              <p className="text-xs text-gray-600">{getText('quickRecognize')}</p>
             </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-            <CardContent className="p-4 text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-full mx-auto mb-2 flex items-center justify-center">
-                <Barcode className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="font-medium text-sm">{getText('barcode')}</h3>
-              <p className="text-xs text-gray-600">{getText('productRecognize')}</p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-            <CardContent className="p-4 text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-full mx-auto mb-2 flex items-center justify-center">
-                <History className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="font-medium text-sm">{getText('history')}</h3>
-              <p className="text-xs text-gray-600">{getText('viewHistory')}</p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-            <CardContent className="p-4 text-center">
-              <div className="w-12 h-12 bg-orange-100 rounded-full mx-auto mb-2 flex items-center justify-center">
-                <Settings className="w-6 h-6 text-orange-600" />
-              </div>
-              <h3 className="font-medium text-sm">{getText('settings')}</h3>
-              <p className="text-xs text-gray-600">{getText('scanSettings')}</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>;
-  };
-
-  // 渲染扫码结果
-  const renderScanResult = () => {
-    if (!scanResult) return null;
-    return <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-2xl w-full max-w-md mx-4 max-h-[80vh] overflow-y-auto">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">{getText('scanningResult')}</h3>
-              <button onClick={() => setShowResult(false)} className="p-2 hover:bg-gray-100 rounded-lg">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-          
-          <div className="p-6">
-            {/* 结果类型 */}
-            <div className="flex items-center justify-center mb-4">
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center ${scanResult.type === 'qr' ? 'bg-blue-100' : 'bg-green-100'}`}>
-                {scanResult.type === 'qr' ? <QrCode className="w-8 h-8 text-blue-600" /> : <Barcode className="w-8 h-8 text-green-600" />}
-              </div>
-            </div>
-
-            {/* 结果内容 */}
-            <div className="text-center mb-6">
-              <h4 className="text-lg font-semibold mb-2">{scanResult.title}</h4>
-              <p className="text-sm text-gray-600 break-all">{scanResult.content}</p>
-              <p className="text-xs text-gray-500 mt-2">
-                {scanResult.timestamp.toLocaleString()}
-              </p>
-            </div>
-
-            {/* 操作按钮 */}
-            <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                <Button onClick={() => handleResultAction('copy')} variant="outline" className="w-full">
-                  <Copy className="w-4 h-4 mr-2" />
-                  {getText('copy')}
-                </Button>
-                <Button onClick={() => handleResultAction('share')} variant="outline" className="w-full">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  {getText('share')}
-                </Button>
-              </div>
-              
-              {scanResult.content.startsWith('http') && <Button onClick={() => handleResultAction('open')} className="w-full">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  {getText('openLink')}
-                </Button>}
-              
-              <Button onClick={() => handleResultAction('save')} variant="outline" className="w-full">
-                <Star className="w-4 h-4 mr-2" />
-                {getText('saveToHistory')}
-              </Button>
-            </div>
-          </div>
-        </div>
+          </Card>}
       </div>;
   };
 
   // 渲染历史记录
   const renderHistory = () => {
-    const stats = {
-      total: scanHistory.length,
-      qr: scanHistory.filter(item => item.type === 'qr').length,
-      barcode: scanHistory.filter(item => item.type === 'barcode').length,
-      favorite: scanHistory.filter(item => item.favorite).length
-    };
+    const filteredHistory = scanHistory.filter(item => item.status === 'success');
     return <div className="space-y-6">
-        {/* 统计信息 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* 历史统计 */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
-              <p className="text-sm text-gray-600">{getText('totalRecords')}</p>
+            <CardContent className="p-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-2">{getText('totalScans')}</p>
+                <p className="text-2xl font-bold text-gray-800">{filteredHistory.length}</p>
+                <p className="text-xs text-gray-500">总次数</p>
+              </div>
             </CardContent>
           </Card>
+
           <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-blue-600">{stats.qr}</p>
-              <p className="text-sm text-gray-600">{getText('qrCode')}</p>
+            <CardContent className="p-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-2">{getText('successRate')}</p>
+                <p className="text-2xl font-bold text-green-600">100%</p>
+                <p className="text-xs text-gray-500">成功率</p>
+              </div>
             </CardContent>
           </Card>
+
           <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-green-600">{stats.barcode}</p>
-              <p className="text-sm text-gray-600">{getText('barcode')}</p>
+            <CardContent className="p-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-2">{getText('avgScanTime')}</p>
+                <p className="text-2xl font-bold text-blue-600">2.3s</p>
+                <p className="text-xs text-gray-500">平均时间</p>
+              </div>
             </CardContent>
           </Card>
+
           <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-orange-600">{stats.favorite}</p>
-              <p className="text-sm text-gray-600">{getText('favorite')}</p>
+            <CardContent className="p-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-2">{getText('popularTypes')}</p>
+                <p className="text-2xl font-bold text-purple-600">产品</p>
+                <p className="text-xs text-gray-500">热门类型</p>
+              </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* 搜索和筛选 */}
+        {/* 历史记录列表 */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input type="text" placeholder={getText('searchHistory')} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
-              </div>
-              
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center">
+                <History className="w-5 h-5 mr-2" />
+                {getText('scanHistory')}
+              </CardTitle>
               <div className="flex space-x-2">
-                <select value={filterType} onChange={e => setFilterType(e.target.value)} className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-                  <option value="all">{getText('all')}</option>
-                  <option value="qr">{getText('qrCode')}</option>
-                  <option value="barcode">{getText('barcode')}</option>
-                </select>
-                
-                <Button variant="outline" onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}>
-                  {viewMode === 'grid' ? <List className="w-4 h-4" /> : <Grid3x3 className="w-4 h-4" />}
+                <Button onClick={handleClearHistory} variant="outline" size="sm">
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  {getText('clearHistory')}
                 </Button>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* 历史记录列表 */}
-        <Card>
-          <CardContent className="p-4">
-            {filteredHistory.length === 0 ? <div className="text-center py-8">
-                <History className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">{getText('noHistory')}</p>
-              </div> : <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-4'}>
-                {filteredHistory.map(item => <div key={item.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${item.type === 'qr' ? 'bg-blue-100' : 'bg-green-100'}`}>
-                          {item.type === 'qr' ? <QrCode className="w-5 h-5 text-blue-600" /> : <Barcode className="w-5 h-5 text-green-600" />}
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-sm">{item.title}</h4>
-                          <p className="text-xs text-gray-500">{item.timestamp.toLocaleDateString()}</p>
-                        </div>
+          </CardHeader>
+          <CardContent>
+            {filteredHistory.length === 0 ? <div className="text-center py-12">
+                <History className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">{getText('noHistory')}</h3>
+                <p className="text-gray-600">开始扫码后，记录将显示在这里</p>
+              </div> : <div className="space-y-4">
+                {filteredHistory.map(item => <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        {item.type === 'product' && <Package className="w-6 h-6 text-purple-600" />}
+                        {item.type === 'website' && <Globe className="w-6 h-6 text-purple-600" />}
+                        {item.type === 'contact' && <Phone className="w-6 h-6 text-purple-600" />}
+                        {item.type === 'text' && <FileText className="w-6 h-6 text-purple-600" />}
                       </div>
-                      
-                      <button onClick={() => handleHistoryAction(item.id, 'favorite')} className="p-1 hover:bg-gray-100 rounded">
-                        <Star className={`w-4 h-4 ${item.favorite ? 'text-yellow-500 fill-current' : 'text-gray-400'}`} />
-                      </button>
+                      <div>
+                        <h4 className="font-medium">{item.content}</h4>
+                        <p className="text-sm text-gray-600">{item.scanTime}</p>
+                      </div>
                     </div>
-                    
-                    {item.image && <img src={item.image} alt={item.title} className="w-full h-24 object-cover rounded mb-3" />}
-                    
-                    <p className="text-sm text-gray-600 break-all mb-3">{item.content}</p>
-                    
-                    <div className="flex space-x-2">
-                      <Button size="sm" variant="outline" onClick={() => handleHistoryAction(item.id, 'rescan')}>
-                        <Eye className="w-3 h-3 mr-1" />
-                        {getText('view')}
+                    <div className="flex items-center space-x-2">
+                      <Button onClick={() => {
+                  setScanResult(item);
+                  setShowResult(true);
+                  setActiveTab('scanner');
+                }} variant="outline" size="sm">
+                        <Eye className="w-4 h-4" />
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleHistoryAction(item.id, 'delete')}>
-                        <Trash2 className="w-3 h-3 mr-1" />
-                        {getText('delete')}
+                      <Button onClick={() => handleCopy(item.content)} variant="outline" size="sm">
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                      <Button onClick={() => handleShare(item)} variant="outline" size="sm">
+                        <Share2 className="w-4 h-4" />
+                      </Button>
+                      <Button onClick={() => handleDelete(item.id)} variant="outline" size="sm">
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>)}
@@ -764,181 +885,172 @@ export default function QRScanner(props) {
       </div>;
   };
 
-  // 渲染设置界面
+  // 渲染设置
   const renderSettings = () => {
     return <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>{getText('scanSettings')}</CardTitle>
+            <CardTitle className="flex items-center">
+              <Settings className="w-5 h-5 mr-2" />
+              {getText('scanSettings')}
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-medium">{getText('autoSave')}</h4>
-                <p className="text-sm text-gray-600">{getText('autoSaveDesc')}</p>
+          <CardContent>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">{getText('autoFocus')}</h4>
+                  <p className="text-sm text-gray-600">自动对焦二维码</p>
+                </div>
+                <button className="w-12 h-6 bg-purple-600 rounded-full relative">
+                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                </button>
               </div>
-              <button onClick={() => setScanSettings(prev => ({
-              ...prev,
-              autoSave: !prev.autoSave
-            }))} className={`relative inline-flex h-6 w-11 items-center rounded-full ${scanSettings.autoSave ? 'bg-purple-600' : 'bg-gray-200'}`}>
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${scanSettings.autoSave ? 'translate-x-6' : 'translate-x-1'}`} />
-              </button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-medium">{getText('soundAlert')}</h4>
-                <p className="text-sm text-gray-600">{getText('soundAlertDesc')}</p>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">{getText('flashLight')}</h4>
+                  <p className="text-sm text-gray-600">在光线不足时开启闪光灯</p>
+                </div>
+                <button className="w-12 h-6 bg-gray-300 rounded-full relative">
+                  <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                </button>
               </div>
-              <button onClick={() => setScanSettings(prev => ({
-              ...prev,
-              soundEnabled: !prev.soundEnabled
-            }))} className={`relative inline-flex h-6 w-11 items-center rounded-full ${scanSettings.soundEnabled ? 'bg-purple-600' : 'bg-gray-200'}`}>
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${scanSettings.soundEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
-              </button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-medium">{getText('vibrateFeedback')}</h4>
-                <p className="text-sm text-gray-600">{getText('vibrateFeedbackDesc')}</p>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">{getText('soundEffect')}</h4>
+                  <p className="text-sm text-gray-600">扫码成功时播放提示音</p>
+                </div>
+                <button className="w-12 h-6 bg-purple-600 rounded-full relative">
+                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                </button>
               </div>
-              <button onClick={() => setScanSettings(prev => ({
-              ...prev,
-              vibrateEnabled: !prev.vibrateEnabled
-            }))} className={`relative inline-flex h-6 w-11 items-center rounded-full ${scanSettings.vibrateEnabled ? 'bg-purple-600' : 'bg-gray-200'}`}>
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${scanSettings.vibrateEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
-              </button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-medium">{getText('autoCopy')}</h4>
-                <p className="text-sm text-gray-600">{getText('autoCopyDesc')}</p>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">{getText('vibrate')}</h4>
+                  <p className="text-sm text-gray-600">扫码成功时震动提醒</p>
+                </div>
+                <button className="w-12 h-6 bg-purple-600 rounded-full relative">
+                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                </button>
               </div>
-              <button onClick={() => setScanSettings(prev => ({
-              ...prev,
-              autoCopy: !prev.autoCopy
-            }))} className={`relative inline-flex h-6 w-11 items-center rounded-full ${scanSettings.autoCopy ? 'bg-purple-600' : 'bg-gray-200'}`}>
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${scanSettings.autoCopy ? 'translate-x-6' : 'translate-x-1'}`} />
-              </button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-medium">{getText('previewResult')}</h4>
-                <p className="text-sm text-gray-600">{getText('previewResultDesc')}</p>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">{getText('saveHistory')}</h4>
+                  <p className="text-sm text-gray-600">自动保存扫码历史记录</p>
+                </div>
+                <button className="w-12 h-6 bg-purple-600 rounded-full relative">
+                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                </button>
               </div>
-              <button onClick={() => setScanSettings(prev => ({
-              ...prev,
-              showPreview: !prev.showPreview
-            }))} className={`relative inline-flex h-6 w-11 items-center rounded-full ${scanSettings.showPreview ? 'bg-purple-600' : 'bg-gray-200'}`}>
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${scanSettings.showPreview ? 'translate-x-6' : 'translate-x-1'}`} />
-              </button>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">{getText('autoRecognize')}</h4>
+                  <p className="text-sm text-gray-600">自动识别二维码类型</p>
+                </div>
+                <button className="w-12 h-6 bg-purple-600 rounded-full relative">
+                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                </button>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>{getText('dataManagement')}</CardTitle>
+            <CardTitle>高级设置</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-3 border rounded-lg">
+          <CardContent>
+            <div className="space-y-6">
               <div>
-                <h4 className="font-medium">{getText('exportHistory')}</h4>
-                <p className="text-sm text-gray-600">{getText('exportHistoryDesc')}</p>
+                <h4 className="font-medium mb-3">{getText('scanSpeed')}</h4>
+                <div className="flex space-x-2">
+                  <button className="px-4 py-2 bg-purple-600 text-white rounded-lg">{getText('fast')}</button>
+                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">{getText('normal')}</button>
+                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">{getText('accurate')}</button>
+                </div>
               </div>
-              <Button variant="outline">
-                <Download className="w-4 h-4 mr-2" />
-                {getText('export')}
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 border rounded-lg">
+              
               <div>
-                <h4 className="font-medium">{getText('importHistory')}</h4>
-                <p className="text-sm text-gray-600">{getText('importHistoryDesc')}</p>
+                <h4 className="font-medium mb-3">{getText('quality')}</h4>
+                <div className="flex space-x-2">
+                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">{getText('high')}</button>
+                  <button className="px-4 py-2 bg-purple-600 text-white rounded-lg">{getText('medium')}</button>
+                  <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">{getText('low')}</button>
+                </div>
               </div>
-              <Button variant="outline">
-                <Upload className="w-4 h-4 mr-2" />
-                {getText('import')}
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 border rounded-lg">
-              <div>
-                <h4 className="font-medium text-red-600">{getText('clearHistory')}</h4>
-                <p className="text-sm text-gray-600">{getText('clearHistoryDesc')}</p>
-              </div>
-              <Button variant="outline" className="text-red-600 border-red-600">
-                <Trash2 className="w-4 h-4 mr-2" />
-                {getText('clear')}
-              </Button>
             </div>
           </CardContent>
         </Card>
+
+        <div className="flex space-x-4">
+          <Button className="flex-1 bg-purple-600 hover:bg-purple-700">
+            {getText('saveSettings')}
+          </Button>
+          <Button variant="outline" className="flex-1">
+            {getText('resetSettings')}
+          </Button>
+        </div>
       </div>;
   };
-  return <>
-      <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
-        <div className="container mx-auto px-4 py-8">
-          {/* 页面头部 */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">{getText('title')}</h1>
-              <p className="text-gray-600">{getText('subtitle')}</p>
-            </div>
-            
-            {/* 语言切换 */}
-            <div className="relative">
-              <button className="flex items-center space-x-2 px-3 py-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <Globe className="w-4 h-4 text-gray-600" />
-                <span className="text-sm font-medium">{languages.find(lang => lang.code === selectedLanguage)?.flag}</span>
-              </button>
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
-                {languages.map(lang => <button key={lang.code} onClick={() => setSelectedLanguage(lang.code)} className={`w-full flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 ${selectedLanguage === lang.code ? 'bg-purple-50' : ''}`}>
-                    <span>{lang.flag}</span>
-                    <span className="text-sm">{lang.name}</span>
-                  </button>)}
-              </div>
+  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pb-20">
+      <div className="container mx-auto px-4 py-8">
+        {/* 页面头部 */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">{getText('title')}</h1>
+            <p className="text-gray-600">{getText('subtitle')}</p>
+          </div>
+          
+          {/* 语言切换 */}
+          <div className="relative">
+            <button className="flex items-center space-x-2 px-3 py-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <Globe className="w-4 h-4 text-gray-600" />
+              <span className="text-sm font-medium">{languages.find(lang => lang.code === selectedLanguage)?.flag}</span>
+            </button>
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+              {languages.map(lang => <button key={lang.code} onClick={() => setSelectedLanguage(lang.code)} className={`w-full flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 ${selectedLanguage === lang.code ? 'bg-purple-50' : ''}`}>
+                  <span>{lang.flag}</span>
+                  <span className="text-sm">{lang.name}</span>
+                </button>)}
             </div>
           </div>
-
-          {/* 标签导航 */}
-          <div className="bg-white rounded-lg shadow-sm p-2 mb-8">
-            <div className="flex flex-wrap gap-2">
-              {[{
-              id: 'scanner',
-              name: getText('scanner'),
-              icon: Camera
-            }, {
-              id: 'history',
-              name: getText('history'),
-              icon: History
-            }, {
-              id: 'settings',
-              name: getText('settings'),
-              icon: Settings
-            }].map(tab => {
-              const Icon = tab.icon;
-              return <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center px-4 py-2 rounded-lg transition-all ${activeTab === tab.id ? 'bg-purple-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
-                    <Icon className="w-4 h-4 mr-2" />
-                    {tab.name}
-                  </button>;
-            })}
-            </div>
-          </div>
-
-          {/* 内容区域 */}
-          {activeTab === 'scanner' && renderScanner()}
-          {activeTab === 'history' && renderHistory()}
-          {activeTab === 'settings' && renderSettings()}
         </div>
-      </div>
 
-      {/* 扫码结果弹窗 */}
-      {showResult && renderScanResult()}
+        {/* 标签导航 */}
+        <div className="bg-white rounded-lg shadow-sm p-2 mb-8">
+          <div className="flex flex-wrap gap-2">
+            {[{
+            id: 'scanner',
+            name: getText('scanner'),
+            icon: Scan
+          }, {
+            id: 'history',
+            name: getText('history'),
+            icon: History
+          }, {
+            id: 'settings',
+            name: getText('settings'),
+            icon: Settings
+          }].map(tab => {
+            const Icon = tab.icon;
+            return <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center px-4 py-2 rounded-lg transition-all ${activeTab === tab.id ? 'bg-purple-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
+                  <Icon className="w-4 h-4 mr-2" />
+                  {tab.name}
+                </button>;
+          })}
+          </div>
+        </div>
+
+        {/* 内容区域 */}
+        {activeTab === 'scanner' && renderScanner()}
+        {activeTab === 'history' && renderHistory()}
+        {activeTab === 'settings' && renderSettings()}
+      </div>
 
       {/* 底部导航 */}
       <TabBar currentPage="qr-scanner" onPageChange={pageId => {
@@ -947,5 +1059,5 @@ export default function QRScanner(props) {
         params: {}
       });
     }} />
-    </>;
+    </div>;
 }
