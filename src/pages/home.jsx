@@ -6,10 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, Button, useToast } from '@/co
 import { Home, Package, Bot, Users, TrendingUp, Star, ShoppingCart, Eye, Heart, MessageCircle, Share2, BarChart3, Zap, Shield, Award } from 'lucide-react';
 
 // @ts-ignore;
-import { useAuth } from '@/components/AuthProvider';
-// @ts-ignore;
-import { useData } from '@/components/DataManager';
-// @ts-ignore;
 import { TabBar } from '@/components/TabBar';
 export default function HomePage(props) {
   const {
@@ -17,7 +13,7 @@ export default function HomePage(props) {
     style
   } = props;
 
-  // 临时模拟数据，避免context错误
+  // 临时模拟数据，避免context错误 - 更新为AI美发相关产品
   const [user] = useState({
     name: '访客用户',
     lastLogin: new Date().toISOString()
@@ -25,134 +21,173 @@ export default function HomePage(props) {
   const [isAuthenticated] = useState(false);
   const [products] = useState([{
     id: 1,
-    name: '智能调色机 Pro',
-    category: '设备',
-    price: 29999,
-    description: '高精度智能调色设备，支持AI辅助调色',
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=200&fit=crop',
+    name: 'AI智能染发自动调色宝机',
+    category: '智能设备',
+    price: 4980,
+    description: '新一代AI智能染发设备，自动识别发质、精准调色，一键完成专业染发过程',
+    image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300&h=200&fit=crop',
     stock: 50,
-    rating: 4.8,
-    reviews: 128,
-    features: ['AI智能调色', '高精度传感器', '云端同步', '移动端控制'],
+    rating: 4.9,
+    reviews: 256,
+    features: ['AI发质识别', '精准自动调色', '一键操作', '智能温控'],
     createdAt: '2024-01-15T10:00:00Z',
     updatedAt: '2024-01-15T10:00:00Z'
   }, {
     id: 2,
-    name: '色彩分析仪 Lite',
-    category: '设备',
-    price: 8999,
-    description: '便携式色彩分析工具，专业级色彩识别',
-    image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=200&fit=crop',
-    stock: 120,
-    rating: 4.6,
-    reviews: 89,
-    features: ['便携设计', '专业级精度', '蓝牙连接', 'APP控制'],
+    name: 'AI品牌染发膏管理系统',
+    category: '管理软件',
+    price: 1680,
+    description: '专业染发膏库存管理系统，智能预警、批次追踪、成本控制，让染发产品管理更高效',
+    image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=300&h=200&fit=crop',
+    stock: 999,
+    rating: 4.7,
+    reviews: 128,
+    features: ['智能库存管理', '批次追踪', '成本分析', '预警提醒'],
     createdAt: '2024-01-10T15:30:00Z',
     updatedAt: '2024-01-10T15:30:00Z'
   }, {
     id: 3,
-    name: '配方管理系统',
-    category: '软件',
-    price: 4999,
-    description: '全面的配方管理和分析系统',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop',
+    name: 'AI客户配方管理系统',
+    category: '管理软件',
+    price: 2680,
+    description: '智能客户染发配方管理，记录客户偏好、历史配方、过敏信息，提供个性化服务体验',
+    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop',
     stock: 999,
-    rating: 4.7,
-    reviews: 56,
-    features: ['配方管理', '成本分析', '库存管理', '报表生成'],
+    rating: 4.8,
+    reviews: 189,
+    features: ['客户档案管理', '配方历史记录', '过敏信息提醒', '个性化推荐'],
     createdAt: '2024-01-08T09:15:00Z',
     updatedAt: '2024-01-08T09:15:00Z'
+  }, {
+    id: 4,
+    name: 'AI美发连锁门店管理系统',
+    category: '管理软件',
+    price: 3680,
+    description: '专为美发连锁店设计的一体化管理解决方案，涵盖预约、员工、财务、营销等全方位管理',
+    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop',
+    stock: 999,
+    rating: 4.6,
+    reviews: 167,
+    features: ['多店统一管理', '智能预约系统', '员工绩效管理', '财务报表分析'],
+    createdAt: '2024-01-05T14:20:00Z',
+    updatedAt: '2024-01-05T14:20:00Z'
+  }, {
+    id: 5,
+    name: 'AI美发客户管理系统CRM',
+    category: '管理软件',
+    price: 6800,
+    description: '专业美发行业CRM系统，客户关系维护、营销自动化、数据分析，助力门店业绩增长',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop',
+    stock: 999,
+    rating: 4.8,
+    reviews: 234,
+    features: ['客户关系管理', '营销自动化', '数据分析洞察', '会员积分系统'],
+    createdAt: '2024-01-03T11:45:00Z',
+    updatedAt: '2024-01-03T11:45:00Z'
+  }, {
+    id: 6,
+    name: 'AI染发色彩大师AI原生开源SaaS系统',
+    category: 'SaaS平台',
+    price: 8800,
+    description: '基于AI原生技术开发的染发色彩管理SaaS平台，开源架构、云端部署、支持定制化开发',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop',
+    stock: 999,
+    rating: 4.9,
+    reviews: 312,
+    features: ['AI原生架构', '开源可定制', '云端SaaS部署', 'API接口丰富'],
+    createdAt: '2024-01-01T16:30:00Z',
+    updatedAt: '2024-01-01T16:30:00Z'
   }]);
   const [formulas] = useState([{
     id: 1,
-    name: '天空蓝标准配方',
-    type: '水性涂料',
-    color: '#87CEEB',
+    name: '时尚奶茶色染发配方',
+    type: '潮流染发',
+    color: '#D2B48C',
     ingredients: [{
-      name: '钛白粉',
-      amount: 45,
-      unit: 'kg'
+      name: '奶茶色染发剂',
+      amount: 60,
+      unit: 'ml'
     }, {
-      name: '蓝色颜料',
-      amount: 12,
-      unit: 'kg'
+      name: '双氧奶',
+      amount: 60,
+      unit: 'ml'
     }, {
-      name: '添加剂',
-      amount: 3,
-      unit: 'kg'
+      name: '护色精华',
+      amount: 10,
+      unit: 'ml'
     }, {
-      name: '水',
-      amount: 40,
-      unit: 'kg'
+      name: '修护精华',
+      amount: 5,
+      unit: 'ml'
     }],
-    totalWeight: 100,
-    cost: 156.8,
+    totalWeight: 135,
+    cost: 89.9,
     createdBy: 1,
     createdAt: '2024-01-12T14:20:00Z',
-    usage: 234
+    usage: 456
   }, {
     id: 2,
-    name: '森林绿环保配方',
-    type: '环保涂料',
-    color: '#228B22',
+    name: '高级灰金色染发配方',
+    type: '高端染发',
+    color: '#C0C0C0',
     ingredients: [{
-      name: '环保树脂',
-      amount: 50,
-      unit: 'kg'
+      name: '灰金色染发剂',
+      amount: 75,
+      unit: 'ml'
     }, {
-      name: '绿色颜料',
+      name: '9%双氧奶',
+      amount: 75,
+      unit: 'ml'
+    }, {
+      name: '抗褪色剂',
+      amount: 15,
+      unit: 'ml'
+    }, {
+      name: '光泽精华',
       amount: 8,
-      unit: 'kg'
-    }, {
-      name: '天然填料',
-      amount: 30,
-      unit: 'kg'
-    }, {
-      name: '水',
-      amount: 12,
-      unit: 'kg'
+      unit: 'ml'
     }],
-    totalWeight: 100,
-    cost: 189.5,
+    totalWeight: 173,
+    cost: 128.5,
     createdBy: 1,
     createdAt: '2024-01-11T16:45:00Z',
-    usage: 156
+    usage: 289
   }]);
   const [colors] = useState([{
     id: 1,
-    name: '天空蓝',
-    hex: '#87CEEB',
-    rgb: '135, 206, 235',
-    category: '蓝色系',
-    pantone: '290 C',
-    usage: 89,
-    popularity: 4.7,
-    description: '清新明亮的天空蓝色，适合室内装饰',
-    combinations: ['#FFFFFF', '#F0F8FF', '#4682B4'],
+    name: '奶茶色',
+    hex: '#D2B48C',
+    rgb: '210, 180, 140',
+    category: '棕色系',
+    pantone: '4685 C',
+    usage: 156,
+    popularity: 4.8,
+    description: '温柔自然的奶茶色，适合各种肤色，是当下最流行的发色之一',
+    combinations: ['#8B4513', '#F5DEB3', '#DEB887'],
     createdAt: '2024-01-05T11:30:00Z'
   }, {
     id: 2,
-    name: '森林绿',
-    hex: '#228B22',
-    rgb: '34, 139, 34',
-    category: '绿色系',
-    pantone: '355 C',
-    usage: 67,
-    popularity: 4.5,
-    description: '自然深沉的森林绿色，环保涂料首选',
-    combinations: ['#FFFFFF', '#F5DEB3', '#8B4513'],
+    name: '灰金色',
+    hex: '#C0C0C0',
+    rgb: '192, 192, 192',
+    category: '金色系',
+    pantone: '877 C',
+    usage: 134,
+    popularity: 4.6,
+    description: '高级感十足的灰金色，时尚前卫，适合追求个性的年轻人群',
+    combinations: ['#FFFFFF', '#808080', '#FFD700'],
     createdAt: '2024-01-06T13:15:00Z'
   }, {
     id: 3,
-    name: '珊瑚红',
-    hex: '#FF7F50',
-    rgb: '255, 127, 80',
-    category: '红色系',
-    pantone: '164 C',
-    usage: 45,
-    popularity: 4.3,
-    description: '温暖活力的珊瑚红色，现代装饰流行色',
-    combinations: ['#FFFFFF', '#FFE4B5', '#FF6347'],
+    name: '玫瑰粉',
+    hex: '#FFB6C1',
+    rgb: '255, 182, 193',
+    category: '粉色系',
+    pantone: '706 C',
+    usage: 98,
+    popularity: 4.4,
+    description: '浪漫甜美的玫瑰粉，充满少女感，适合皮肤白皙的人群',
+    combinations: ['#FFFFFF', '#FFC0CB', '#FF69B4'],
     createdAt: '2024-01-07T10:45:00Z'
   }]);
   const [loading] = useState(false);
@@ -319,10 +354,10 @@ export default function HomePage(props) {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">
-                {isAuthenticated ? `欢迎回来，${user?.name}！` : '欢迎来到智能调色系统'}
+                {isAuthenticated ? `欢迎回来，${user?.name}！` : '欢迎来到AI美发智能系统'}
               </h1>
               <p className="text-white/80">
-                {isAuthenticated ? '探索智能调色的无限可能' : '登录以体验完整功能'}
+                {isAuthenticated ? '探索AI美发的无限可能' : '登录以体验完整功能'}
               </p>
             </div>
             
@@ -342,7 +377,7 @@ export default function HomePage(props) {
             <CardContent className="p-4 text-center">
               <Package className="w-8 h-8 text-blue-400 mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">{stats.totalProducts}</div>
-              <div className="text-sm text-white/80">产品总数</div>
+              <div className="text-sm text-white/80">AI产品总数</div>
             </CardContent>
           </Card>
           
@@ -350,7 +385,7 @@ export default function HomePage(props) {
             <CardContent className="p-4 text-center">
               <BarChart3 className="w-8 h-8 text-green-400 mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">{stats.totalFormulas}</div>
-              <div className="text-sm text-white/80">配方总数</div>
+              <div className="text-sm text-white/80">染发配方总数</div>
             </CardContent>
           </Card>
           
@@ -358,7 +393,7 @@ export default function HomePage(props) {
             <CardContent className="p-4 text-center">
               <div className="w-8 h-8 bg-gradient-to-r from-red-400 to-yellow-400 rounded-full mx-auto mb-2"></div>
               <div className="text-2xl font-bold text-white">{stats.totalColors}</div>
-              <div className="text-sm text-white/80">色彩总数</div>
+              <div className="text-sm text-white/80">流行色彩总数</div>
             </CardContent>
           </Card>
           
@@ -366,7 +401,7 @@ export default function HomePage(props) {
             <CardContent className="p-4 text-center">
               <Users className="w-8 h-8 text-purple-400 mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">{stats.totalUsers}</div>
-              <div className="text-sm text-white/80">用户总数</div>
+              <div className="text-sm text-white/80">合作门店总数</div>
             </CardContent>
           </Card>
         </div>
@@ -383,7 +418,7 @@ export default function HomePage(props) {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Button onClick={() => handleQuickAction('ai-chat')} className="bg-white/20 hover:bg-white/30 text-white border border-white/30 h-20 flex flex-col">
                 <Bot className="w-6 h-6 mb-2" />
-                <span className="text-sm">AI助手</span>
+                <span className="text-sm">AI染发顾问</span>
               </Button>
               
               <Button onClick={() => handleQuickAction('qr-scanner')} className="bg-white/20 hover:bg-white/30 text-white border border-white/30 h-20 flex flex-col">
@@ -410,7 +445,7 @@ export default function HomePage(props) {
             <CardTitle className="text-white flex items-center justify-between">
               <span className="flex items-center">
                 <Star className="w-5 h-5 mr-2" />
-                特色产品
+                热门AI美发产品
               </span>
               <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo && $w.utils.navigateTo({
               pageId: 'products',
@@ -446,7 +481,7 @@ export default function HomePage(props) {
             <CardTitle className="text-white flex items-center justify-between">
               <span className="flex items-center">
                 <TrendingUp className="w-5 h-5 mr-2" />
-                热门配方
+                热门染发配方
               </span>
               <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo && $w.utils.navigateTo({
               pageId: 'formula-management',
@@ -485,7 +520,7 @@ export default function HomePage(props) {
             <CardTitle className="text-white flex items-center justify-between">
               <span className="flex items-center">
                 <div className="w-5 h-5 bg-gradient-to-r from-red-400 via-yellow-400 to-blue-400 rounded-full mr-2"></div>
-                流行色彩
+                流行发色趋势
               </span>
               <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo && $w.utils.navigateTo({
               pageId: 'color-library',

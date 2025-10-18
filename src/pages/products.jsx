@@ -13,7 +13,7 @@ export default function ProductsPage(props) {
     style
   } = props;
 
-  // 临时模拟数据
+  // 临时模拟数据 - 更新为AI美发相关产品
   const [user] = useState({
     name: '访客用户',
     role: 'user',
@@ -22,69 +22,82 @@ export default function ProductsPage(props) {
   const [isAuthenticated] = useState(false);
   const [products] = useState([{
     id: 1,
-    name: '智能调色机 Pro',
-    category: '设备',
-    price: 29999,
-    description: '高精度智能调色设备，支持AI辅助调色，适用于专业调色场景',
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=200&fit=crop',
+    name: 'AI智能染发自动调色宝机',
+    category: '智能设备',
+    price: 4980,
+    description: '新一代AI智能染发设备，自动识别发质、精准调色，一键完成专业染发过程，大幅提升门店效率',
+    image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300&h=200&fit=crop',
     stock: 50,
-    rating: 4.8,
-    reviews: 128,
-    features: ['AI智能调色', '高精度传感器', '云端同步', '移动端控制'],
+    rating: 4.9,
+    reviews: 256,
+    features: ['AI发质识别', '精准自动调色', '一键操作', '智能温控'],
     createdAt: '2024-01-15T10:00:00Z',
     updatedAt: '2024-01-15T10:00:00Z'
   }, {
     id: 2,
-    name: '色彩分析仪 Lite',
-    category: '设备',
-    price: 8999,
-    description: '便携式色彩分析工具，专业级色彩识别，适合现场使用',
-    image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=200&fit=crop',
-    stock: 120,
-    rating: 4.6,
-    reviews: 89,
-    features: ['便携设计', '专业级精度', '蓝牙连接', 'APP控制'],
+    name: 'AI品牌染发膏管理系统',
+    category: '管理软件',
+    price: 1680,
+    description: '专业染发膏库存管理系统，智能预警、批次追踪、成本控制，让染发产品管理更高效',
+    image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=300&h=200&fit=crop',
+    stock: 999,
+    rating: 4.7,
+    reviews: 128,
+    features: ['智能库存管理', '批次追踪', '成本分析', '预警提醒'],
     createdAt: '2024-01-10T15:30:00Z',
     updatedAt: '2024-01-10T15:30:00Z'
   }, {
     id: 3,
-    name: '配方管理系统',
-    category: '软件',
-    price: 4999,
-    description: '全面的配方管理和分析系统，支持成本分析和库存管理',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop',
+    name: 'AI客户配方管理系统',
+    category: '管理软件',
+    price: 2680,
+    description: '智能客户染发配方管理，记录客户偏好、历史配方、过敏信息，提供个性化服务体验',
+    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop',
     stock: 999,
-    rating: 4.7,
-    reviews: 56,
-    features: ['配方管理', '成本分析', '库存管理', '报表生成'],
+    rating: 4.8,
+    reviews: 189,
+    features: ['客户档案管理', '配方历史记录', '过敏信息提醒', '个性化推荐'],
     createdAt: '2024-01-08T09:15:00Z',
     updatedAt: '2024-01-08T09:15:00Z'
   }, {
     id: 4,
-    name: '智能配色助手',
-    category: '软件',
-    price: 2999,
-    description: 'AI驱动的配色建议工具，提供专业的色彩搭配方案',
-    image: 'https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=300&h=200&fit=crop',
+    name: 'AI美发连锁门店管理系统',
+    category: '管理软件',
+    price: 3680,
+    description: '专为美发连锁店设计的一体化管理解决方案，涵盖预约、员工、财务、营销等全方位管理',
+    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop',
     stock: 999,
-    rating: 4.5,
-    reviews: 34,
-    features: ['AI配色建议', '色彩趋势分析', '搭配方案生成', '历史记录管理'],
+    rating: 4.6,
+    reviews: 167,
+    features: ['多店统一管理', '智能预约系统', '员工绩效管理', '财务报表分析'],
     createdAt: '2024-01-05T14:20:00Z',
     updatedAt: '2024-01-05T14:20:00Z'
   }, {
     id: 5,
-    name: '环保涂料套装',
-    category: '材料',
-    price: 1599,
-    description: '环保型涂料套装，包含基础色彩和工具',
-    image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=300&h=200&fit=crop',
-    stock: 200,
-    rating: 4.4,
-    reviews: 67,
-    features: ['环保配方', '无毒无害', '易于施工', '持久耐用'],
+    name: 'AI美发客户管理系统CRM',
+    category: '管理软件',
+    price: 6800,
+    description: '专业美发行业CRM系统，客户关系维护、营销自动化、数据分析，助力门店业绩增长',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop',
+    stock: 999,
+    rating: 4.8,
+    reviews: 234,
+    features: ['客户关系管理', '营销自动化', '数据分析洞察', '会员积分系统'],
     createdAt: '2024-01-03T11:45:00Z',
     updatedAt: '2024-01-03T11:45:00Z'
+  }, {
+    id: 6,
+    name: 'AI染发色彩大师AI原生开源SaaS系统',
+    category: 'SaaS平台',
+    price: 8800,
+    description: '基于AI原生技术开发的染发色彩管理SaaS平台，开源架构、云端部署、支持定制化开发',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop',
+    stock: 999,
+    rating: 4.9,
+    reviews: 312,
+    features: ['AI原生架构', '开源可定制', '云端SaaS部署', 'API接口丰富'],
+    createdAt: '2024-01-01T16:30:00Z',
+    updatedAt: '2024-01-01T16:30:00Z'
   }]);
   const [loading] = useState(false);
   const {
@@ -215,8 +228,8 @@ export default function ProductsPage(props) {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">产品中心</h1>
-              <p className="text-white/80">探索我们的智能调色产品系列</p>
+              <h1 className="text-3xl font-bold text-white mb-2">AI美发产品中心</h1>
+              <p className="text-white/80">探索智能美发解决方案，提升门店效率与服务质量</p>
             </div>
             
             {hasPermission('product:write') && <Button onClick={() => toast({
@@ -239,7 +252,7 @@ export default function ProductsPage(props) {
               {/* 搜索框 */}
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4" />
-                <Input placeholder="搜索产品..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-white/10 border-white/20 text-white placeholder-white/60" />
+                <Input placeholder="搜索AI美发产品..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 bg-white/10 border-white/20 text-white placeholder-white/60" />
               </div>
 
               {/* 分类筛选 */}
@@ -308,6 +321,13 @@ export default function ProductsPage(props) {
                       <span className="text-white/60 text-sm">{product.category}</span>
                     </div>
 
+                    {/* 产品特性标签 */}
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {product.features.slice(0, 2).map((feature, index) => <span key={index} className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded-full">
+                          {feature}
+                        </span>)}
+                    </div>
+
                     <div className="flex gap-2">
                       <Button onClick={() => handleAddToCart(product)} className="flex-1 bg-white/20 hover:bg-white/30 text-white border border-white/30">
                         <ShoppingCart className="w-4 h-4 mr-2" />
@@ -346,6 +366,13 @@ export default function ProductsPage(props) {
                           <div>
                             <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
                             <p className="text-white/60 text-sm mb-3 line-clamp-2">{product.description}</p>
+                            
+                            {/* 产品特性标签 */}
+                            <div className="flex flex-wrap gap-1 mb-3">
+                              {product.features.slice(0, 3).map((feature, index) => <span key={index} className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded-full">
+                                  {feature}
+                                </span>)}
+                            </div>
                             
                             <div className="flex items-center gap-4 text-sm">
                               <span className="text-white font-bold">¥{product.price.toLocaleString()}</span>
