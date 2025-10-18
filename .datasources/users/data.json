@@ -1,0 +1,54 @@
+
+[
+  {
+    "_id": "user_001",
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "hashed_password_123",
+    "avatar": "https://picsum.photos/seed/admin/200/200.jpg",
+    "phone": "13800138000",
+    "role": "admin",
+    "status": "active",
+    "preferences": {
+      "language": "zh-CN",
+      "theme": "light",
+      "notifications": true
+    },
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "_id": "user_002",
+    "username": "manager",
+    "email": "manager@example.com",
+    "password": "hashed_password_456",
+    "avatar": "https://picsum.photos/seed/manager/200/200.jpg",
+    "phone": "13800138001",
+    "role": "manager",
+    "status": "active",
+    "preferences": {
+      "language": "zh-CN",
+      "theme": "light",
+      "notifications": true
+    },
+    "createdAt": "2024-01-02T00:00:00Z",
+    "updatedAt": "2024-01-02T00:00:00Z"
+  },
+  {
+    "_id": "user_003",
+    "username": "technician",
+    "email": "tech@example.com",
+    "password": "hashed_password_789",
+    "avatar": "https://picsum.photos/seed/tech/200/200.jpg",
+    "phone": "13800138002",
+    "role": "technician",
+    "status": "active",
+    "preferences": {
+      "language": "zh-CN",
+      "theme": "light",
+      "notifications": false
+    },
+    "createdAt": "2024-01-03T00:00:00Z",
+    "updatedAt": "2024-01-03T00:00:00Z"
+  }
+]

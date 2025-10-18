@@ -1,0 +1,159 @@
+
+{
+  "name": "stores",
+  "description": "门店信息表",
+  "fields": {
+    "_id": {
+      "type": "string",
+      "description": "门店ID",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "description": "门店名称",
+      "required": true
+    },
+    "type": {
+      "type": "string",
+      "description": "门店类型",
+      "enum": ["flagship", "standard", "express", "online"],
+      "required": true
+    },
+    "address": {
+      "type": "object",
+      "description": "地址信息",
+      "required": true,
+      "properties": {
+        "province": {
+          "type": "string",
+          "description": "省份"
+        },
+        "city": {
+          "type": "string",
+          "description": "城市"
+        },
+        "district": {
+          "type": "string",
+          "description": "区域"
+        },
+        "street": {
+          "type": "string",
+          "description": "街道地址"
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "邮政编码"
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "description": "联系方式",
+      "required": true,
+      "properties": {
+        "phone": {
+          "type": "string",
+          "description": "电话"
+        },
+        "email": {
+          "type": "string",
+          "description": "邮箱"
+        },
+        "website": {
+          "type": "string",
+          "description": "网站"
+        }
+      }
+    },
+    "coordinates": {
+      "type": "object",
+      "description": "地理坐标",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "description": "纬度"
+        },
+        "longitude": {
+          "type": "number",
+          "description": "经度"
+        }
+      }
+    },
+    "businessHours": {
+      "type": "object",
+      "description": "营业时间",
+      "properties": {
+        "weekdays": {
+          "type": "string",
+          "description": "工作日营业时间"
+        },
+        "weekends": {
+          "type": "string",
+          "description": "周末营业时间"
+        },
+        "holidays": {
+          "type": "string",
+          "description": "节假日营业时间"
+        }
+      }
+    },
+    "services": {
+      "type": "array",
+      "description": "提供服务",
+      "items": {
+        "type": "string"
+      }
+    },
+    "facilities": {
+      "type": "array",
+      "description": "设施设备",
+      "items": {
+        "type": "string"
+      }
+    },
+    "manager": {
+      "type": "string",
+      "description": "店长ID"
+    },
+    "staff": {
+      "type": "array",
+      "description": "员工列表",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "description": "门店状态",
+      "enum": ["active", "inactive", "maintenance"],
+      "default": "active"
+    },
+    "rating": {
+      "type": "number",
+      "description": "评分",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 0
+    },
+    "reviews": {
+      "type": "number",
+      "description": "评论数",
+      "default": 0
+    },
+    "images": {
+      "type": "array",
+      "description": "门店图片",
+      "items": {
+        "type": "string"
+      }
+    },
+    "createdAt": {
+      "type": "datetime",
+      "description": "创建时间"
+    },
+    "updatedAt": {
+      "type": "datetime",
+      "description": "更新时间"
+    }
+  }
+}

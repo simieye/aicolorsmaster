@@ -1,0 +1,105 @@
+
+{
+  "name": "products",
+  "description": "产品信息表",
+  "fields": {
+    "_id": {
+      "type": "string",
+      "description": "产品ID",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "description": "产品名称",
+      "required": true
+    },
+    "category": {
+      "type": "string",
+      "description": "产品分类",
+      "enum": ["paint", "coating", "primer", "additive", "tool"],
+      "required": true
+    },
+    "brand": {
+      "type": "string",
+      "description": "品牌",
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "description": "产品描述"
+    },
+    "price": {
+      "type": "number",
+      "description": "价格",
+      "required": true
+    },
+    "unit": {
+      "type": "string",
+      "description": "单位",
+      "default": "L"
+    },
+    "stock": {
+      "type": "number",
+      "description": "库存数量",
+      "required": true
+    },
+    "images": {
+      "type": "array",
+      "description": "产品图片",
+      "items": {
+        "type": "string"
+      }
+    },
+    "specifications": {
+      "type": "object",
+      "description": "产品规格",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "viscosity": {
+          "type": "string"
+        },
+        "coverage": {
+          "type": "string"
+        },
+        "dryingTime": {
+          "type": "string"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "description": "产品状态",
+      "enum": ["active", "inactive", "discontinued"],
+      "default": "active"
+    },
+    "tags": {
+      "type": "array",
+      "description": "标签",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rating": {
+      "type": "number",
+      "description": "评分",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 0
+    },
+    "reviews": {
+      "type": "number",
+      "description": "评论数",
+      "default": 0
+    },
+    "createdAt": {
+      "type": "datetime",
+      "description": "创建时间"
+    },
+    "updatedAt": {
+      "type": "datetime",
+      "description": "更新时间"
+    }
+  }
+}

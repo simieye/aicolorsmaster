@@ -1,0 +1,80 @@
+
+[
+  {
+    "_id": "product_001",
+    "name": "高级环保内墙漆",
+    "category": "paint",
+    "brand": "美涂士",
+    "description": "采用先进环保配方，无甲醛添加，适合室内装修使用",
+    "price": 298.00,
+    "unit": "L",
+    "stock": 500,
+    "images": [
+      "https://picsum.photos/seed/paint1/400/300.jpg",
+      "https://picsum.photos/seed/paint1_2/400/300.jpg"
+    ],
+    "specifications": {
+      "color": "白色",
+      "viscosity": "中等",
+      "coverage": "12-15㎡/L",
+      "dryingTime": "2小时"
+    },
+    "status": "active",
+    "tags": ["环保", "内墙", "无甲醛"],
+    "rating": 4.5,
+    "reviews": 128,
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "_id": "product_002",
+    "name": "防水外墙涂料",
+    "category": "coating",
+    "brand": "立邦",
+    "description": "超强防水性能，耐候性强，适合建筑外墙使用",
+    "price": 458.00,
+    "unit": "L",
+    "stock": 300,
+    "images": [
+      "https://picsum.photos/seed/coating1/400/300.jpg",
+      "https://picsum.photos/seed/coating1_2/400/300.jpg"
+    ],
+    "specifications": {
+      "color": "灰色",
+      "viscosity": "高",
+      "coverage": "8-10㎡/L",
+      "dryingTime": "4小时"
+    },
+    "status": "active",
+    "tags": ["防水", "外墙", "耐候"],
+    "rating": 4.8,
+    "reviews": 89,
+    "createdAt": "2024-01-02T00:00:00Z",
+    "updatedAt": "2024-01-02T00:00:00Z"
+  },
+  {
+    "_id": "product_003",
+    "name": "强力底漆",
+    "category": "primer",
+    "brand": "多乐士",
+    "description": "增强附着力，提高面漆效果，适合各种基材",
+    "price": 168.00,
+    "unit": "L",
+    "stock": 800,
+    "images": [
+      "https://picsum.photos/seed/primer1/400/300.jpg"
+    ],
+    "specifications": {
+      "color": "透明",
+      "viscosity": "低",
+      "coverage": "15-18㎡/L",
+      "dryingTime": "1小时"
+    },
+    "status": "active",
+    "tags": ["底漆", "附着力", "通用"],
+    "rating": 4.2,
+    "reviews": 56,
+    "createdAt": "2024-01-03T00:00:00Z",
+    "updatedAt": "2024-01-03T00:00:00Z"
+  }
+]

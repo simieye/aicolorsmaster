@@ -1,0 +1,158 @@
+
+{
+  "name": "formulas",
+  "description": "配方信息表",
+  "fields": {
+    "_id": {
+      "type": "string",
+      "description": "配方ID",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "description": "配方名称",
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "description": "配方描述"
+    },
+    "category": {
+      "type": "string",
+      "description": "配方分类",
+      "enum": ["interior", "exterior", "metal", "wood", "special"],
+      "required": true
+    },
+    "difficulty": {
+      "type": "string",
+      "description": "难度等级",
+      "enum": ["beginner", "intermediate", "advanced"],
+      "default": "intermediate"
+    },
+    "ingredients": {
+      "type": "array",
+      "description": "配方成分",
+      "required": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "成分名称"
+          },
+          "percentage": {
+            "type": "number",
+            "description": "百分比"
+          },
+          "unit": {
+            "type": "string",
+            "description": "单位"
+          }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "description": "制作步骤",
+      "required": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "number",
+            "description": "步骤顺序"
+          },
+          "description": {
+            "type": "string",
+            "description": "步骤描述"
+          },
+          "duration": {
+            "type": "string",
+            "description": "所需时间"
+          }
+        }
+      }
+    },
+    "color": {
+      "type": "object",
+      "description": "颜色信息",
+      "properties": {
+        "hex": {
+          "type": "string",
+          "description": "十六进制颜色值"
+        },
+        "rgb": {
+          "type": "string",
+          "description": "RGB颜色值"
+        },
+        "name": {
+          "type": "string",
+          "description": "颜色名称"
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "description": "性能指标",
+      "properties": {
+        "coverage": {
+          "type": "string",
+          "description": "覆盖率"
+        },
+        "dryingTime": {
+          "type": "string",
+          "description": "干燥时间"
+        },
+        "durability": {
+          "type": "string",
+          "description": "耐久性"
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "description": "安全信息",
+      "properties": {
+        "warning": {
+          "type": "string",
+          "description": "警告信息"
+        },
+        "protection": {
+          "type": "array",
+          "description": "防护措施",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "author": {
+      "type": "string",
+      "description": "创建者ID"
+    },
+    "status": {
+      "type": "string",
+      "description": "配方状态",
+      "enum": ["draft", "published", "archived"],
+      "default": "draft"
+    },
+    "views": {
+      "type": "number",
+      "description": "浏览次数",
+      "default": 0
+    },
+    "likes": {
+      "type": "number",
+      "description": "点赞数",
+      "default": 0
+    },
+    "createdAt": {
+      "type": "datetime",
+      "description": "创建时间"
+    },
+    "updatedAt": {
+      "type": "datetime",
+      "description": "更新时间"
+    }
+  }
+}

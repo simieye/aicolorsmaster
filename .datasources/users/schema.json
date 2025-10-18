@@ -1,0 +1,72 @@
+
+{
+  "name": "users",
+  "description": "用户信息表",
+  "fields": {
+    "_id": {
+      "type": "string",
+      "description": "用户ID",
+      "required": true
+    },
+    "username": {
+      "type": "string",
+      "description": "用户名",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "description": "邮箱",
+      "required": true
+    },
+    "password": {
+      "type": "string",
+      "description": "密码",
+      "required": true
+    },
+    "avatar": {
+      "type": "string",
+      "description": "头像URL"
+    },
+    "phone": {
+      "type": "string",
+      "description": "手机号"
+    },
+    "role": {
+      "type": "string",
+      "description": "用户角色",
+      "enum": ["admin", "user", "manager", "technician"]
+    },
+    "status": {
+      "type": "string",
+      "description": "用户状态",
+      "enum": ["active", "inactive", "banned"],
+      "default": "active"
+    },
+    "preferences": {
+      "type": "object",
+      "description": "用户偏好设置",
+      "properties": {
+        "language": {
+          "type": "string",
+          "default": "zh-CN"
+        },
+        "theme": {
+          "type": "string",
+          "default": "light"
+        },
+        "notifications": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "createdAt": {
+      "type": "datetime",
+      "description": "创建时间"
+    },
+    "updatedAt": {
+      "type": "datetime",
+      "description": "更新时间"
+    }
+  }
+}

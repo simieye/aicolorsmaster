@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>涂料社区</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #fb923c 0%, #ec4899 50%, #a855f7 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .post-card {
+            transition: all 0.3s ease;
+        }
+        .post-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .tab-active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #7c3aed;
+        }
+        .role-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-white">
+    <!-- 头部导航 -->
+    <header class="glass-effect border-b border-white/20">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-users text-3xl text-white"></i>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">涂料社区</h1>
+                        <p class="text-sm text-white/80">分享经验，交流心得</p>
+                    </div>
+                </div>
+                <button class="bg-white text-purple-600 hover:bg-white/90 px-4 py-2 rounded-lg font-medium transition-colors">
+                    <i class="fas fa-plus mr-2"></i>发布帖子
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-6 pb-24">
+        <!-- 搜索和筛选 -->
+        <div class="glass-effect rounded-xl p-4 mb-6">
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1 relative">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60"></i>
+                    <input type="text" placeholder="搜索帖子、标签或用户..." 
+                           class="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-white/40 focus:outline-none">
+                </div>
+                <select class="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:border-white/40 focus:outline-none">
+                    <option value="all">全部分类</option>
+                    <option value="discussion">讨论</option>
+                    <option value="showcase">展示</option>
+                    <option value="question">问答</option>
+                    <option value="tutorial">教程</option>
+                    <option value="news">资讯</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 标签页 -->
+        <div class="flex space-x-1 mb-6 bg-white/10 rounded-lg p-1">
+            <button class="flex-1 py-2 px-4 rounded-lg font-medium tab-active transition-colors">
+                <i class="fas fa-fire mr-2"></i>热门
+            </button>
+            <button class="flex-1 py-2 px-4 rounded-lg font-medium text-white/80 hover:text-white transition-colors">
+                <i class="fas fa-clock mr-2"></i>最新
+            </button>
+            <button class="flex-1 py-2 px-4 rounded-lg font-medium text-white/80 hover:text-white transition-colors">
+                <i class="fas fa-users mr-2"></i>关注
+            </button>
+        </div>
+
+        <!-- 帖子列表 -->
+        <div class="space-y-4">
+            <!-- 帖子1 -->
+            <div class="glass-effect rounded-xl post-card">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/seed/user1/200/200.jpg" alt="用户头像" class="w-10 h-10 rounded-full">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="text-white font-medium">设计师小王</h3>
+                                    <span class="role-badge bg-purple-500">设计师</span>
+                                </div>
+                                <p class="text-white/60 text-sm">2天前</p>
+                            </div>
+                        </div>
+                        <button class="text-white/60 hover:text-white">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    
+                    <h2 class="text-white font-medium text-lg mb-2">现代简约风格客厅色彩搭配分享</h2>
+                    <p class="text-white/80 mb-3">最近完成了一个现代简约风格的客厅装修，想和大家分享一下色彩搭配的心得。主色调选择了温暖的米白色，搭配深灰色的沙发和原木色的茶几，整体效果非常和谐...</p>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <img src="https://picsum.photos/seed/living1/600/400.jpg" alt="客厅图片1" class="w-full h-32 object-cover rounded-lg">
+                        <img src="https://picsum.photos/seed/living2/600/400.jpg" alt="客厅图片2" class="w-full h-32 object-cover rounded-lg">
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80">#色彩搭配</span>
+                        <span class="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80">#作品展示</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-3 border-t border-white/20">
+                        <div class="flex items-center space-x-4">
+                            <button class="flex items-center space-x-1 text-sm text-red-400 hover:text-red-300 transition-colors">
+                                <i class="fas fa-heart"></i>
+                                <span>156</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-sm text-white/60 hover:text-white transition-colors">
+                                <i class="fas fa-comment"></i>
+                                <span>23</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-sm text-white/60 hover:text-white transition-colors">
+                                <i class="fas fa-share"></i>
+                                <span>12</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-sm text-yellow-400 hover:text-yellow-300 transition-colors">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-1 text-sm text-white/60">
+                            <i class="fas fa-eye"></i>
+                            <span>892</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 帖子2 -->
+            <div class="glass-effect rounded-xl post-card">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/seed/user2/200/200.jpg" alt="用户头像" class="w-10 h-10 rounded-full">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="text-white font-medium">施工专家李工</h3>
+                                    <span class="role-badge bg-blue-500">专业人士</span>
+                                </div>
+                                <p class="text-white/60 text-sm">3天前</p>
+                            </div>
+                        </div>
+                        <button class="text-white/60 hover:text-white">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    
+                    <h2 class="text-white font-medium text-lg mb-2">外墙防水涂料施工注意事项</h2>
+                    <p class="text-white/80 mb-3">在多年的施工经验中，总结了一些外墙防水涂料施工的关键注意事项，希望对大家有帮助：<br>
+                    1. 基层处理是关键<br>
+                    2. 天气条件很重要<br>
+                    3. 涂刷厚度要均匀<br>
+                    4. 接缝处理要仔细...</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80">#施工技巧</span>
+                        <span class="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80">#防水涂料</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-3 border-t border-white/20">
+                        <div class="flex items-center space-x-4">
+                            <button class="flex items-center space-x-1 text-sm text-white/60 hover:text-red-400 transition-colors">
+                                <i class="far fa-heart"></i>
+                                <span>89</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-sm text-white/60 hover:text-white transition-colors">
+                                <i class="fas fa-comment"></i>
+                                <span>15</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-sm text-white/60 hover:text-white transition-colors">
+                                <i class="fas fa-share"></i>
+                                <span>8</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-sm text-white/60 hover:text-yellow-400 transition-colors">
+                                <i class="far fa-bookmark"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-1 text-sm text-white/60">
+                            <i class="fas fa-eye"></i>
+                            <span>456</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 帖子3 -->
+            <div class="glass-effect rounded-xl post-card">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/seed/user3/200/200.jpg" alt="用户头像" class="w-10 h-10 rounded-full">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="text-white font-medium">装修新手</h3>
+                                    <span class="role-badge bg-gray-500">用户</span>
+                                </div>
+                                <p class="text-white/60 text-sm">1周前</p>
+                            </div>
+                        </div>
+                        <button class="text-white/60 hover:text-white">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    
+                    <h2 class="text-white font-medium text-lg mb-2">求助：如何选择适合潮湿环境的涂料？</h2>
+                    <p class="text-white/80 mb-3">家住南方，气候比较潮湿，特别是梅雨季节墙面容易发霉。想请教一下有经验的朋友，应该选择什么样的涂料？有什么品牌推荐吗？</p>
+                    
+                    <div class="grid grid-cols-1 gap-2 mb-3">
+                        <img src="https://picsum.photos/seed/moisture/600/400.jpg" alt="潮湿墙面" class="w-full h-48 object-cover rounded-lg">
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80">#问题求助</span>
+                        <span class="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80">#产品推荐</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-3 border-t border-white/20">
+                        <div class="flex items-center space-x-4">
+                            <button class="flex items-center space-x-1 text-sm text-white/60 hover:text-red-400 transition-colors">
+                                <i class="far fa-heart"></i>
+                                <span>23</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-sm text-white/60 hover:text-white transition-colors">
+                                <i class="fas fa-comment"></i>
+                                <span>34</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-sm text-white/60 hover:text-white transition-colors">
+                                <i class="fas fa-share"></i>
+                                <span>2</span>
+                            </button>
+                            <button class="flex items-center space-x-1 text-sm text-yellow-400 hover:text-yellow-300 transition-colors">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-1 text-sm text-white/60">
+                            <i class="fas fa-eye"></i>
+                            <span>178</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航 -->
+    <nav class="fixed bottom-0 left-0 right-0 glass-effect border-t border-white/20">
+        <div class="flex justify-around items-center py-2">
+            <button class="flex flex-col items-center p-2 text-white/70 hover:text-white">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-xs">首页</span>
+            </button>
+            <button class="flex flex-col items-center p-2 text-white/70 hover:text-white">
+                <i class="fas fa-box text-xl mb-1"></i>
+                <span class="text-xs">产品</span>
+            </button>
+            <button class="flex flex-col items-center p-2 text-white/70 hover:text-white">
+                <i class="fas fa-robot text-xl mb-1"></i>
+                <span class="text-xs">AI</span>
+            </button>
+            <button class="flex flex-col items-center p-2 text-green-400">
+                <i class="fas fa-users text-xl mb-1"></i>
+                <span class="text-xs">社区</span>
+            </button>
+            <button class="flex flex-col items-center p-2 text-white/70 hover:text-white">
+                <i class="fas fa-user text-xl mb-1"></i>
+                <span class="text-xs">我的</span>
+            </button>
+        </div>
+    </nav>
+</body>
+</html>

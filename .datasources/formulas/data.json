@@ -1,0 +1,150 @@
+
+[
+  {
+    "_id": "formula_001",
+    "name": "室内环保墙面漆配方",
+    "description": "适合室内使用的环保墙面漆，无甲醛添加，安全可靠",
+    "category": "interior",
+    "difficulty": "intermediate",
+    "ingredients": [
+      {
+        "name": "环保树脂",
+        "percentage": 45,
+        "unit": "%"
+      },
+      {
+        "name": "钛白粉",
+        "percentage": 20,
+        "unit": "%"
+      },
+      {
+        "name": "填料",
+        "percentage": 25,
+        "unit": "%"
+      },
+      {
+        "name": "助剂",
+        "percentage": 10,
+        "unit": "%"
+      }
+    ],
+    "steps": [
+      {
+        "order": 1,
+        "description": "将环保树脂加入搅拌罐中",
+        "duration": "5分钟"
+      },
+      {
+        "order": 2,
+        "description": "缓慢加入钛白粉，持续搅拌",
+        "duration": "10分钟"
+      },
+      {
+        "order": 3,
+        "description": "加入填料，调整粘度",
+        "duration": "8分钟"
+      },
+      {
+        "order": 4,
+        "description": "最后加入助剂，搅拌均匀",
+        "duration": "5分钟"
+      }
+    ],
+    "color": {
+      "hex": "#FFFFFF",
+      "rgb": "255,255,255",
+      "name": "纯白色"
+    },
+    "performance": {
+      "coverage": "12-15㎡/L",
+      "dryingTime": "2小时",
+      "durability": "5-8年"
+    },
+    "safety": {
+      "warning": "避免接触皮肤和眼睛",
+      "protection": ["手套", "护目镜", "口罩"]
+    },
+    "author": "user_001",
+    "status": "published",
+    "views": 1250,
+    "likes": 89,
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "_id": "formula_002",
+    "name": "外墙防水涂料配方",
+    "description": "超强防水性能，适合建筑外墙使用",
+    "category": "exterior",
+    "difficulty": "advanced",
+    "ingredients": [
+      {
+        "name": "丙烯酸树脂",
+        "percentage": 50,
+        "unit": "%"
+      },
+      {
+        "name": "防水剂",
+        "percentage": 15,
+        "unit": "%"
+      },
+      {
+        "name": "颜料",
+        "percentage": 20,
+        "unit": "%"
+      },
+      {
+        "name": "填料",
+        "percentage": 10,
+        "unit": "%"
+      },
+      {
+        "name": "助剂",
+        "percentage": 5,
+        "unit": "%"
+      }
+    ],
+    "steps": [
+      {
+        "order": 1,
+        "description": "将丙烯酸树脂加入反应釜",
+        "duration": "10分钟"
+      },
+      {
+        "order": 2,
+        "description": "加入防水剂，充分混合",
+        "duration": "15分钟"
+      },
+      {
+        "order": 3,
+        "description": "加入颜料，调色",
+        "duration": "20分钟"
+      },
+      {
+        "order": 4,
+        "description": "加入填料和助剂",
+        "duration": "10分钟"
+      }
+    ],
+    "color": {
+      "hex": "#808080",
+      "rgb": "128,128,128",
+      "name": "灰色"
+    },
+    "performance": {
+      "coverage": "8-10㎡/L",
+      "dryingTime": "4小时",
+      "durability": "10-15年"
+    },
+    "safety": {
+      "warning": "请在通风良好的环境下操作",
+      "protection": ["防护服", "呼吸器", "手套"]
+    },
+    "author": "user_002",
+    "status": "published",
+    "views": 890,
+    "likes": 67,
+    "createdAt": "2024-01-02T00:00:00Z",
+    "updatedAt": "2024-01-02T00:00:00Z"
+  }
+]

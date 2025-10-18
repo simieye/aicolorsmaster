@@ -1,103 +1,115 @@
 // @ts-ignore;
 import React from 'react';
 // @ts-ignore;
-import { Card, CardContent, Button } from '@/components/ui';
+import { Heart, MessageCircle, Share2, Bookmark, Eye, MoreHorizontal, Users, Award } from 'lucide-react';
 // @ts-ignore;
-import { Heart, MessageCircle, Share2, Star, User } from 'lucide-react';
+import { Button } from '@/components/ui';
 
-export function PostCard({
+export const PostCard = ({
   post,
   onLike,
-  onShare
-}) {
-  const handleLike = () => {
-    onLike(post.id);
+  onBookmark,
+  onShare,
+  onComment
+}) => {
+  // 获取角色标签
+  const getRoleLabel = role => {
+    const roleMap = {
+      admin: '管理员',
+      designer: '设计师',
+      professional: '专业人士',
+      user: '用户'
+    };
+    return roleMap[role] || '用户';
   };
-  const handleShare = () => {
-    onShare(post);
+
+  // 获取角色颜色
+  const getRoleColor = role => {
+    const colorMap = {
+      admin: 'bg-red-500',
+      designer: 'bg-purple-500',
+      professional: 'bg-blue-500',
+      user: 'bg-gray-500'
+    };
+    return colorMap[role] || 'bg-gray-500';
   };
-  return <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      {/* 作者信息 */}
-      <div className="p-4 pb-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <img src={post.avatar} alt={post.author} className="w-10 h-10 rounded-full mr-3" />
-            <div>
-              <p className="font-semibold">{post.author}</p>
-              <p className="text-xs text-gray-600">{post.role}</p>
+
+  // 格式化时间
+  const formatTime = timestamp => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now - date;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+    if (days > 0) {
+      return `${days}天前`;
+    } else if (hours > 0) {
+      return `${hours}小时前`;
+    } else {
+      return '刚刚';
+    }
+  };
+  return <div className="bg-white/10 backdrop-blur-md border-white/20 rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-1">
+      {/* 用户信息 */}
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center space-x-3">
+          <img src={post.author.avatar} alt={post.author.name} className="w-10 h-10 rounded-full border-2 border-white/20" />
+          <div>
+            <div className="flex items-center space-x-2">
+              <h3 className="text-white font-medium">{post.author.name}</h3>
+              <span className={`px-2 py-1 rounded-full text-xs text-white ${getRoleColor(post.author.role)}`}>
+                {getRoleLabel(post.author.role)}
+              </span>
+              {post.author.verified && <Award className="w-4 h-4 text-yellow-400" />}
             </div>
-          </div>
-          <div className="text-right">
-            <div className="flex items-center text-yellow-500">
-              <Star className="w-4 h-4 fill-current" />
-              <span className="text-sm ml-1">{post.rating}</span>
-            </div>
-            <p className="text-xs text-gray-600">{post.createdAt}</p>
+            <p className="text-white/60 text-sm">{formatTime(post.createdAt)}</p>
           </div>
         </div>
+        <Button variant="ghost" size="sm" className="text-white/60 hover:text-white p-1">
+          <MoreHorizontal className="w-4 h-4" />
+        </Button>
       </div>
 
-      {/* 对比图片 */}
-      <div className="relative h-64">
-        <div className="absolute inset-0 flex">
-          <div className="w-1/2 relative">
-            <img src={post.beforeImage} alt="染发前" className="w-full h-full object-cover" />
-            <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-              染发前
-            </div>
-          </div>
-          <div className="w-1/2 relative">
-            <img src={post.afterImage} alt="染发后" className="w-full h-full object-cover" />
-            <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-              染发后
-            </div>
-          </div>
-        </div>
-        <div className="absolute top-2 left-2 bg-purple-600 text-white px-3 py-1 rounded-full text-sm">
-          {post.color}
-        </div>
-      </div>
+      {/* 帖子内容 */}
+      <h2 className="text-white font-medium text-lg mb-2">{post.title}</h2>
+      <p className="text-white/80 mb-3 line-clamp-3">{post.content}</p>
 
-      {/* 内容 */}
-      <CardContent className="p-4">
-        <h3 className="font-semibold mb-2">{post.title}</h3>
-        <p className="text-sm text-gray-600 mb-3">{post.description}</p>
-        
-        {/* 标签 */}
-        <div className="flex flex-wrap gap-2 mb-3">
-          {post.tags.map((tag, index) => <span key={index} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
-              {tag}
+      {/* 图片 */}
+      {post.images && post.images.length > 0 && <div className={`grid gap-2 mb-3 ${post.images.length === 1 ? 'grid-cols-1' : post.images.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+          {post.images.map((image, index) => <img key={index} src={image} alt={`图片${index + 1}`} className="w-full h-32 object-cover rounded-lg hover:scale-105 transition-transform cursor-pointer" />)}
+        </div>}
+
+      {/* 标签 */}
+      {post.tags && post.tags.length > 0 && <div className="flex flex-wrap gap-2 mb-3">
+          {post.tags.map((tag, index) => <span key={index} className="px-2 py-1 bg-white/10 rounded-full text-xs text-white/80 hover:bg-white/20 transition-colors cursor-pointer">
+              #{tag}
             </span>)}
-        </div>
+        </div>}
 
-        {/* KOL评分 */}
-        <div className="flex items-center justify-between mb-3 p-2 bg-gradient-to-r from-purple-50 to-pink-50 rounded">
-          <span className="text-sm font-medium">KOL评分</span>
-          <span className="px-2 py-1 bg-purple-600 text-white text-xs rounded-full">
-            {post.kolRating}
-          </span>
+      {/* 统计信息 */}
+      <div className="flex items-center justify-between pt-3 border-t border-white/20">
+        <div className="flex items-center space-x-4">
+          <button onClick={() => onLike && onLike(post.id)} className={`flex items-center space-x-1 text-sm transition-colors ${post.isLiked ? 'text-red-400' : 'text-white/60 hover:text-red-400'}`}>
+            <Heart className={`w-4 h-4 ${post.isLiked ? 'fill-current' : ''}`} />
+            <span>{post.stats.likes}</span>
+          </button>
+          <button onClick={() => onComment && onComment(post.id)} className="flex items-center space-x-1 text-sm text-white/60 hover:text-white transition-colors">
+            <MessageCircle className="w-4 h-4" />
+            <span>{post.stats.comments}</span>
+          </button>
+          <button onClick={() => onShare && onShare(post.id)} className="flex items-center space-x-1 text-sm text-white/60 hover:text-white transition-colors">
+            <Share2 className="w-4 h-4" />
+            <span>{post.stats.shares}</span>
+          </button>
+          <button onClick={() => onBookmark && onBookmark(post.id)} className={`flex items-center space-x-1 text-sm transition-colors ${post.isBookmarked ? 'text-yellow-400' : 'text-white/60 hover:text-yellow-400'}`}>
+            <Bookmark className={`w-4 h-4 ${post.isBookmarked ? 'fill-current' : ''}`} />
+          </button>
         </div>
-
-        {/* 互动按钮 */}
-        <div className="flex items-center justify-between">
-          <div className="flex space-x-4">
-            <button onClick={handleLike} className="flex items-center text-gray-600 hover:text-red-500 transition-colors">
-              <Heart className="w-4 h-4 mr-1" />
-              <span className="text-sm">{post.likes}</span>
-            </button>
-            <button className="flex items-center text-gray-600 hover:text-blue-500 transition-colors">
-              <MessageCircle className="w-4 h-4 mr-1" />
-              <span className="text-sm">{post.comments}</span>
-            </button>
-            <button onClick={handleShare} className="flex items-center text-gray-600 hover:text-green-500 transition-colors">
-              <Share2 className="w-4 h-4 mr-1" />
-              <span className="text-sm">{post.shares}</span>
-            </button>
-          </div>
-          <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-            查看详情
-          </Button>
+        <div className="flex items-center space-x-1 text-sm text-white/60">
+          <Eye className="w-4 h-4" />
+          <span>{post.stats.views}</span>
         </div>
-      </CardContent>
-    </Card>;
-}
+      </div>
+    </div>;
+};
+export default PostCard;

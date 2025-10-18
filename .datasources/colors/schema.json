@@ -1,0 +1,74 @@
+
+{
+  "name": "colors",
+  "description": "颜色信息表",
+  "fields": {
+    "_id": {
+      "type": "string",
+      "description": "颜色ID",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "description": "颜色名称",
+      "required": true
+    },
+    "hex": {
+      "type": "string",
+      "description": "十六进制颜色值",
+      "required": true
+    },
+    "rgb": {
+      "type": "string",
+      "description": "RGB颜色值",
+      "required": true
+    },
+    "hsl": {
+      "type": "string",
+      "description": "HSL颜色值"
+    },
+    "category": {
+      "type": "string",
+      "description": "颜色分类",
+      "enum": ["red", "orange", "yellow", "green", "blue", "purple", "pink", "brown", "gray", "white", "black"],
+      "required": true
+    },
+    "pantone": {
+      "type": "string",
+      "description": "潘通色号"
+    },
+    "description": {
+      "type": "string",
+      "description": "颜色描述"
+    },
+    "usage": {
+      "type": "array",
+      "description": "适用场景",
+      "items": {
+        "type": "string"
+      }
+    },
+    "popularity": {
+      "type": "number",
+      "description": "热门程度",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0
+    },
+    "tags": {
+      "type": "array",
+      "description": "标签",
+      "items": {
+        "type": "string"
+      }
+    },
+    "createdAt": {
+      "type": "datetime",
+      "description": "创建时间"
+    },
+    "updatedAt": {
+      "type": "datetime",
+      "description": "更新时间"
+    }
+  }
+}

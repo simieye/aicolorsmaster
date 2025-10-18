@@ -1,0 +1,78 @@
+
+[
+  {
+    "_id": "color_001",
+    "name": "天空蓝",
+    "hex": "#87CEEB",
+    "rgb": "135,206,235",
+    "hsl": "197,71%,73%",
+    "category": "blue",
+    "pantone": "290 C",
+    "description": "清新明亮的天空蓝色，给人轻松愉悦的感觉",
+    "usage": ["卧室", "客厅", "儿童房"],
+    "popularity": 85,
+    "tags": ["清新", "明亮", "舒适"],
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "_id": "color_002",
+    "name": "温暖米白",
+    "hex": "#F5F5DC",
+    "rgb": "245,245,220",
+    "hsl": "60,57%,91%",
+    "category": "white",
+    "pantone": "7527 C",
+    "description": "温暖柔和的米白色，营造温馨舒适的氛围",
+    "usage": ["客厅", "餐厅", "走廊"],
+    "popularity": 92,
+    "tags": ["温暖", "柔和", "舒适"],
+    "createdAt": "2024-01-02T00:00:00Z",
+    "updatedAt": "2024-01-02T00:00:00Z"
+  },
+  {
+    "_id": "color_003",
+    "name": "薄荷绿",
+    "hex": "#98FF98",
+    "rgb": "152,255,152",
+    "hsl": "120,100%,80%",
+    "category": "green",
+    "pantone": "2281 C",
+    "description": "清新的薄荷绿色，带来自然清新的感觉",
+    "usage": ["浴室", "厨房", "阳台"],
+    "popularity": 78,
+    "tags": ["清新", "自然", "活力"],
+    "createdAt": "2024-01-03T00:00:00Z",
+    "updatedAt": "2024-01-03T00:00:00Z"
+  },
+  {
+    "_id": "color_004",
+    "name": "珊瑚粉",
+    "hex": "#FF7F50",
+    "rgb": "255,127,80",
+    "hsl": "16,100%,66%",
+    "category": "orange",
+    "pantone": "1645 C",
+    "description": "温暖活泼的珊瑚粉色，适合营造温馨氛围",
+    "usage": ["卧室", "化妆间", "衣帽间"],
+    "popularity": 73,
+    "tags": ["温暖", "活泼", "浪漫"],
+    "createdAt": "2024-01-04T00:00:00Z",
+    "updatedAt": "2024-01-04T00:00:00Z"
+  },
+  {
+    "_id": "color_005",
+    "name": "深海蓝",
+    "hex": "#191970",
+    "rgb": "25,25,112",
+    "hsl": "240,64%,27%",
+    "category": "blue",
+    "pantone": "280 C",
+    "description": "深邃稳重的深海蓝色，营造宁静专注的氛围",
+    "usage": ["书房", "办公室", "卧室"],
+    "popularity": 68,
+    "tags": ["深邃", "稳重", "宁静"],
+    "createdAt": "2024-01-05T00:00:00Z",
+    "updatedAt": "2024-01-05T00:00:00Z"
+  }
+]
