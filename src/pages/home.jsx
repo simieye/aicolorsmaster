@@ -16,16 +16,146 @@ export default function HomePage(props) {
     $w,
     style
   } = props;
-  const {
-    user,
-    isAuthenticated
-  } = useAuth();
-  const {
-    products,
-    formulas,
-    colors,
-    loading
-  } = useData();
+
+  // 临时模拟数据，避免context错误
+  const [user] = useState({
+    name: '访客用户',
+    lastLogin: new Date().toISOString()
+  });
+  const [isAuthenticated] = useState(false);
+  const [products] = useState([{
+    id: 1,
+    name: '智能调色机 Pro',
+    category: '设备',
+    price: 29999,
+    description: '高精度智能调色设备，支持AI辅助调色',
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=200&fit=crop',
+    stock: 50,
+    rating: 4.8,
+    reviews: 128,
+    features: ['AI智能调色', '高精度传感器', '云端同步', '移动端控制'],
+    createdAt: '2024-01-15T10:00:00Z',
+    updatedAt: '2024-01-15T10:00:00Z'
+  }, {
+    id: 2,
+    name: '色彩分析仪 Lite',
+    category: '设备',
+    price: 8999,
+    description: '便携式色彩分析工具，专业级色彩识别',
+    image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=200&fit=crop',
+    stock: 120,
+    rating: 4.6,
+    reviews: 89,
+    features: ['便携设计', '专业级精度', '蓝牙连接', 'APP控制'],
+    createdAt: '2024-01-10T15:30:00Z',
+    updatedAt: '2024-01-10T15:30:00Z'
+  }, {
+    id: 3,
+    name: '配方管理系统',
+    category: '软件',
+    price: 4999,
+    description: '全面的配方管理和分析系统',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop',
+    stock: 999,
+    rating: 4.7,
+    reviews: 56,
+    features: ['配方管理', '成本分析', '库存管理', '报表生成'],
+    createdAt: '2024-01-08T09:15:00Z',
+    updatedAt: '2024-01-08T09:15:00Z'
+  }]);
+  const [formulas] = useState([{
+    id: 1,
+    name: '天空蓝标准配方',
+    type: '水性涂料',
+    color: '#87CEEB',
+    ingredients: [{
+      name: '钛白粉',
+      amount: 45,
+      unit: 'kg'
+    }, {
+      name: '蓝色颜料',
+      amount: 12,
+      unit: 'kg'
+    }, {
+      name: '添加剂',
+      amount: 3,
+      unit: 'kg'
+    }, {
+      name: '水',
+      amount: 40,
+      unit: 'kg'
+    }],
+    totalWeight: 100,
+    cost: 156.8,
+    createdBy: 1,
+    createdAt: '2024-01-12T14:20:00Z',
+    usage: 234
+  }, {
+    id: 2,
+    name: '森林绿环保配方',
+    type: '环保涂料',
+    color: '#228B22',
+    ingredients: [{
+      name: '环保树脂',
+      amount: 50,
+      unit: 'kg'
+    }, {
+      name: '绿色颜料',
+      amount: 8,
+      unit: 'kg'
+    }, {
+      name: '天然填料',
+      amount: 30,
+      unit: 'kg'
+    }, {
+      name: '水',
+      amount: 12,
+      unit: 'kg'
+    }],
+    totalWeight: 100,
+    cost: 189.5,
+    createdBy: 1,
+    createdAt: '2024-01-11T16:45:00Z',
+    usage: 156
+  }]);
+  const [colors] = useState([{
+    id: 1,
+    name: '天空蓝',
+    hex: '#87CEEB',
+    rgb: '135, 206, 235',
+    category: '蓝色系',
+    pantone: '290 C',
+    usage: 89,
+    popularity: 4.7,
+    description: '清新明亮的天空蓝色，适合室内装饰',
+    combinations: ['#FFFFFF', '#F0F8FF', '#4682B4'],
+    createdAt: '2024-01-05T11:30:00Z'
+  }, {
+    id: 2,
+    name: '森林绿',
+    hex: '#228B22',
+    rgb: '34, 139, 34',
+    category: '绿色系',
+    pantone: '355 C',
+    usage: 67,
+    popularity: 4.5,
+    description: '自然深沉的森林绿色，环保涂料首选',
+    combinations: ['#FFFFFF', '#F5DEB3', '#8B4513'],
+    createdAt: '2024-01-06T13:15:00Z'
+  }, {
+    id: 3,
+    name: '珊瑚红',
+    hex: '#FF7F50',
+    rgb: '255, 127, 80',
+    category: '红色系',
+    pantone: '164 C',
+    usage: 45,
+    popularity: 4.3,
+    description: '温暖活力的珊瑚红色，现代装饰流行色',
+    combinations: ['#FFFFFF', '#FFE4B5', '#FF6347'],
+    createdAt: '2024-01-07T10:45:00Z'
+  }]);
+  const [loading] = useState(false);
   const {
     toast
   } = useToast();
@@ -70,6 +200,11 @@ export default function HomePage(props) {
           productId: product.id
         }
       });
+    } else {
+      toast({
+        title: "产品详情",
+        description: `查看 ${product.name} 的详细信息`
+      });
     }
   };
 
@@ -81,6 +216,11 @@ export default function HomePage(props) {
         params: {
           formulaId: formula.id
         }
+      });
+    } else {
+      toast({
+        title: "配方详情",
+        description: `查看 ${formula.name} 的详细信息`
       });
     }
   };
@@ -94,6 +234,11 @@ export default function HomePage(props) {
           colorId: color.id
         }
       });
+    } else {
+      toast({
+        title: "色彩详情",
+        description: `查看 ${color.name} 的详细信息`
+      });
     }
   };
 
@@ -106,6 +251,11 @@ export default function HomePage(props) {
             pageId: 'ai-chat',
             params: {}
           });
+        } else {
+          toast({
+            title: "功能开发中",
+            description: "AI聊天功能正在开发中，敬请期待"
+          });
         }
         break;
       case 'qr-scanner':
@@ -113,6 +263,11 @@ export default function HomePage(props) {
           $w.utils.navigateTo({
             pageId: 'qr-scanner',
             params: {}
+          });
+        } else {
+          toast({
+            title: "功能开发中",
+            description: "扫码功能正在开发中，敬请期待"
           });
         }
         break;
@@ -122,6 +277,11 @@ export default function HomePage(props) {
             pageId: 'color-recognition',
             params: {}
           });
+        } else {
+          toast({
+            title: "功能开发中",
+            description: "色彩识别功能正在开发中，敬请期待"
+          });
         }
         break;
       case 'formula-generation':
@@ -129,6 +289,11 @@ export default function HomePage(props) {
           $w.utils.navigateTo({
             pageId: 'formula-generation',
             params: {}
+          });
+        } else {
+          toast({
+            title: "功能开发中",
+            description: "配方生成功能正在开发中，敬请期待"
           });
         }
         break;
@@ -247,7 +412,7 @@ export default function HomePage(props) {
                 <Star className="w-5 h-5 mr-2" />
                 特色产品
               </span>
-              <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo({
+              <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo && $w.utils.navigateTo({
               pageId: 'products',
               params: {}
             })}>
@@ -283,7 +448,7 @@ export default function HomePage(props) {
                 <TrendingUp className="w-5 h-5 mr-2" />
                 热门配方
               </span>
-              <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo({
+              <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo && $w.utils.navigateTo({
               pageId: 'formula-management',
               params: {}
             })}>
@@ -322,7 +487,7 @@ export default function HomePage(props) {
                 <div className="w-5 h-5 bg-gradient-to-r from-red-400 via-yellow-400 to-blue-400 rounded-full mr-2"></div>
                 流行色彩
               </span>
-              <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo({
+              <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => $w.utils?.navigateTo && $w.utils.navigateTo({
               pageId: 'color-library',
               params: {}
             })}>
