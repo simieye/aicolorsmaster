@@ -1,15 +1,14 @@
 // @ts-ignore;
 import React, { useState } from 'react';
 // @ts-ignore;
-import { useForm } from 'react-hook-form';
-// @ts-ignore;
-import { Button, Card, CardContent, CardHeader, CardTitle, Alert, AlertDescription } from '@/components/ui';
-// @ts-ignore;
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui';
-// @ts-ignore;
-import { Input } from '@/components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Alert, AlertDescription, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@/components/ui';
 // @ts-ignore;
 import { Eye, EyeOff, Lock, Mail, User, LogIn } from 'lucide-react';
+
+// @ts-ignore;
+import { useForm } from 'react-hook-form';
+// @ts-ignore;
+
 // @ts-ignore;
 import { useAuth } from '@/components/AuthProvider';
 export default function LoginPage(props) {
@@ -34,14 +33,13 @@ export default function LoginPage(props) {
       name: ''
     }
   });
-  const handleLogin = async (data) => {
+  const handleLogin = async data => {
     setIsLoading(true);
     try {
       const result = await login({
         username: data.username,
         password: data.password
       });
-      
       if (result.success) {
         // 跳转到首页
         if ($w.utils && $w.utils.navigateTo) {
@@ -57,7 +55,7 @@ export default function LoginPage(props) {
       setIsLoading(false);
     }
   };
-  const handleRegister = async (data) => {
+  const handleRegister = async data => {
     setIsLoading(true);
     try {
       const result = await register({
@@ -67,7 +65,6 @@ export default function LoginPage(props) {
         confirmPassword: data.confirmPassword,
         name: data.name
       });
-      
       if (result.success) {
         // 切换到登录模式
         setIsLogin(true);
@@ -79,7 +76,7 @@ export default function LoginPage(props) {
       setIsLoading(false);
     }
   };
-  const onSubmit = async (data) => {
+  const onSubmit = async data => {
     if (isLogin) {
       await handleLogin(data);
     } else {
@@ -122,7 +119,7 @@ export default function LoginPage(props) {
                   value: 3,
                   message: '用户名至少3个字符'
                 }
-              }} render={{
+              }} render={({
                 field
               }) => <FormItem>
                     <FormLabel className="text-white">用户名</FormLabel>
@@ -142,7 +139,7 @@ export default function LoginPage(props) {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: '请输入有效的邮箱地址'
                 }
-              }} render={{
+              }} render={({
                 field
               }) => <FormItem>
                     <FormLabel className="text-white">邮箱</FormLabel>
@@ -158,7 +155,7 @@ export default function LoginPage(props) {
                 {/* 姓名（仅注册时显示） */}
                 {!isLogin && <FormField control={form.control} name="name" rules={{
                 required: '请输入姓名'
-              }} render={{
+              }} render={({
                 field
               }) => <FormItem>
                     <FormLabel className="text-white">姓名</FormLabel>
@@ -178,7 +175,7 @@ export default function LoginPage(props) {
                   value: 6,
                   message: '密码至少6个字符'
                 }
-              }} render={{
+              }} render={({
                 field
               }) => <FormItem>
                     <FormLabel className="text-white">密码</FormLabel>
@@ -198,7 +195,7 @@ export default function LoginPage(props) {
                 {!isLogin && <FormField control={form.control} name="confirmPassword" rules={{
                 required: '请确认密码',
                 validate: value => value === form.watch('password') || '两次输入的密码不一致'
-              }} render={{
+              }} render={({
                 field
               }) => <FormItem>
                     <FormLabel className="text-white">确认密码</FormLabel>
