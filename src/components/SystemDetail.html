@@ -1,0 +1,508 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能染发自动调色宝机 - 系统详情</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .price-card {
+            transition: all 0.3s ease;
+        }
+        .price-card:hover {
+            transform: scale(1.05);
+        }
+        .review-card {
+            transition: all 0.3s ease;
+        }
+        .review-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">系统详情</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-share-alt mr-2"></i>
+                        分享
+                    </button>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-heart mr-2"></i>
+                        收藏
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 产品概览 -->
+        <section class="glass-effect rounded-2xl p-8 mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <div class="aspect-video bg-white/10 rounded-xl overflow-hidden mb-6">
+                        <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=400&fit=crop" 
+                             alt="AI智能染发自动调色宝机" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="grid grid-cols-4 gap-2">
+                        <div class="aspect-video bg-white/10 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-white/50">
+                            <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=150&h=100&fit=crop" 
+                                 alt="产品图片1" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div class="aspect-video bg-white/10 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-white/50">
+                            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=150&h=100&fit=crop" 
+                                 alt="产品图片2" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div class="aspect-video bg-white/10 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-white/50">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=150&h=100&fit=crop" 
+                                 alt="产品图片3" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div class="aspect-video bg-white/10 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-white/50">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=150&h=100&fit=crop" 
+                                 alt="产品图片4" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">智能设备</span>
+                        <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">现货</span>
+                    </div>
+                    
+                    <h1 class="text-3xl font-bold text-white mb-4">AI智能染发自动调色宝机</h1>
+                    
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="flex items-center text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="ml-2 text-white">4.9</span>
+                        </div>
+                        <span class="text-white/60">256条评价</span>
+                        <span class="text-white/60">月销500+</span>
+                    </div>
+                    
+                    <div class="flex items-baseline space-x-2 mb-6">
+                        <span class="text-4xl font-bold text-red-400">¥4,980</span>
+                        <span class="text-white/60 line-through text-xl">¥5,980</span>
+                        <span class="bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-sm">限时优惠</span>
+                    </div>
+                    
+                    <p class="text-white/80 text-lg mb-6">
+                        新一代AI智能染发设备，自动识别发质、精准调色，一键完成专业染发过程，大幅提升门店效率。采用先进的AI算法和传感器技术，为美发行业带来革命性变革。
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="glass-effect rounded-lg p-4 text-center">
+                            <i class="fas fa-truck text-blue-400 text-2xl mb-2"></i>
+                            <p class="text-white text-sm">免费配送</p>
+                        </div>
+                        <div class="glass-effect rounded-lg p-4 text-center">
+                            <i class="fas fa-shield-alt text-green-400 text-2xl mb-2"></i>
+                            <p class="text-white text-sm">一年质保</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <button class="flex-1 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white py-3 rounded-lg font-medium">
+                            <i class="fas fa-shopping-cart mr-2"></i>
+                            立即购买
+                        </button>
+                        <button class="glass-effect px-6 py-3 rounded-lg text-white hover:bg-white/20">
+                            <i class="fas fa-phone-alt mr-2"></i>
+                            咨询客服
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能特性 -->
+        <section class="glass-effect rounded-2xl p-8 mb-8">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-star text-yellow-400 mr-3"></i>
+                核心功能特性
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="feature-card glass-effect rounded-xl p-6 text-center">
+                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-brain text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">AI发质识别</h3>
+                    <p class="text-white/60 text-sm">智能识别发质类型、受损程度和颜色基础，精准分析发质状况</p>
+                </div>
+                
+                <div class="feature-card glass-effect rounded-xl p-6 text-center">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-palette text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">精准自动调色</h3>
+                    <p class="text-white/60 text-sm">根据发质分析结果，自动计算最佳染发配方比例</p>
+                </div>
+                
+                <div class="feature-card glass-effect rounded-xl p-6 text-center">
+                    <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-magic text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">一键操作</h3>
+                    <p class="text-white/60 text-sm">简化操作流程，一键完成从发质检测到配方生成的全过程</p>
+                </div>
+                
+                <div class="feature-card glass-effect rounded-xl p-6 text-center">
+                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-thermometer-half text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">智能温控</h3>
+                    <p class="text-white/60 text-sm">精确控制染发温度，确保最佳染发效果和发质保护</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 详细信息标签页 -->
+        <section class="glass-effect rounded-2xl p-8 mb-8">
+            <div class="flex space-x-1 mb-6 border-b border-white/20">
+                <button class="tab-btn px-6 py-3 text-white font-medium border-b-2 border-blue-400" data-tab="overview">
+                    产品介绍
+                </button>
+                <button class="tab-btn px-6 py-3 text-white/60 font-medium hover:text-white" data-tab="specs">
+                    技术规格
+                </button>
+                <button class="tab-btn px-6 py-3 text-white/60 font-medium hover:text-white" data-tab="usage">
+                    使用场景
+                </button>
+                <button class="tab-btn px-6 py-3 text-white/60 font-medium hover:text-white" data-tab="reviews">
+                    用户评价
+                </button>
+            </div>
+            
+            <!-- 产品介绍 -->
+            <div class="tab-content active" id="overview">
+                <h3 class="text-xl font-semibold text-white mb-4">产品介绍</h3>
+                <p class="text-white/80 mb-6">
+                    AI智能染发自动调色宝机是专为美发行业打造的智能化设备，集成了先进的AI算法、高精度传感器和自动化控制系统。
+                    该设备能够快速准确地分析客户发质状况，并根据目标色彩自动生成最佳染发配方，大大提高了染发过程的效率和准确性。
+                </p>
+                
+                <h4 class="text-lg font-semibold text-white mb-3">核心优势</h4>
+                <ul class="space-y-3 text-white/80">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                        <span>智能发质分析，精准识别发质类型和受损程度，准确率达98%以上</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                        <span>自动调色系统，确保每次调色的一致性，减少人为误差</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                        <span>云端配方库，实时更新流行色彩趋势，包含1000+专业配方</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                        <span>操作简单，培训成本低，普通员工经过简单培训即可熟练使用</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 技术规格 -->
+            <div class="tab-content" id="specs">
+                <h3 class="text-xl font-semibold text-white mb-4">技术规格</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="flex justify-between py-3 border-b border-white/10">
+                            <span class="text-white/60">产品型号</span>
+                            <span class="text-white">AI-HC-2024</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-white/10">
+                            <span class="text-white/60">尺寸规格</span>
+                            <span class="text-white">350×280×450mm</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-white/10">
+                            <span class="text-white/60">产品重量</span>
+                            <span class="text-white">8.5kg</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-white/10">
+                            <span class="text-white/60">额定功率</span>
+                            <span class="text-white">150W</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between py-3 border-b border-white/10">
+                            <span class="text-white/60">工作温度</span>
+                            <span class="text-white">15-35°C</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-white/10">
+                            <span class="text-white/60">识别精度</span>
+                            <span class="text-white">98.5%</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-white/10">
+                            <span class="text-white/60">调色时间</span>
+                            <span class="text-white">≤30秒</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-white/10">
+                            <span class="text-white/60">质保期限</span>
+                            <span class="text-white">1年</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 使用场景 -->
+            <div class="tab-content" id="usage">
+                <h3 class="text-xl font-semibold text-white mb-4">使用场景</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-effect rounded-xl p-6">
+                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-store text-white text-xl"></i>
+                        </div>
+                        <h4 class="text-white font-semibold mb-2">美发沙龙</h4>
+                        <p class="text-white/60 text-sm">
+                            适用于各类美发沙龙，提高染发效率，减少客户等待时间，提升服务质量
+                        </p>
+                    </div>
+                    <div class="glass-effect rounded-xl p-6">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-graduation-cap text-white text-xl"></i>
+                        </div>
+                        <h4 class="text-white font-semibold mb-2">美发培训学校</h4>
+                        <p class="text-white/60 text-sm">
+                            用于教学演示，帮助学生理解染发原理，提高学习效果
+                        </p>
+                    </div>
+                    <div class="glass-effect rounded-xl p-6">
+                        <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-building text-white text-xl"></i>
+                        </div>
+                        <h4 class="text-white font-semibold mb-2">连锁美发店</h4>
+                        <p class="text-white/60 text-sm">
+                            标准化染发流程，确保各分店服务质量一致，提升品牌形象
+                        </p>
+                    </div>
+                    <div class="glass-effect rounded-xl p-6">
+                        <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-home text-white text-xl"></i>
+                        </div>
+                        <h4 class="text-white font-semibold mb-2">个人工作室</h4>
+                        <p class="text-white/60 text-sm">
+                            适合个人美发师使用，提高工作效率，扩大服务范围
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 用户评价 -->
+            <div class="tab-content" id="reviews">
+                <h3 class="text-xl font-semibold text-white mb-4">用户评价</h3>
+                <div class="space-y-4">
+                    <div class="review-card glass-effect rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-purple-500 rounded-full overflow-hidden">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
+                                         alt="用户头像" 
+                                         class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">张店长</h4>
+                                    <div class="flex text-yellow-400 text-sm">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-white/60 text-sm">2024-01-15</span>
+                        </div>
+                        <p class="text-white/80">
+                            这个设备真的太棒了！大大提高了我们店的染发效率，顾客满意度也提升了很多。
+                            AI发质识别功能很准确，调色效果一致性好，节省了很多时间。
+                        </p>
+                    </div>
+                    
+                    <div class="review-card glass-effect rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full overflow-hidden">
+                                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" 
+                                         alt="用户头像" 
+                                         class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">李发型师</h4>
+                                    <div class="flex text-yellow-400 text-sm">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-white/60 text-sm">2024-01-12</span>
+                        </div>
+                        <p class="text-white/80">
+                            作为一名专业发型师，我对这个设备非常满意。操作简单，功能强大，
+                            特别是AI推荐功能，能够根据客户需求推荐最适合的颜色方案。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 价格方案 -->
+        <section class="glass-effect rounded-2xl p-8 mb-8">
+            <h2 class="text-2xl font-bold text-white mb-6">价格方案</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="price-card glass-effect rounded-xl p-6 border border-white/20">
+                    <h3 class="text-white font-semibold mb-2">基础版</h3>
+                    <div class="text-3xl font-bold text-white mb-4">¥3,980</div>
+                    <ul class="space-y-2 text-white/60 text-sm mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            AI发质识别
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            基础调色功能
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            100个基础配方
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-times text-red-400 mr-2"></i>
+                            云端同步
+                        </li>
+                    </ul>
+                    <button class="w-full glass-effect py-2 rounded-lg text-white hover:bg-white/20">
+                        选择方案
+                    </button>
+                </div>
+                
+                <div class="price-card glass-effect rounded-xl p-6 border-2 border-blue-400 relative">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-3 py-1 rounded-full text-sm">
+                        推荐
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">专业版</h3>
+                    <div class="text-3xl font-bold text-white mb-4">¥4,980</div>
+                    <ul class="space-y-2 text-white/60 text-sm mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            AI发质识别
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            精准调色功能
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            500个专业配方
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            云端同步
+                        </li>
+                    </ul>
+                    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg">
+                        选择方案
+                    </button>
+                </div>
+                
+                <div class="price-card glass-effect rounded-xl p-6 border border-white/20">
+                    <h3 class="text-white font-semibold mb-2">企业版</h3>
+                    <div class="text-3xl font-bold text-white mb-4">¥6,980</div>
+                    <ul class="space-y-2 text-white/60 text-sm mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            AI发质识别
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            高级调色功能
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            无限配方库
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            定制化服务
+                        </li>
+                    </ul>
+                    <button class="w-full glass-effect py-2 rounded-lg text-white hover:bg-white/20">
+                        选择方案
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签页切换功能
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 移除所有活动状态
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('border-b-2', 'border-blue-400');
+                    b.classList.add('text-white/60');
+                });
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // 添加当前活动状态
+                this.classList.add('border-b-2', 'border-blue-400');
+                this.classList.remove('text-white/60');
+                
+                // 显示对应内容
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

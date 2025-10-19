@@ -14,3 +14,4 @@ export * from './StatsCards.jsx';
 export * from './ProductShowcase.jsx';
 export * from './QuickActions.jsx';
 export * from './RecentActivity.jsx';
+export * from './SystemDetail.jsx';

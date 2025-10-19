@@ -20,13 +20,7 @@ import CHECKOUT from '../pages/checkout.jsx';
 import ORDER_SUCCESS from '../pages/order-success.jsx';
 import ORDERS from '../pages/orders.jsx';
 import STORE_MANAGEMENT-SYSTEM from '../pages/store-management-system.jsx';
-import AI_COLOR-DEVICE from '../pages/ai-color-device.jsx';
-import AI_DYE-MANAGEMENT from '../pages/ai-dye-management.jsx';
-import AI_CUSTOMER-FORMULA from '../pages/ai-customer-formula.jsx';
-import AI_CHAIN-STORE from '../pages/ai-chain-store.jsx';
-import AI_CRM from '../pages/ai-crm.jsx';
-import AI_COLOR-MASTER from '../pages/ai-color-master.jsx';
-import AI_STORE-MANAGEMENT from '../pages/ai-store-management.jsx';
+import SYSTEM_DETAIL from '../pages/system-detail.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -94,24 +88,6 @@ export const routers = [{
   id: "store-management-system",
   component: STORE_MANAGEMENT-SYSTEM
 }, {
-  id: "ai-color-device",
-  component: AI_COLOR-DEVICE
-}, {
-  id: "ai-dye-management",
-  component: AI_DYE-MANAGEMENT
-}, {
-  id: "ai-customer-formula",
-  component: AI_CUSTOMER-FORMULA
-}, {
-  id: "ai-chain-store",
-  component: AI_CHAIN-STORE
-}, {
-  id: "ai-crm",
-  component: AI_CRM
-}, {
-  id: "ai-color-master",
-  component: AI_COLOR-MASTER
-}, {
-  id: "ai-store-management",
-  component: AI_STORE-MANAGEMENT
+  id: "system-detail",
+  component: SYSTEM_DETAIL
 }]
