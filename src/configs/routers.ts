@@ -34,6 +34,10 @@ import USER_FEEDBACK-COMPLETE from '../pages/user-feedback-complete.jsx';
 import CORPORATE_CULTURE from '../pages/corporate-culture.jsx';
 import FINANCE_MANAGEMENT-DETAILED from '../pages/finance-management-detailed.jsx';
 import ATTENDANCE_MANAGEMENT-DETAILED from '../pages/attendance-management-detailed.jsx';
+import AI_CUSTOMER-SERVICE-DETAIL from '../pages/ai-customer-service-detail.jsx';
+import AI_APPOINTMENT-SYSTEM-DETAIL from '../pages/ai-appointment-system-detail.jsx';
+import AI_EMPLOYEE-TRAINING-DETAIL from '../pages/ai-employee-training-detail.jsx';
+import AI_MICRO-STORE-DETAIL from '../pages/ai-micro-store-detail.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -142,4 +146,16 @@ export const routers = [{
 }, {
   id: "attendance-management-detailed",
   component: ATTENDANCE_MANAGEMENT-DETAILED
+}, {
+  id: "ai-customer-service-detail",
+  component: AI_CUSTOMER-SERVICE-DETAIL
+}, {
+  id: "ai-appointment-system-detail",
+  component: AI_APPOINTMENT-SYSTEM-DETAIL
+}, {
+  id: "ai-employee-training-detail",
+  component: AI_EMPLOYEE-TRAINING-DETAIL
+}, {
+  id: "ai-micro-store-detail",
+  component: AI_MICRO-STORE-DETAIL
 }]

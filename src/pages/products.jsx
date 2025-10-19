@@ -1,284 +1,401 @@
 // @ts-ignore;
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // @ts-ignore;
-import { useToast, Button } from '@/components/ui';
+import { Button } from '@/components/ui';
+// @ts-ignore;
+import { HeadphonesIcon, Calendar, GraduationCap, ShoppingBag, Star, Briefcase, MessageSquare, History, Bolt, TicketAlt, Users, ConciergeBell, ChartLine, Book, FolderOpen, ClipboardCheck, Store, Box, ShoppingCart, Bullhorn, UserPlus, Award, Certificate, Industry, ArrowRight, Check } from 'lucide-react';
 
-// @ts-ignore;
-import { TabBar } from '@/components/TabBar';
 // @ts-ignore;
 import { TopNavigation } from '@/components/TopNavigation';
 // @ts-ignore;
-import { ShoppingCart } from '@/components/ShoppingCart';
+import { TabBar } from '@/components/TabBar';
+// @ts-ignore;
+
 export default function ProductsPage(props) {
   const {
-    $w,
-    style
+    $w
   } = props;
-  const {
-    toast
-  } = useToast();
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // 处理返回
-  const handleBack = () => {
-    if ($w.utils && $w.utils.navigateBack) {
-      $w.utils.navigateBack();
-    } else if ($w.utils && $w.utils.navigateTo) {
+  // AI系统产品数据
+  const aiProducts = [{
+    id: 'customer-service',
+    name: 'AI客服系统',
+    description: '智能客服机器人，24小时在线服务，提升客户满意度',
+    icon: HeadphonesIcon,
+    gradient: 'from-blue-500 to-purple-600',
+    prices: [{
+      name: '标准版',
+      price: '2,680',
+      color: 'bg-white/20'
+    }, {
+      name: '企业版',
+      price: '4,980',
+      color: 'bg-yellow-500/20'
+    }],
+    features: [{
+      icon: MessageSquare,
+      title: '智能对话',
+      description: '基于NLP技术，理解客户意图，提供精准回复',
+      color: 'bg-blue-100',
+      iconColor: 'text-blue-600'
+    }, {
+      icon: History,
+      title: '历史记录',
+      description: '完整保存聊天记录，支持搜索和管理',
+      color: 'bg-green-100',
+      iconColor: 'text-green-600'
+    }, {
+      icon: Bolt,
+      title: '快捷回复',
+      description: '预设常用回复模板，提高响应效率',
+      color: 'bg-purple-100',
+      iconColor: 'text-purple-600'
+    }, {
+      icon: TicketAlt,
+      title: '工单管理',
+      description: '自动创建工单，跟踪处理进度',
+      color: 'bg-yellow-100',
+      iconColor: 'text-yellow-600'
+    }],
+    scenarios: [{
+      icon: Store,
+      title: '美发门店',
+      description: '处理客户咨询、预约服务、产品推荐',
+      gradient: 'from-blue-50 to-indigo-50',
+      iconBg: 'bg-blue-500'
+    }, {
+      icon: ShoppingCart,
+      title: '电商平台',
+      description: '商品咨询、订单查询、售后服务',
+      gradient: 'from-green-50 to-emerald-50',
+      iconBg: 'bg-green-500'
+    }, {
+      icon: Users,
+      title: '连锁品牌',
+      description: '统一客服标准、多店协同服务',
+      gradient: 'from-purple-50 to-pink-50',
+      iconBg: 'bg-purple-500'
+    }]
+  }, {
+    id: 'appointment-system',
+    name: 'AI客户预约系统',
+    description: '智能预约管理，优化时间安排，提升服务效率',
+    icon: Calendar,
+    gradient: 'from-green-500 to-teal-600',
+    prices: [{
+      name: '基础版',
+      price: '2,680',
+      color: 'bg-white/20'
+    }, {
+      name: '专业版',
+      price: '4,980',
+      color: 'bg-yellow-500/20'
+    }],
+    features: [{
+      icon: Calendar,
+      title: '预约日历',
+      description: '可视化日历界面，直观查看预约安排',
+      color: 'bg-blue-100',
+      iconColor: 'text-blue-600'
+    }, {
+      icon: Users,
+      title: '客户管理',
+      description: '客户信息管理，历史记录查询',
+      color: 'bg-green-100',
+      iconColor: 'text-green-600'
+    }, {
+      icon: ConciergeBell,
+      title: '服务管理',
+      description: '服务项目设置，价格时长管理',
+      color: 'bg-purple-100',
+      iconColor: 'text-purple-600'
+    }, {
+      icon: ChartLine,
+      title: '数据分析',
+      description: '预约统计，客户分析，收入报表',
+      color: 'bg-yellow-100',
+      iconColor: 'text-yellow-600'
+    }],
+    scenarios: [{
+      icon: Briefcase,
+      title: '美发沙龙',
+      description: '发型师预约，服务时间管理',
+      gradient: 'from-blue-50 to-indigo-50',
+      iconBg: 'bg-blue-500'
+    }, {
+      icon: Briefcase,
+      title: '美容院',
+      description: '美容师排班，护理项目预约',
+      gradient: 'from-green-50 to-emerald-50',
+      iconBg: 'bg-green-500'
+    }, {
+      icon: Store,
+      title: '连锁门店',
+      description: '多店统一管理，资源调配',
+      gradient: 'from-purple-50 to-pink-50',
+      iconBg: 'bg-purple-500'
+    }]
+  }, {
+    id: 'employee-training',
+    name: 'AI员工成长业务培训系统',
+    description: '智能培训平台，提升员工技能，促进业务成长',
+    icon: GraduationCap,
+    gradient: 'from-purple-500 to-pink-600',
+    prices: [{
+      name: '标准版',
+      price: '3,680',
+      color: 'bg-white/20'
+    }, {
+      name: '企业版',
+      price: '6,980',
+      color: 'bg-yellow-500/20'
+    }],
+    features: [{
+      icon: Book,
+      title: '课程管理',
+      description: '丰富的培训课程，分类管理，进度跟踪',
+      color: 'bg-blue-100',
+      iconColor: 'text-blue-600'
+    }, {
+      icon: ChartLine,
+      title: '学习跟踪',
+      description: '学习进度监控，成绩统计分析',
+      color: 'bg-green-100',
+      iconColor: 'text-green-600'
+    }, {
+      icon: FolderOpen,
+      title: '资料下载',
+      description: '培训资料管理，支持多种格式下载',
+      color: 'bg-purple-100',
+      iconColor: 'text-purple-600'
+    }, {
+      icon: ClipboardCheck,
+      title: '考试测评',
+      description: '在线考试，自动评分，证书颁发',
+      color: 'bg-yellow-100',
+      iconColor: 'text-yellow-600'
+    }],
+    scenarios: [{
+      icon: UserPlus,
+      title: '新员工培训',
+      description: '入职培训，企业文化，岗位技能',
+      gradient: 'from-blue-50 to-indigo-50',
+      iconBg: 'bg-blue-500'
+    }, {
+      icon: Award,
+      title: '技能提升',
+      description: '技术培训，服务技能，管理能力',
+      gradient: 'from-green-50 to-emerald-50',
+      iconBg: 'bg-green-500'
+    }, {
+      icon: Certificate,
+      title: '认证考核',
+      description: '技能认证，等级评定，证书管理',
+      gradient: 'from-purple-50 to-pink-50',
+      iconBg: 'bg-purple-500'
+    }]
+  }, {
+    id: 'micro-store',
+    name: 'AI微店开店通商城系统',
+    description: '一站式电商解决方案，轻松开店，智能运营',
+    icon: ShoppingBag,
+    gradient: 'from-orange-500 to-red-600',
+    prices: [{
+      name: '基础版',
+      price: '4,980',
+      color: 'bg-white/20'
+    }, {
+      name: '专业版',
+      price: '8,980',
+      color: 'bg-yellow-500/20'
+    }],
+    features: [{
+      icon: Store,
+      title: '店铺管理',
+      description: '店铺信息设置，装修模板，支付配置',
+      color: 'bg-blue-100',
+      iconColor: 'text-blue-600'
+    }, {
+      icon: Box,
+      title: '商品管理',
+      description: '商品上架，库存管理，价格设置',
+      color: 'bg-green-100',
+      iconColor: 'text-green-600'
+    }, {
+      icon: ShoppingCart,
+      title: '订单处理',
+      description: '订单管理，发货处理，物流跟踪',
+      color: 'bg-purple-100',
+      iconColor: 'text-purple-600'
+    }, {
+      icon: Bullhorn,
+      title: '营销活动',
+      description: '优惠券，促销活动，会员管理',
+      color: 'bg-yellow-100',
+      iconColor: 'text-yellow-600'
+    }],
+    scenarios: [{
+      icon: User,
+      title: '个人创业者',
+      description: '快速开店，低成本创业，简单易用',
+      gradient: 'from-blue-50 to-indigo-50',
+      iconBg: 'bg-blue-500'
+    }, {
+      icon: Store,
+      title: '实体门店',
+      description: '线上线下融合，拓展销售渠道',
+      gradient: 'from-green-50 to-emerald-50',
+      iconBg: 'bg-green-500'
+    }, {
+      icon: Industry,
+      title: '品牌商家',
+      description: '多店管理，品牌展示，数据分析',
+      gradient: 'from-purple-50 to-pink-50',
+      iconBg: 'bg-purple-500'
+    }]
+  }];
+  const handleProductClick = productId => {
+    setSelectedProduct(productId);
+    // 可以添加导航到详情页的逻辑
+    if ($w?.utils?.navigateTo) {
       $w.utils.navigateTo({
-        pageId: 'home',
-        params: {}
-      });
-    }
-  };
-
-  // 处理购物车
-  const handleCart = () => {
-    if ($w.utils && $w.utils.navigateTo) {
-      $w.utils.navigateTo({
-        pageId: 'shopping-cart',
-        params: {}
-      });
-    } else {
-      toast({
-        title: "购物车",
-        description: "查看购物车商品"
-      });
-    }
-  };
-
-  // 处理产品详情
-  const handleProductDetail = productId => {
-    if ($w.utils && $w.utils.navigateTo) {
-      $w.utils.navigateTo({
-        pageId: 'product-detail',
+        pageId: 'system-detail',
         params: {
-          productId: productId
+          productId
         }
       });
-    } else {
-      toast({
-        title: "产品详情",
-        description: `查看产品 ${productId} 的详细信息`
-      });
     }
   };
-
-  // 处理添加到购物车
-  const handleAddToCart = product => {
-    // 直接调用购物车功能，不使用 useCart hook
-    toast({
-      title: "添加成功",
-      description: `${product.name} 已添加到购物车`
-    });
+  const handlePurchase = productId => {
+    // 处理购买逻辑
+    console.log('购买产品:', productId);
   };
-
-  // 产品数据
-  const [products] = useState([{
-    id: 1,
-    name: "AI智能染发自动调色宝机",
-    price: 4980,
-    image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=300&h=300&fit=crop",
-    category: "智能设备",
-    description: "AI发质识别，精准自动调色",
-    features: ["AI发质识别", "精准调色", "智能温控", "一键操作"]
-  }, {
-    id: 2,
-    name: "AI品牌染发膏管理系统",
-    price: 1680,
-    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=300&fit=crop",
-    category: "管理软件",
-    description: "专业染发膏库存管理",
-    features: ["库存管理", "批次追踪", "过期提醒", "数据分析"]
-  }, {
-    id: 3,
-    name: "AI客户配方管理系统",
-    price: 2680,
-    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=300&fit=crop",
-    category: "管理软件",
-    description: "客户染发配方管理",
-    features: ["配方管理", "客户档案", "历史记录", "个性化推荐"]
-  }, {
-    id: 4,
-    name: "AI美发连锁门店管理系统",
-    price: 3680,
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=300&fit=crop",
-    category: "管理软件",
-    description: "多店统一管理",
-    features: ["多店管理", "员工管理", "财务统计", "客户管理"]
-  }, {
-    id: 5,
-    name: "AI美发客户管理系统CRM",
-    price: 6800,
-    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=300&fit=crop",
-    category: "管理软件",
-    description: "客户关系管理",
-    features: ["客户管理", "营销自动化", "数据分析", "会员管理"]
-  }, {
-    id: 6,
-    name: "AI染发色彩大师SaaS系统",
-    price: 8800,
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop",
-    category: "云平台",
-    description: "AI原生开源SaaS平台",
-    features: ["云端部署", "API接口", "定制开发", "数据分析"]
-  }, {
-    id: 7,
-    name: "AI财务管理系统",
-    price: 2680,
-    image: "https://images.unsplash.com/photo-1554224154-260325c0598c?w=300&h=300&fit=crop",
-    category: "AI系统",
-    description: "智能财务管理，自动化报表",
-    features: ["财务报表", "成本分析", "预算管理", "税务计算"]
-  }, {
-    id: 8,
-    name: "AI考勤管理系统",
-    price: 2680,
-    image: "https://images.unsplash.com/photo-1515378791036-0648a814d764?w=300&h=300&fit=crop",
-    category: "AI系统",
-    description: "人脸识别考勤，智能排班",
-    features: ["人脸识别", "考勤统计", "异常处理", "排班管理"]
-  }, {
-    id: 9,
-    name: "AI文化管理系统",
-    price: 2680,
-    image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=300&h=300&fit=crop",
-    category: "AI系统",
-    description: "企业文化展示，员工活动管理",
-    features: ["文化展示", "员工活动", "培训管理", "内部通知"]
-  }, {
-    id: 10,
-    name: "AI门店店长CEO管理系统",
-    price: 19800,
-    image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=300&h=300&fit=crop",
-    category: "AI系统",
-    description: "全店智能管理，决策支持系统",
-    features: ["AI财务管理系统", "AI考勤管理系统", "AI文化管理系统", "AI染发膏库存管理系统", "AI客户配方管理系统", "AI客户（会员）管理系统CRM", "AI员工管理系统", "AI发型师管理系统", "AI社区管理系统", "AI客服系统", "AI客户预约系统"]
-  }, {
-    id: 11,
-    name: "AI客服系统",
-    price: 2680,
-    image: "https://images.unsplash.com/photo-1531297484013-562f0126c8a5?w=300&h=300&fit=crop",
-    category: "AI系统",
-    description: "智能客服机器人，在线咨询",
-    features: ["智能客服", "在线咨询", "工单管理", "知识库"]
-  }, {
-    id: 12,
-    name: "AI客户预约系统",
-    price: 2680,
-    image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=300&h=300&fit=crop",
-    category: "AI系统",
-    description: "在线预约，智能排期管理",
-    features: ["在线预约", "智能排期", "客户管理", "服务提醒"]
-  }, {
-    id: 13,
-    name: "AI员工成长业务培训系统",
-    price: 3680,
-    image: "https://images.unsplash.com/photo-1515378791036-0648a814d764?w=300&h=300&fit=crop",
-    category: "AI系统",
-    description: "员工培训，成长管理",
-    features: ["培训管理", "成长跟踪", "技能评估", "职业规划"]
-  }, {
-    id: 14,
-    name: "AI微店开店通商城系统",
-    price: 4980,
-    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=300&h=300&fit=crop",
-    category: "AI系统",
-    description: "微店管理，电商运营",
-    features: ["微店管理", "商品管理", "订单处理", "营销推广"]
-  }]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-
-  // 筛选产品
-  const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || product.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  // 渲染产品卡片
-  const renderProductCard = product => {
-    return <div key={product.id} className="bg-white/10 backdrop-blur-md rounded-xl p-6 hover:bg-white/15 transition-all duration-300">
-        <div className="relative mb-4">
-          <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded-lg" />
-          <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded-full text-xs">
-            {product.category}
-          </div>
-        </div>
-        
-        <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
-        <p className="text-white/60 text-sm mb-4">{product.description}</p>
-        
-        <div className="flex flex-wrap gap-2 mb-4">
-          {product.features.slice(0, 3).map((feature, index) => <span key={index} className="bg-white/10 text-white/80 text-xs px-2 py-1 rounded">
-              {feature}
-            </span>)}
-          {product.features.length > 3 && <span className="bg-white/10 text-white/80 text-xs px-2 py-1 rounded">
-              +{product.features.length - 3}更多
-            </span>}
-        </div>
-        
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-2xl font-bold text-white">¥{product.price.toLocaleString()}</div>
-        </div>
-        
-        <div className="flex gap-2">
-          <Button onClick={() => handleProductDetail(product.id)} className="flex-1 bg-white/20 hover:bg-white/30 text-white border border-white/30">
-            查看详情
-          </Button>
-          <Button onClick={() => handleAddToCart(product)} className="flex-1 bg-blue-500 hover:bg-blue-600 text-white">
-            加入购物车
-          </Button>
-        </div>
-      </div>;
+  const handleTrial = productId => {
+    // 处理试用逻辑
+    console.log('申请试用:', productId);
   };
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
-      {/* 顶部导航 */}
+  return <div className="min-h-screen bg-gray-50">
       <TopNavigation currentPage="products" />
       
-      {/* 主内容区 */}
-      <main className="container mx-auto px-4 py-8 pb-24">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-4">产品中心</h1>
-          <p className="text-white/80">探索我们的AI美发智能产品线</p>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
+        {/* 页面标题 */}
+        <section className="text-center mb-16">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            AI智能系统产品中心
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            为美发行业量身定制的AI智能解决方案，助力门店数字化转型，提升运营效率
+          </p>
+        </section>
+
+        {/* 产品列表 */}
+        <div className="space-y-20">
+          {aiProducts.map(product => {
+          const Icon = product.icon;
+          return <section key={product.id} className="product-card">
+                <div className={`bg-gradient-to-r ${product.gradient} rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02]`}>
+                  <div className="p-8 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center space-x-3 mb-4">
+                          <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                            <Icon className="w-6 h-6" />
+                          </div>
+                          <h2 className="text-3xl font-bold">{product.name}</h2>
+                        </div>
+                        <p className="text-white/90 text-lg mb-6">{product.description}</p>
+                        <div className="flex items-center space-x-6">
+                          {product.prices.map((price, index) => <div key={index} className={`${price.color} backdrop-blur-sm rounded-lg px-6 py-3 transform transition-all duration-300 hover:scale-105`}>
+                              <span className="text-white/80 text-sm">{price.name}</span>
+                              <span className="text-2xl font-bold ml-2">¥{price.price}</span>
+                            </div>)}
+                        </div>
+                      </div>
+                      <div className="hidden lg:block">
+                        <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
+                          <Icon className="w-16 h-16 text-white/50" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-8 bg-white">
+                    {/* 功能特点 */}
+                    <div className="mb-8">
+                      <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <Star className="w-5 h-5 text-yellow-500 mr-2" />
+                        核心功能特点
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {product.features.map((feature, index) => {
+                      const FeatureIcon = feature.icon;
+                      return <div key={index} className="feature-item bg-gray-50 rounded-lg p-4 transform transition-all duration-300 hover:translate-x-2 hover:bg-gray-100">
+                              <div className="flex items-start space-x-3">
+                                <div className={`w-8 h-8 ${feature.color} rounded-full flex items-center justify-center flex-shrink-0`}>
+                                  <FeatureIcon className={`w-4 h-4 ${feature.iconColor}`} />
+                                </div>
+                                <div>
+                                  <h4 className="font-medium text-gray-900">{feature.title}</h4>
+                                  <p className="text-gray-600 text-sm">{feature.description}</p>
+                                </div>
+                              </div>
+                            </div>;
+                    })}
+                      </div>
+                    </div>
+
+                    {/* 使用场景 */}
+                    <div className="mb-8">
+                      <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <Briefcase className="w-5 h-5 text-blue-500 mr-2" />
+                        适用场景
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {product.scenarios.map((scenario, index) => {
+                      const ScenarioIcon = scenario.icon;
+                      return <div key={index} className={`scenario-card bg-gradient-to-br ${scenario.gradient} rounded-lg p-4 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}>
+                              <div className={`w-10 h-10 ${scenario.iconBg} rounded-full flex items-center justify-center mb-3`}>
+                                <ScenarioIcon className="w-5 h-5 text-white" />
+                              </div>
+                              <h4 className="font-medium text-gray-900 mb-2">{scenario.title}</h4>
+                              <p className="text-gray-600 text-sm">{scenario.description}</p>
+                            </div>;
+                    })}
+                      </div>
+                    </div>
+
+                    {/* 购买按钮 */}
+                    <div className="flex items-center justify-center space-x-4">
+                      <Button onClick={() => handlePurchase(product.id)} className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-300">
+                        立即购买
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                      <Button variant="outline" onClick={() => handleTrial(product.id)} className="border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-all duration-300">
+                        申请试用
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </section>;
+        })}
         </div>
 
-        {/* 搜索和筛选 */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1">
-              <input type="text" placeholder="搜索产品..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50" />
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={() => setSelectedCategory('all')} className={`px-4 py-2 rounded-lg ${selectedCategory === 'all' ? 'bg-blue-500 text-white' : 'bg-white/10 text-white/80 hover:bg-white/20'}`}>
-                全部
-              </Button>
-              <Button onClick={() => setSelectedCategory('智能设备')} className={`px-4 py-2 rounded-lg ${selectedCategory === '智能设备' ? 'bg-blue-500 text-white' : 'bg-white/10 text-white/80 hover:bg-white/20'}`}>
-                智能设备
-              </Button>
-              <Button onClick={() => setSelectedCategory('管理软件')} className={`px-4 py-2 rounded-lg ${selectedCategory === '管理软件' ? 'bg-blue-500 text-white' : 'bg-white/10 text-white/80 hover:bg-white/20'}`}>
-                管理软件
-              </Button>
-              <Button onClick={() => setSelectedCategory('云平台')} className={`px-4 py-2 rounded-lg ${selectedCategory === '云平台' ? 'bg-blue-500 text-white' : 'bg-white/10 text-white/80 hover:bg-white/20'}`}>
-                云平台
-              </Button>
-              <Button onClick={() => setSelectedCategory('AI系统')} className={`px-4 py-2 rounded-lg ${selectedCategory === 'AI系统' ? 'bg-blue-500 text-white' : 'bg-white/10 text-white/80 hover:bg-white/20'}`}>
-                AI系统
-              </Button>
-            </div>
+        {/* 底部CTA */}
+        <section className="mt-20 text-center bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-12 text-white">
+          <h2 className="text-3xl font-bold mb-4">选择适合您的AI解决方案</h2>
+          <p className="text-xl mb-8 text-white/90">专业团队支持，定制化服务，助力您的业务腾飞</p>
+          <div className="flex items-center justify-center space-x-4">
+            <Button className="bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-all duration-300">
+              联系咨询
+            </Button>
+            <Button variant="outline" className="border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white/10 transition-all duration-300">
+              预约演示
+            </Button>
           </div>
-        </div>
-
-        {/* 产品网格 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map(renderProductCard)}
-        </div>
-
-        {filteredProducts.length === 0 && <div className="text-center py-12">
-            <p className="text-white/60">没有找到匹配的产品</p>
-          </div>}
+        </section>
       </main>
 
-      {/* 底部导航 */}
       <TabBar currentPage="products" />
     </div>;
 }
