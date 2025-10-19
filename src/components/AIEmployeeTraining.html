@@ -1,0 +1,888 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI员工成长业务培训系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .course-card {
+            transition: all 0.3s ease;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #667eea;
+        }
+        .material-item {
+            transition: all 0.3s ease;
+        }
+        .material-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .exam-item {
+            transition: all 0.3s ease;
+        }
+        .exam-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .category-badge {
+            transition: all 0.3s ease;
+        }
+        .category-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">AI员工成长业务培训系统</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-white text-sm">系统正常</span>
+                    </div>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-cog mr-2"></i>
+                        设置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 培训统计概览 -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-book text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">48</div>
+                <div class="text-white/60">培训课程</div>
+                <div class="text-blue-400 text-sm mt-2">+6个</div>
+            </div>
+            
+            <div class="glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">156</div>
+                <div class="text-white/60">学习员工</div>
+                <div class="text-green-400 text-sm mt-2">+12位</div>
+            </div>
+            
+            <div class="glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-chart-line text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">78%</div>
+                <div class="text-white/60">平均完成率</div>
+                <div class="text-purple-400 text-sm mt-2">优秀</div>
+            </div>
+            
+            <div class="glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-certificate text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">89</div>
+                <div class="text-white/60">颁发证书</div>
+                <div class="text-yellow-400 text-sm mt-2">+15个</div>
+            </div>
+        </section>
+
+        <!-- 标签切换 -->
+        <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
+            <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium" onclick="switchTab('courses')">
+                <i class="fas fa-book mr-2"></i>
+                课程管理
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('learning')">
+                <i class="fas fa-graduation-cap mr-2"></i>
+                学习中心
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('materials')">
+                <i class="fas fa-folder-open mr-2"></i>
+                培训资料
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('exams')">
+                <i class="fas fa-clipboard-check mr-2"></i>
+                考试测评
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('analytics')">
+                <i class="fas fa-chart-bar mr-2"></i>
+                数据分析
+            </button>
+        </div>
+
+        <!-- 课程管理内容 -->
+        <section id="courses-content" class="space-y-8">
+            <!-- 课程列表 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">课程管理</h2>
+                    <div class="flex items-center space-x-4">
+                        <select class="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                            <option value="">全部分类</option>
+                            <option value="technical">技术培训</option>
+                            <option value="business">业务培训</option>
+                            <option value="management">管理培训</option>
+                            <option value="safety">安全培训</option>
+                        </select>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>
+                            新建课程
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 分类标签 -->
+                <div class="flex items-center space-x-2 mb-6">
+                    <span class="category-badge bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm cursor-pointer">技术培训</span>
+                    <span class="category-badge bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm cursor-pointer">业务培训</span>
+                    <span class="category-badge bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm cursor-pointer">管理培训</span>
+                    <span class="category-badge bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full text-sm cursor-pointer">安全培训</span>
+                    <span class="category-badge bg-pink-500/20 text-pink-300 px-3 py-1 rounded-full text-sm cursor-pointer">新员工培训</span>
+                </div>
+                
+                <!-- 课程卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="course-card bg-white/10 rounded-xl p-6">
+                        <div class="w-full h-40 bg-white/20 rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-code text-4xl text-blue-400"></i>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-white font-medium">AI技术基础</h3>
+                            <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-xs">技术培训</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">学习AI基础知识和核心技术</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-clock text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">8小时</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-users text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">45人</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-white/60 text-sm">学习进度</span>
+                                <span class="text-white text-sm">65%</span>
+                            </div>
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-blue-400 h-2 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm">
+                                开始学习
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card bg-white/10 rounded-xl p-6">
+                        <div class="w-full h-40 bg-white/20 rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-handshake text-4xl text-green-400"></i>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-white font-medium">客户服务技巧</h3>
+                            <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-xs">业务培训</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">提升客户服务质量和沟通技巧</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-clock text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">6小时</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-users text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">32人</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-white/60 text-sm">学习进度</span>
+                                <span class="text-white text-sm">82%</span>
+                            </div>
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-green-400 h-2 rounded-full" style="width: 82%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm">
+                                继续学习
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card bg-white/10 rounded-xl p-6">
+                        <div class="w-full h-40 bg-white/20 rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-users-cog text-4xl text-purple-400"></i>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-white font-medium">团队管理</h3>
+                            <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full text-xs">管理培训</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">学习团队管理和领导力提升</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-clock text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">10小时</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-users text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">28人</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-white/60 text-sm">学习进度</span>
+                                <span class="text-white text-sm">45%</span>
+                            </div>
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-purple-400 h-2 rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-purple-500 hover:bg-purple-600 text-white px-3 py-2 rounded-lg text-sm">
+                                开始学习
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card bg-white/10 rounded-xl p-6">
+                        <div class="w-full h-40 bg-white/20 rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-4xl text-yellow-400"></i>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-white font-medium">安全生产</h3>
+                            <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-xs">安全培训</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">安全生产规范和应急处理</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-clock text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">4小时</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-users text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">56人</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-white/60 text-sm">学习进度</span>
+                                <span class="text-white text-sm">90%</span>
+                            </div>
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-yellow-400 h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-lg text-sm">
+                                继续学习
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card bg-white/10 rounded-xl p-6">
+                        <div class="w-full h-40 bg-white/20 rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-user-plus text-4xl text-pink-400"></i>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-white font-medium">新员工入职</h3>
+                            <span class="bg-pink-500/20 text-pink-300 px-2 py-1 rounded-full text-xs">新员工培训</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">新员工入职培训和公司文化</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-clock text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">12小时</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-users text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">18人</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-white/60 text-sm">学习进度</span>
+                                <span class="text-white text-sm">30%</span>
+                            </div>
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-pink-400 h-2 rounded-full" style="width: 30%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-pink-500 hover:bg-pink-600 text-white px-3 py-2 rounded-lg text-sm">
+                                开始学习
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card bg-white/10 rounded-xl p-6">
+                        <div class="w-full h-40 bg-white/20 rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-chart-line text-4xl text-indigo-400"></i>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-white font-medium">数据分析</h3>
+                            <span class="bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded-full text-xs">技术培训</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">数据分析和业务洞察技能</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-clock text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">8小时</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-users text-white/40 text-sm"></i>
+                                <span class="text-white/60 text-sm">22人</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-white/60 text-sm">学习进度</span>
+                                <span class="text-white text-sm">55%</span>
+                            </div>
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-indigo-400 h-2 rounded-full" style="width: 55%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-lg text-sm">
+                                继续学习
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 学习中心内容 -->
+        <section id="learning-content" class="space-y-8 hidden">
+            <!-- 学习进度概览 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">学习进度概览</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-white font-medium">我的学习</h3>
+                            <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-sm">进行中</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-white/60 text-sm">AI技术基础</span>
+                                    <span class="text-white text-sm">65%</span>
+                                </div>
+                                <div class="bg-white/20 rounded-full h-2">
+                                    <div class="bg-blue-400 h-2 rounded-full" style="width: 65%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-white/60 text-sm">客户服务技巧</span>
+                                    <span class="text-white text-sm">82%</span>
+                                </div>
+                                <div class="bg-white/20 rounded-full h-2">
+                                    <div class="bg-green-400 h-2 rounded-full" style="width: 82%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-white/60 text-sm">团队管理</span>
+                                    <span class="text-white text-sm">45%</span>
+                                </div>
+                                <div class="bg-white/20 rounded-full h-2">
+                                    <div class="bg-purple-400 h-2 rounded-full" style="width: 45%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-white font-medium">学习统计</h3>
+                            <i class="fas fa-chart-line text-blue-400"></i>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">总学习时长</span>
+                                <span class="text-white font-medium">48小时</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">完成课程</span>
+                                <span class="text-white font-medium">3个</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">获得证书</span>
+                                <span class="text-white font-medium">2个</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">平均成绩</span>
+                                <span class="text-white font-medium">85分</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-white font-medium">推荐课程</h3>
+                            <i class="fas fa-star text-yellow-400"></i>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-code text-white text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-white text-sm">机器学习入门</div>
+                                    <div class="text-white/60 text-xs">适合您的进阶学习</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-comments text-white text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-white text-sm">沟通技巧提升</div>
+                                    <div class="text-white/60 text-xs">基于您的学习记录</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-project-diagram text-white text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-white text-sm">项目管理实战</div>
+                                    <div class="text-white/60 text-xs">热门课程推荐</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 培训资料内容 -->
+        <section id="materials-content" class="space-y-8 hidden">
+            <!-- 资料管理 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">培训资料</h2>
+                    <div class="flex items-center space-x-4">
+                        <input type="text" placeholder="搜索资料..." class="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-upload mr-2"></i>
+                            上传资料
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 资料分类 -->
+                <div class="flex items-center space-x-2 mb-6">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">全部</button>
+                    <button class="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20">文档</button>
+                    <button class="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20">视频</button>
+                    <button class="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20">音频</button>
+                    <button class="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20">图片</button>
+                </div>
+                
+                <!-- 资料列表 -->
+                <div class="space-y-4">
+                    <div class="material-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-file-pdf text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">AI技术基础培训手册.pdf</h3>
+                                    <p class="text-white/60 text-sm">2.5MB • 上传于2024-01-10</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="material-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-file-video text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">客户服务技巧培训视频.mp4</h3>
+                                    <p class="text-white/60 text-sm">156MB • 上传于2024-01-08</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="material-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-file-word text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">团队管理培训资料.docx</h3>
+                                    <p class="text-white/60 text-sm">1.8MB • 上传于2024-01-05</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="material-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-file-powerpoint text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">安全生产培训课件.pptx</h3>
+                                    <p class="text-white/60 text-sm">5.2MB • 上传于2024-01-03</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 考试测评内容 -->
+        <section id="exams-content" class="space-y-8 hidden">
+            <!-- 考试列表 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">考试测评</h2>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-plus mr-2"></i>
+                        创建考试
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="exam-item bg-white/10 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-white font-medium">AI技术基础考试</h3>
+                            <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-sm">进行中</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">测试AI技术基础知识的掌握程度</p>
+                        <div class="space-y-3 mb-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">题目数量</span>
+                                <span class="text-white text-sm">50题</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">考试时长</span>
+                                <span class="text-white text-sm">90分钟</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">及格分数</span>
+                                <span class="text-white text-sm">60分</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">参与人数</span>
+                                <span class="text-white text-sm">23人</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm">
+                                开始考试
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="exam-item bg-white/10 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-white font-medium">客户服务技巧测评</h3>
+                            <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm">已完成</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">评估客户服务技能和沟通能力</p>
+                        <div class="space-y-3 mb-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">题目数量</span>
+                                <span class="text-white text-sm">30题</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">考试时长</span>
+                                <span class="text-white text-sm">60分钟</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">及格分数</span>
+                                <span class="text-white text-sm">70分</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">参与人数</span>
+                                <span class="text-white text-sm">18人</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm">
+                                查看成绩
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="exam-item bg-white/10 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-white font-medium">团队管理能力测试</h3>
+                            <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-sm">即将开始</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">测试团队管理和领导力能力</p>
+                        <div class="space-y-3 mb-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">题目数量</span>
+                                <span class="text-white text-sm">40题</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">考试时长</span>
+                                <span class="text-white text-sm">75分钟</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">及格分数</span>
+                                <span class="text-white text-sm">65分</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">参与人数</span>
+                                <span class="text-white text-sm">0人</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-lg text-sm">
+                                预约考试
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="exam-item bg-white/10 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-white font-medium">安全生产知识考核</h3>
+                            <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full text-sm">已完成</span>
+                        </div>
+                        <p class="text-white/60 text-sm mb-4">考核安全生产规范和应急处理知识</p>
+                        <div class="space-y-3 mb-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">题目数量</span>
+                                <span class="text-white text-sm">25题</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">考试时长</span>
+                                <span class="text-white text-sm">45分钟</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">及格分数</span>
+                                <span class="text-white text-sm">80分</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">参与人数</span>
+                                <span class="text-white text-sm">32人</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="flex-1 bg-purple-500 hover:bg-purple-600 text-white px-3 py-2 rounded-lg text-sm">
+                                查看成绩
+                            </button>
+                            <button class="glass-effect px-3 py-2 rounded-lg text-white hover:bg-white/20">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据分析内容 -->
+        <section id="analytics-content" class="space-y-8 hidden">
+            <!-- 学习数据分析 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-effect rounded-2xl p-8">
+                    <h2 class="text-xl font-bold text-white mb-6">学习进度趋势</h2>
+                    <div class="h-64 flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line text-4xl text-blue-400 mb-4"></i>
+                            <p class="text-white/60">学习进度趋势图表</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-8">
+                    <h2 class="text-xl font-bold text-white mb-6">课程完成率</h2>
+                    <div class="h-64 flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-chart-pie text-4xl text-green-400 mb-4"></i>
+                            <p class="text-white/60">课程完成率图表</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 详细统计 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-xl font-bold text-white mb-6">培训效果统计</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white mb-2">1,234</div>
+                        <div class="text-white/60">总学习时长</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white mb-2">89%</div>
+                        <div class="text-white/60">平均完成率</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white mb-2">85分</div>
+                        <div class="text-white/60">平均考试成绩</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-white mb-2">156</div>
+                        <div class="text-white/60">颁发证书数</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签切换
+        function switchTab(tab) {
+            // 移除所有active类
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-white/70');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            event.target.classList.remove('text-white/70');
+            
+            // 隐藏所有section
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // 显示对应的section
+            const sectionId = tab + '-content';
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
