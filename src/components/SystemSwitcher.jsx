@@ -3,41 +3,40 @@ import React from 'react';
 // @ts-ignore;
 import { Button } from '@/components/ui';
 // @ts-ignore;
-import { HeadphonesIcon, Calendar, GraduationCap, ShoppingBag, Settings, ChevronDown } from 'lucide-react';
+import { HeadphonesIcon, Calendar, GraduationCap, Briefcase, MessageSquare, Bot, ChevronDown } from 'lucide-react';
 
 export function SystemSwitcher({
-  currentSystem,
+  activeSystem,
   onSystemChange,
-  onSettingsClick
+  className = ''
 }) {
   const systems = [{
     id: 'customer-service',
     name: 'AI客服系统',
-    description: '智能客服对话',
     icon: HeadphonesIcon,
+    description: '智能客服，自动回复',
     color: 'purple'
   }, {
     id: 'appointment',
     name: 'AI预约系统',
-    description: '预约管理服务',
     icon: Calendar,
+    description: '智能预约，自动提醒',
     color: 'blue'
   }, {
     id: 'training',
     name: 'AI培训系统',
-    description: '员工培训管理',
     icon: GraduationCap,
+    description: '员工培训，技能提升',
     color: 'green'
   }, {
-    id: 'micro-store',
-    name: 'AI微店系统',
-    description: '电商开店服务',
-    icon: ShoppingBag,
-    color: 'orange'
+    id: 'recruitment',
+    name: 'AI招聘系统',
+    icon: Briefcase,
+    description: '智能招聘，人才匹配',
+    color: 'indigo'
   }];
-  const currentSystemData = systems.find(s => s.id === currentSystem) || systems[0];
-  const CurrentIcon = currentSystemData.icon;
-  const [isOpen, setIsOpen] = React.useState(false);
+  const currentSystem = systems.find(s => s.id === activeSystem) || systems[0];
+  const CurrentIcon = currentSystem.icon;
   const getColorClasses = color => {
     const colorMap = {
       purple: {
@@ -58,54 +57,42 @@ export function SystemSwitcher({
         border: 'border-green-200',
         hover: 'hover:bg-green-50'
       },
-      orange: {
-        bg: 'bg-orange-100',
-        text: 'text-orange-600',
-        border: 'border-orange-200',
-        hover: 'hover:bg-orange-50'
+      indigo: {
+        bg: 'bg-indigo-100',
+        text: 'text-indigo-600',
+        border: 'border-indigo-200',
+        hover: 'hover:bg-indigo-50'
       }
     };
     return colorMap[color] || colorMap.purple;
   };
-  return <div className="relative">
-      <div className="flex items-center space-x-4">
-        <Button variant="outline" onClick={() => setIsOpen(!isOpen)} className="flex items-center space-x-3 px-4 py-2">
-          <div className={`w-8 h-8 ${getColorClasses(currentSystemData.color).bg} rounded-full flex items-center justify-center`}>
-            <CurrentIcon className={`w-4 h-4 ${getColorClasses(currentSystemData.color).text}`} />
-          </div>
-          <div className="text-left">
-            <div className="font-medium text-gray-900">{currentSystemData.name}</div>
-            <div className="text-xs text-gray-500">{currentSystemData.description}</div>
-          </div>
-          <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-        </Button>
-        
-        <Button variant="ghost" size="sm" onClick={onSettingsClick} className="p-2">
-          <Settings className="w-5 h-5 text-gray-600" />
-        </Button>
+  return <div className={`relative ${className}`}>
+      <Button variant="outline" className="flex items-center space-x-3 px-4 py-2 bg-white border-gray-200 hover:bg-gray-50">
+        <div className={`w-8 h-8 ${getColorClasses(currentSystem.color).bg} rounded-full flex items-center justify-center`}>
+          <CurrentIcon className={`w-4 h-4 ${getColorClasses(currentSystem.color).text}`} />
+        </div>
+        <div className="text-left">
+          <div className="font-medium text-gray-900">{currentSystem.name}</div>
+          <div className="text-xs text-gray-500">{currentSystem.description}</div>
+        </div>
+        <ChevronDown className="w-4 h-4 text-gray-400" />
+      </Button>
+      
+      {/* 下拉菜单 */}
+      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden">
+        {systems.map(system => {
+        const Icon = system.icon;
+        const colors = getColorClasses(system.color);
+        return <button key={system.id} onClick={() => onSystemChange(system.id)} className={`w-full flex items-center space-x-3 px-4 py-3 text-left hover:${colors.hover} border-b border-gray-100 last:border-b-0`}>
+            <div className={`w-8 h-8 ${colors.bg} rounded-full flex items-center justify-center`}>
+              <Icon className={`w-4 h-4 ${colors.text}`} />
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">{system.name}</div>
+              <div className="text-xs text-gray-500">{system.description}</div>
+            </div>
+          </button>;
+      })}
       </div>
-
-      {isOpen && <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-          <div className="p-2">
-            {systems.map(system => {
-          const colors = getColorClasses(system.color);
-          const Icon = system.icon;
-          const isActive = system.id === currentSystem;
-          return <button key={system.id} onClick={() => {
-            onSystemChange(system.id);
-            setIsOpen(false);
-          }} className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive ? colors.bg : 'hover:bg-gray-50'}`}>
-                <div className={`w-10 h-10 ${colors.bg} rounded-full flex items-center justify-center`}>
-                  <Icon className={`w-5 h-5 ${colors.text}`} />
-                </div>
-                <div className="text-left flex-1">
-                  <div className={`font-medium ${isActive ? colors.text : 'text-gray-900'}`}>{system.name}</div>
-                  <div className="text-sm text-gray-500">{system.description}</div>
-                </div>
-                {isActive && <div className={`w-2 h-2 ${colors.text} rounded-full`}></div>}
-              </button>;
-        })}
-          </div>
-        </div>}
     </div>;
 }

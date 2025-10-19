@@ -1,14 +1,12 @@
 // @ts-ignore;
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent } from '@/components/ui';
 // @ts-ignore;
-import { MessageCircle, History, Star, Settings, Maximize2, Minimize2 } from 'lucide-react';
+import { Bot, MessageSquare, Settings, History, Star, Zap, Users, HeadphonesIcon, Calendar, GraduationCap, Briefcase } from 'lucide-react';
 
 // @ts-ignore;
 import { SystemSwitcher } from '@/components/SystemSwitcher';
-// @ts-ignore;
-import { QuickActions } from '@/components/QuickActions';
 // @ts-ignore;
 import { ChatInterface } from '@/components/ChatInterface';
 // @ts-ignore;
@@ -17,196 +15,211 @@ export default function AIChatPage(props) {
   const {
     $w
   } = props;
-  const [currentSystem, setCurrentSystem] = useState('customer-service');
+  const [activeSystem, setActiveSystem] = useState('customer-service');
   const [messages, setMessages] = useState([]);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState({
-    language: 'zh-CN',
-    theme: 'light',
+    voiceEnabled: true,
     notifications: true,
     autoResponse: true,
-    soundEnabled: true,
-    fontSize: 'medium'
+    language: 'zh-CN',
+    theme: 'light',
+    privacy: true
   });
 
-  // 初始化欢迎消息
-  useEffect(() => {
-    const welcomeMessages = {
-      'customer-service': [{
-        id: 1,
-        sender: 'assistant',
-        content: '您好！我是AI客服助手，有什么可以帮助您的吗？',
-        timestamp: new Date().toLocaleTimeString()
-      }],
-      'appointment': [{
-        id: 1,
-        sender: 'assistant',
-        content: '欢迎使用AI预约系统！我可以帮您管理预约、查看日程等。',
-        timestamp: new Date().toLocaleTimeString()
-      }],
-      'training': [{
-        id: 1,
-        sender: 'assistant',
-        content: '欢迎使用AI培训系统！我可以为您提供学习指导和培训支持。',
-        timestamp: new Date().toLocaleTimeString()
-      }],
-      'micro-store': [{
-        id: 1,
-        sender: 'assistant',
-        content: '欢迎使用AI微店系统！我可以帮您管理店铺、处理订单等。',
-        timestamp: new Date().toLocaleTimeString()
-      }]
-    };
-    setMessages(welcomeMessages[currentSystem] || welcomeMessages['customer-service']);
-  }, [currentSystem]);
-  const handleSystemChange = systemId => {
-    setCurrentSystem(systemId);
+  // 系统信息
+  const systemInfo = {
+    'customer-service': {
+      name: 'AI客服系统',
+      description: '24小时智能客服，自动回复，提升客户满意度',
+      icon: HeadphonesIcon,
+      color: 'purple',
+      features: ['智能对话', '自动回复', '多语言支持', '数据分析']
+    },
+    'appointment': {
+      name: 'AI预约系统',
+      description: '智能预约管理，自动提醒，提升预约效率',
+      icon: Calendar,
+      color: 'blue',
+      features: ['智能排班', '自动提醒', '客户管理', '数据分析']
+    },
+    'training': {
+      name: 'AI培训系统',
+      description: '个性化培训方案，提升员工技能，降低培训成本',
+      icon: GraduationCap,
+      color: 'green',
+      features: ['个性化学习', '进度跟踪', '考试测评', '证书颁发']
+    },
+    'recruitment': {
+      name: 'AI招聘系统',
+      description: '智能招聘代理，自动筛选简历，精准匹配人才',
+      icon: Briefcase,
+      color: 'indigo',
+      features: ['简历筛选', '智能匹配', '面试安排', '人才库管理']
+    }
   };
-  const handleSendMessage = content => {
+  const currentSystem = systemInfo[activeSystem];
+
+  // 处理消息发送
+  const handleSendMessage = message => {
     const newMessage = {
       id: Date.now(),
+      text: message,
       sender: 'user',
-      content: content,
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: new Date().toISOString()
     };
     setMessages(prev => [...prev, newMessage]);
 
     // 模拟AI回复
     setTimeout(() => {
-      const responses = {
-        'customer-service': '感谢您的咨询！我会尽力帮助您解决问题。',
-        'appointment': '预约已收到！我会为您安排合适的时间。',
-        'training': '学习资料已准备！请查看相关课程内容。',
-        'micro-store': '订单处理中！我们会尽快为您安排发货。'
-      };
       const aiResponse = {
         id: Date.now() + 1,
-        sender: 'assistant',
-        content: responses[currentSystem] || '感谢您的消息！我会尽力帮助您。',
-        timestamp: new Date().toLocaleTimeString()
+        text: getAIResponse(message, activeSystem),
+        sender: 'ai',
+        timestamp: new Date().toISOString()
       };
       setMessages(prev => [...prev, aiResponse]);
     }, 1000);
   };
-  const handleActionClick = action => {
-    const actionMessages = {
-      '开始对话': '请告诉我您需要什么帮助？',
-      '新建预约': '请选择您希望预约的时间和服务项目。',
-      '课程中心': '以下是推荐的培训课程，请选择您感兴趣的内容。',
-      '商品管理': '请选择您要管理的商品类别。'
+
+  // 获取AI回复
+  const getAIResponse = (message, system) => {
+    const responses = {
+      'customer-service': '感谢您的咨询！我已经收到您的问题，正在为您查找相关信息...',
+      'appointment': '好的，我来帮您安排预约。请告诉我您希望的时间和具体服务项目。',
+      'training': '很好的问题！我来为您提供专业的培训指导和建议。',
+      'recruitment': '我理解您的招聘需求，让我来帮您找到最合适的人才。'
     };
-    const message = actionMessages[action.label] || `正在执行${action.label}操作...`;
-    handleSendMessage(message);
+    return responses[system] || '我正在处理您的请求，请稍候...';
   };
+
+  // 处理设置变更
   const handleSettingsChange = newSettings => {
     setSettings(newSettings);
-    // 这里可以保存设置到本地存储或服务器
-    localStorage.setItem('ai-assistant-settings', JSON.stringify(newSettings));
   };
-  const toggleMinimize = () => {
-    setIsMinimized(!isMinimized);
+
+  // 处理系统切换
+  const handleSystemChange = systemId => {
+    setActiveSystem(systemId);
+    setMessages([]); // 清空消息历史
   };
-  return <div className="h-screen bg-gray-50 flex flex-col">
-      {/* 顶部导航栏 */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="px-4 py-3">
-          <div className="flex items-center justify-between">
+  return <div className="min-h-screen bg-gray-50">
+      {/* 顶部导航 */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <MessageCircle className="w-6 h-6 text-blue-600" />
-                <h1 className="text-xl font-bold text-gray-900">AI全能助手</h1>
+              <div className="flex items-center">
+                <Bot className="w-8 h-8 text-blue-600 mr-3" />
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">多任务全能AI助手</h1>
+                  <p className="text-sm text-gray-500">智能客服 • 预约管理 • 员工培训 • 人才招聘</p>
+                </div>
               </div>
-              
-              <SystemSwitcher currentSystem={currentSystem} onSystemChange={handleSystemChange} onSettingsClick={() => setIsSettingsOpen(true)} />
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" onClick={() => $w.utils.navigateTo && $w.utils.navigateTo({
-              pageId: 'history'
-            })}>
-                <History className="w-5 h-5" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Star className="w-5 h-5" />
-              </Button>
-              <Button variant="ghost" size="sm" onClick={toggleMinimize}>
-                {isMinimized ? <Maximize2 className="w-5 h-5" /> : <Minimize2 className="w-5 h-5" />}
+            <div className="flex items-center space-x-4">
+              <SystemSwitcher activeSystem={activeSystem} onSystemChange={handleSystemChange} />
+              <Button variant="ghost" onClick={() => setShowSettings(!showSettings)} className="flex items-center">
+                <Settings className="w-4 h-4 mr-2" />
+                设置
               </Button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* 主要内容区域 */}
-      <div className="flex-1 flex">
-        {!isMinimized && <>
-            {/* 侧边栏 */}
-            <aside className="w-80 bg-white border-r border-gray-200 p-4">
-              <div className="space-y-6">
-                {/* 快捷操作 */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">快捷操作</h3>
-                  <QuickActions currentSystem={currentSystem} onActionClick={handleActionClick} />
+      <div className="flex h-[calc(100vh-4rem)]">
+        {/* 侧边栏 */}
+        <aside className="w-80 bg-white border-r border-gray-200">
+          <div className="p-6">
+            {/* 当前系统信息 */}
+            <Card className="mb-6">
+              <CardContent className="p-4">
+                <div className="flex items-center mb-3">
+                  <div className={`w-12 h-12 bg-${currentSystem.color}-100 rounded-full flex items-center justify-center mr-3`}>
+                    <currentSystem.icon className={`w-6 h-6 text-${currentSystem.color}-600`} />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{currentSystem.name}</h3>
+                    <p className="text-sm text-gray-500">{currentSystem.description}</p>
+                  </div>
                 </div>
+                
+                <div className="space-y-2">
+                  {currentSystem.features.map((feature, index) => <div key={index} className="flex items-center text-sm text-gray-600">
+                      <Star className="w-3 h-3 text-yellow-400 mr-2" />
+                      {feature}
+                    </div>)}
+                </div>
+              </CardContent>
+            </Card>
 
-                {/* 系统信息 */}
-                <Card>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-3">当前系统</h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">系统名称</span>
-                        <span className="text-gray-900">
-                          {currentSystem === 'customer-service' && 'AI客服系统'}
-                          {currentSystem === 'appointment' && 'AI预约系统'}
-                          {currentSystem === 'training' && 'AI培训系统'}
-                          {currentSystem === 'micro-store' && 'AI微店系统'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">状态</span>
-                        <span className="text-green-600">在线</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">响应时间</span>
-                        <span className="text-gray-900">&lt;1s</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* 使用统计 */}
-                <Card>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-3">今日统计</h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">对话次数</span>
-                        <span className="text-gray-900">12</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">处理任务</span>
-                        <span className="text-gray-900">8</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">满意度</span>
-                        <span className="text-gray-900">98%</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+            {/* 快速操作 */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-gray-900 mb-3">快速操作</h4>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full justify-start" onClick={() => $w.utils.navigateTo && $w.utils.navigateTo({
+                pageId: 'products'
+              })}>
+                  <Star className="w-4 h-4 mr-2" />
+                  查看所有系统
+                </Button>
+                <Button variant="outline" className="w-full justify-start" onClick={() => $w.utils.navigateTo && $w.utils.navigateTo({
+                pageId: 'system-demo'
+              })}>
+                  <Zap className="w-4 h-4 mr-2" />
+                  系统演示
+                </Button>
+                <Button variant="outline" className="w-full justify-start" onClick={() => $w.utils.navigateTo && $w.utils.navigateTo({
+                pageId: 'online-consultation'
+              })}>
+                  <Users className="w-4 h-4 mr-2" />
+                  联系客服
+                </Button>
               </div>
-            </aside>
+            </div>
 
-            {/* 聊天界面 */}
-            <main className="flex-1">
-              <ChatInterface currentSystem={currentSystem} messages={messages} onSendMessage={handleSendMessage} />
-            </main>
-          </>}
+            {/* 聊天历史 */}
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-3">聊天历史</h4>
+              <div className="space-y-2">
+                <div className="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-900">客服咨询</span>
+                    <span className="text-xs text-gray-500">2分钟前</span>
+                  </div>
+                  <p className="text-sm text-gray-600 truncate">关于产品价格的咨询...</p>
+                </div>
+                <div className="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-900">预约服务</span>
+                    <span className="text-xs text-gray-500">1小时前</span>
+                  </div>
+                  <p className="text-sm text-gray-600 truncate">明天下午的预约安排...</p>
+                </div>
+                <div className="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-900">培训问题</span>
+                    <span className="text-xs text-gray-500">昨天</span>
+                  </div>
+                  <p className="text-sm text-gray-600 truncate">新员工培训计划制定...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* 主内容区 */}
+        <main className="flex-1 flex">
+          {showSettings ? <div className="w-full max-w-2xl mx-auto p-6">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">AI助手设置</h2>
+                <p className="text-gray-600">自定义您的AI助手体验</p>
+              </div>
+              <AssistantSettings settings={settings} onSettingsChange={handleSettingsChange} />
+            </div> : <ChatInterface activeSystem={activeSystem} messages={messages} onSendMessage={handleSendMessage} className="flex-1" />}
+        </main>
       </div>
-
-      {/* 设置弹窗 */}
-      <AssistantSettings isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} settings={settings} onSettingsChange={handleSettingsChange} />
     </div>;
 }
