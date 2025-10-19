@@ -32,6 +32,8 @@ import USER_FEEDBACK-SYSTEM from '../pages/user-feedback-system.jsx';
 import ATTENDANCE_MANAGEMENT from '../pages/attendance-management.jsx';
 import USER_FEEDBACK-COMPLETE from '../pages/user-feedback-complete.jsx';
 import CORPORATE_CULTURE from '../pages/corporate-culture.jsx';
+import FINANCE_MANAGEMENT-DETAILED from '../pages/finance-management-detailed.jsx';
+import ATTENDANCE_MANAGEMENT-DETAILED from '../pages/attendance-management-detailed.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -134,4 +136,10 @@ export const routers = [{
 }, {
   id: "corporate-culture",
   component: CORPORATE_CULTURE
+}, {
+  id: "finance-management-detailed",
+  component: FINANCE_MANAGEMENT-DETAILED
+}, {
+  id: "attendance-management-detailed",
+  component: ATTENDANCE_MANAGEMENT-DETAILED
 }]

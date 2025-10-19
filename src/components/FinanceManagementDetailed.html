@@ -1,0 +1,818 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI财务管理系统 - 详细功能</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .finance-card {
+            transition: all 0.3s ease;
+        }
+        .finance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #667eea;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .alert-item {
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .transaction-item {
+            transition: all 0.3s ease;
+        }
+        .transaction-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+        .budget-progress {
+            transition: width 0.8s ease;
+        }
+        .warning-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">AI财务管理系统</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-white text-sm">系统正常</span>
+                    </div>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-cog mr-2"></i>
+                        设置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 财务概览 -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-arrow-up text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">¥128,500</div>
+                <div class="text-white/60">本月收入</div>
+                <div class="text-green-400 text-sm mt-2">+15.2%</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-arrow-down text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">¥86,300</div>
+                <div class="text-white/60">本月支出</div>
+                <div class="text-red-400 text-sm mt-2">+8.5%</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-chart-line text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">¥42,200</div>
+                <div class="text-white/60">净利润</div>
+                <div class="text-green-400 text-sm mt-2">+28.3%</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-wallet text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">¥358,600</div>
+                <div class="text-white/60">账户余额</div>
+                <div class="text-green-400 text-sm mt-2">+12.8%</div>
+            </div>
+        </section>
+
+        <!-- 标签切换 -->
+        <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
+            <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium" onclick="switchTab('income-expense')">
+                <i class="fas fa-exchange-alt mr-2"></i>
+                收支管理
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('reports')">
+                <i class="fas fa-chart-bar mr-2"></i>
+                财务报表
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('cost-analysis')">
+                <i class="fas fa-analytics mr-2"></i>
+                成本分析
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('budget')">
+                <i class="fas fa-calculator mr-2"></i>
+                预算管理
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('alerts')">
+                <i class="fas fa-bell mr-2"></i>
+                财务预警
+            </button>
+        </div>
+
+        <!-- 收支管理内容 -->
+        <section id="income-expense-content" class="space-y-8">
+            <!-- 收支记录 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">收支记录</h2>
+                    <div class="flex items-center space-x-4">
+                        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>
+                            收入
+                        </button>
+                        <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-minus mr-2"></i>
+                            支出
+                        </button>
+                        <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                            <i class="fas fa-download mr-2"></i>
+                            导出
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- 收入记录 -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">最近收入</h3>
+                        <div class="space-y-3">
+                            <div class="transaction-item bg-white/10 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-cut text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-medium">美发服务收入</h4>
+                                            <p class="text-white/60 text-sm">2024-01-15 14:30</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-green-400 font-semibold">+¥2,800</div>
+                                        <div class="text-white/60 text-sm">服务收入</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="transaction-item bg-white/10 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-shopping-cart text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-medium">产品销售</h4>
+                                            <p class="text-white/60 text-sm">2024-01-15 10:15</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-green-400 font-semibold">+¥1,200</div>
+                                        <div class="text-white/60 text-sm">产品收入</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="transaction-item bg-white/10 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-crown text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-medium">会员充值</h4>
+                                            <p class="text-white/60 text-sm">2024-01-14 16:45</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-green-400 font-semibold">+¥5,000</div>
+                                        <div class="text-white/60 text-sm">会员收入</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 支出记录 -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">最近支出</h3>
+                        <div class="space-y-3">
+                            <div class="transaction-item bg-white/10 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-box text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-medium">染发膏采购</h4>
+                                            <p class="text-white/60 text-sm">2024-01-15 09:20</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-red-400 font-semibold">-¥3,500</div>
+                                        <div class="text-white/60 text-sm">采购支出</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="transaction-item bg-white/10 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-users text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-medium">员工工资</h4>
+                                            <p class="text-white/60 text-sm">2024-01-10 10:00</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-red-400 font-semibold">-¥25,000</div>
+                                        <div class="text-white/60 text-sm">人力成本</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="transaction-item bg-white/10 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-home text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-medium">店面租金</h4>
+                                            <p class="text-white/60 text-sm">2024-01-05 14:00</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-red-400 font-semibold">-¥12,000</div>
+                                        <div class="text-white/60 text-sm">固定支出</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 收支分类统计 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">收支分类统计</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">收入分类</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">美发服务</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-1 bg-white/20 rounded-full h-3">
+                                        <div class="progress-bar bg-green-400 h-3 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                    <span class="text-white font-medium">¥83,525</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">产品销售</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-1 bg-white/20 rounded-full h-3">
+                                        <div class="progress-bar bg-green-400 h-3 rounded-full" style="width: 25%"></div>
+                                    </div>
+                                    <span class="text-white font-medium">¥32,125</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">会员充值</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-1 bg-white/20 rounded-full h-3">
+                                        <div class="progress-bar bg-green-400 h-3 rounded-full" style="width: 10%"></div>
+                                    </div>
+                                    <span class="text-white font-medium">¥12,850</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">支出分类</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">人力成本</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-1 bg-white/20 rounded-full h-3">
+                                        <div class="progress-bar bg-red-400 h-3 rounded-full" style="width: 45%"></div>
+                                    </div>
+                                    <span class="text-white font-medium">¥38,835</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">产品采购</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-1 bg-white/20 rounded-full h-3">
+                                        <div class="progress-bar bg-red-400 h-3 rounded-full" style="width: 30%"></div>
+                                    </div>
+                                    <span class="text-white font-medium">¥25,890</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">固定支出</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-1 bg-white/20 rounded-full h-3">
+                                        <div class="progress-bar bg-red-400 h-3 rounded-full" style="width: 25%"></div>
+                                    </div>
+                                    <span class="text-white font-medium">¥21,575</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 财务报表内容 -->
+        <section id="reports-content" class="space-y-8 hidden">
+            <!-- 报表类型选择 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">财务报表</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="finance-card bg-white/10 rounded-xl p-6 cursor-pointer">
+                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-chart-line text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-white font-semibold mb-2">利润表</h3>
+                        <p class="text-white/60 text-sm">展示收入、成本和利润情况</p>
+                        <button class="mt-4 text-blue-400 text-sm hover:text-blue-300">生成报表 →</button>
+                    </div>
+                    
+                    <div class="finance-card bg-white/10 rounded-xl p-6 cursor-pointer">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-balance-scale text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-white font-semibold mb-2">资产负债表</h3>
+                        <p class="text-white/60 text-sm">展示资产、负债和所有者权益</p>
+                        <button class="mt-4 text-blue-400 text-sm hover:text-blue-300">生成报表 →</button>
+                    </div>
+                    
+                    <div class="finance-card bg-white/10 rounded-xl p-6 cursor-pointer">
+                        <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-water text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-white font-semibold mb-2">现金流量表</h3>
+                        <p class="text-white/60 text-sm">展示现金流入和流出情况</p>
+                        <button class="mt-4 text-blue-400 text-sm hover:text-blue-300">生成报表 →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 报表预览 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">利润表预览</h2>
+                    <div class="flex items-center space-x-4">
+                        <select class="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                            <option value="month">本月</option>
+                            <option value="quarter">本季度</option>
+                            <option value="year">本年度</option>
+                        </select>
+                        <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                            <i class="fas fa-download mr-2"></i>
+                            导出Excel
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 rounded-xl p-6">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white/20">
+                                <th class="text-left py-3 px-4">项目</th>
+                                <th class="text-right py-3 px-4">本月金额</th>
+                                <th class="text-right py-3 px-4">上月金额</th>
+                                <th class="text-right py-3 px-4">同比增长</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">营业收入</td>
+                                <td class="text-right py-3 px-4">¥128,500</td>
+                                <td class="text-right py-3 px-4">¥111,600</td>
+                                <td class="text-right py-3 px-4 text-green-400">+15.2%</td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">营业成本</td>
+                                <td class="text-right py-3 px-4">¥64,250</td>
+                                <td class="text-right py-3 px-4">¥58,900</td>
+                                <td class="text-right py-3 px-4 text-red-400">+9.1%</td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">毛利润</td>
+                                <td class="text-right py-3 px-4">¥64,250</td>
+                                <td class="text-right py-3 px-4">¥52,700</td>
+                                <td class="text-right py-3 px-4 text-green-400">+21.9%</td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">营业费用</td>
+                                <td class="text-right py-3 px-4">¥22,050</td>
+                                <td class="text-right py-3 px-4">¥19,800</td>
+                                <td class="text-right py-3 px-4 text-red-400">+11.4%</td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">净利润</td>
+                                <td class="text-right py-3 px-4 font-semibold">¥42,200</td>
+                                <td class="text-right py-3 px-4">¥32,900</td>
+                                <td class="text-right py-3 px-4 text-green-400">+28.3%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 成本分析内容 -->
+        <section id="cost-analysis-content" class="space-y-8 hidden">
+            <!-- 成本趋势分析 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">成本趋势分析</h2>
+                <div class="chart-container bg-white/10 rounded-lg p-6 flex items-center justify-center">
+                    <div class="text-center">
+                        <i class="fas fa-chart-line text-6xl text-blue-400 mb-4"></i>
+                        <p class="text-white/60">成本趋势图表</p>
+                        <p class="text-white/40 text-sm mt-2">显示最近6个月的成本变化趋势</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 成本结构分析 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">成本结构分析</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">成本构成</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">人力成本</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-1 bg-white/20 rounded-full h-3">
+                                        <div class="progress-bar bg-blue-400 h-3 rounded-full" style="width: 45%"></div>
+                                    </div>
+                                    <span class="text-white font-medium">45%</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">产品成本</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-1 bg-white/20 rounded-full h-3">
+                                        <div class="progress-bar bg-green-400 h-3 rounded-full" style="width: 30%"></div>
+                                    </div>
+                                    <span class="text-white font-medium">30%</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">固定成本</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-1 bg-white/20 rounded-full h-3">
+                                        <div class="progress-bar bg-purple-400 h-3 rounded-full" style="width: 25%"></div>
+                                    </div>
+                                    <span class="text-white font-medium">25%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">成本对比</h3>
+                        <div class="bg-white/10 rounded-xl p-6">
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">本月成本</span>
+                                    <span class="text-white font-medium">¥86,300</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">上月成本</span>
+                                    <span class="text-white font-medium">¥79,550</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">同比增长</span>
+                                    <span class="text-red-400 font-medium">+8.5%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">成本率</span>
+                                    <span class="text-yellow-400 font-medium">67.2%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 预算管理内容 -->
+        <section id="budget-content" class="space-y-8 hidden">
+            <!-- 预算概览 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">预算管理</h2>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-plus mr-2"></i>
+                        新建预算
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">年度预算</h3>
+                        <div class="text-3xl font-bold text-white mb-2">¥1,200,000</div>
+                        <div class="mb-4">
+                            <div class="flex justify-between text-white/60 text-sm mb-1">
+                                <span>已使用</span>
+                                <span>65%</span>
+                            </div>
+                            <div class="bg-white/20 rounded-full h-3">
+                                <div class="budget-progress bg-blue-400 h-3 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <div class="text-white/60 text-sm">剩余预算: ¥420,000</div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">月度预算</h3>
+                        <div class="text-3xl font-bold text-white mb-2">¥100,000</div>
+                        <div class="mb-4">
+                            <div class="flex justify-between text-white/60 text-sm mb-1">
+                                <span>已使用</span>
+                                <span>86%</span>
+                            </div>
+                            <div class="bg-white/20 rounded-full h-3">
+                                <div class="budget-progress bg-yellow-400 h-3 rounded-full" style="width: 86%"></div>
+                            </div>
+                        </div>
+                        <div class="text-white/60 text-sm">剩余预算: ¥14,000</div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">项目预算</h3>
+                        <div class="text-3xl font-bold text-white mb-2">¥50,000</div>
+                        <div class="mb-4">
+                            <div class="flex justify-between text-white/60 text-sm mb-1">
+                                <span>已使用</span>
+                                <span>42%</span>
+                            </div>
+                            <div class="bg-white/20 rounded-full h-3">
+                                <div class="budget-progress bg-green-400 h-3 rounded-full" style="width: 42%"></div>
+                            </div>
+                        </div>
+                        <div class="text-white/60 text-sm">剩余预算: ¥29,000</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 预算执行情况 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">预算执行情况</h2>
+                <div class="bg-white/10 rounded-xl p-6">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white/20">
+                                <th class="text-left py-3 px-4">预算项目</th>
+                                <th class="text-right py-3 px-4">预算金额</th>
+                                <th class="text-right py-3 px-4">实际支出</th>
+                                <th class="text-right py-3 px-4">执行率</th>
+                                <th class="text-right py-3 px-4">状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">人力成本</td>
+                                <td class="text-right py-3 px-4">¥40,000</td>
+                                <td class="text-right py-3 px-4">¥38,835</td>
+                                <td class="text-right py-3 px-4">97.1%</td>
+                                <td class="text-right py-3 px-4">
+                                    <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm">正常</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">产品采购</td>
+                                <td class="text-right py-3 px-4">¥30,000</td>
+                                <td class="text-right py-3 px-4">¥25,890</td>
+                                <td class="text-right py-3 px-4">86.3%</td>
+                                <td class="text-right py-3 px-4">
+                                    <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm">正常</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">营销费用</td>
+                                <td class="text-right py-3 px-4">¥15,000</td>
+                                <td class="text-right py-3 px-4">¥16,200</td>
+                                <td class="text-right py-3 px-4">108.0%</td>
+                                <td class="text-right py-3 px-4">
+                                    <span class="bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-sm">超支</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">运营费用</td>
+                                <td class="text-right py-3 px-4">¥15,000</td>
+                                <td class="text-right py-3 px-4">¥5,375</td>
+                                <td class="text-right py-3 px-4">35.8%</td>
+                                <td class="text-right py-3 px-4">
+                                    <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-sm">节约</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 财务预警内容 -->
+        <section id="alerts-content" class="space-y-8 hidden">
+            <!-- 预警概览 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">财务预警</h2>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-red-400 rounded-full warning-badge"></div>
+                        <span class="text-white text-sm">3个活跃预警</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-red-500/20 border border-red-400/30 rounded-xl p-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-white"></i>
+                            </div>
+                            <h3 class="text-white font-semibold">高风险</h3>
+                        </div>
+                        <div class="text-2xl font-bold text-white mb-2">1</div>
+                        <div class="text-white/60 text-sm">需要立即处理</div>
+                    </div>
+                    
+                    <div class="bg-yellow-500/20 border border-yellow-400/30 rounded-xl p-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exclamation text-white"></i>
+                            </div>
+                            <h3 class="text-white font-semibold">中风险</h3>
+                        </div>
+                        <div class="text-2xl font-bold text-white mb-2">1</div>
+                        <div class="text-white/60 text-sm">需要关注</div>
+                    </div>
+                    
+                    <div class="bg-blue-500/20 border border-blue-400/30 rounded-xl p-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-info text-white"></i>
+                            </div>
+                            <h3 class="text-white font-semibold">低风险</h3>
+                        </div>
+                        <div class="text-2xl font-bold text-white mb-2">1</div>
+                        <div class="text-white/60 text-sm">需要监控</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 预警详情 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">预警详情</h2>
+                <div class="space-y-4">
+                    <div class="alert-item bg-red-500/20 border border-red-400/30 rounded-xl p-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium mb-1">营销费用超支预警</h3>
+                                    <p class="text-white/60 text-sm mb-2">本月营销费用已超出预算8%，建议控制支出</p>
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-white/40 text-xs">触发时间: 2024-01-15 10:30</span>
+                                        <span class="bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-xs">高风险</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="text-white/60 hover:text-white">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-item bg-yellow-500/20 border border-yellow-400/30 rounded-xl p-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-exclamation text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium mb-1">现金流预警</h3>
+                                    <p class="text-white/60 text-sm mb-2">预计下月现金流可能紧张，建议提前准备</p>
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-white/40 text-xs">触发时间: 2024-01-14 15:20</span>
+                                        <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-xs">中风险</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="text-white/60 hover:text-white">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-item bg-blue-500/20 border border-blue-400/30 rounded-xl p-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-info text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium mb-1">成本增长提醒</h3>
+                                    <p class="text-white/60 text-sm mb-2">本月成本同比增长8.5%，建议关注成本控制</p>
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-white/40 text-xs">触发时间: 2024-01-13 09:15</span>
+                                        <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-xs">低风险</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="text-white/60 hover:text-white">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签切换
+        function switchTab(tab) {
+            // 移除所有active类
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-white/70');
+            });
+            
+            // 添加active类到当前按��
+            event.target.classList.add('active');
+            event.target.classList.remove('text-white/70');
+            
+            // 隐藏所有section
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // 显示对应的section
+            const sectionId = tab + '-content';
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

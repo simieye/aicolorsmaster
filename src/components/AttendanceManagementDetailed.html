@@ -1,0 +1,644 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI考勤管理系统 - 详细功能</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .attendance-card {
+            transition: all 0.3s ease;
+        }
+        .attendance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #667eea;
+        }
+        .face-scan {
+            position: relative;
+            overflow: hidden;
+        }
+        .face-scan::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.4), transparent);
+            animation: scan 2s infinite;
+        }
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        .schedule-item {
+            transition: all 0.3s ease;
+        }
+        .schedule-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .leave-item {
+            transition: all 0.3s ease;
+        }
+        .leave-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .alert-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .clock-animation {
+            animation: clockPulse 2s infinite;
+        }
+        @keyframes clockPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">AI考勤管理系统</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-white text-sm">系统正常</span>
+                    </div>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-cog mr-2"></i>
+                        设置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 考勤统计概览 -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-check text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">24</div>
+                <div class="text-white/60">今日出勤</div>
+                <div class="text-green-400 text-sm mt-2">正常出勤</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clock text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">2</div>
+                <div class="text-white/60">迟到人数</div>
+                <div class="text-yellow-400 text-sm mt-2">需要关注</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-times text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">1</div>
+                <div class="text-white/60">缺勤人数</div>
+                <div class="text-red-400 text-sm mt-2">请假中</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-percentage text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">96%</div>
+                <div class="text-white/60">出勤率</div>
+                <div class="text-green-400 text-sm mt-2">+2.1%</div>
+            </div>
+        </section>
+
+        <!-- 标签切换 -->
+        <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
+            <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium" onclick="switchTab('clock-in')">
+                <i class="fas fa-fingerprint mr-2"></i>
+                人脸打卡
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('statistics')">
+                <i class="fas fa-chart-bar mr-2"></i>
+                考勤统计
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('exceptions')">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                异常处理
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('schedule')">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                排班管理
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('leave')">
+                <i class="fas fa-file-alt mr-2"></i>
+                请假审批
+            </button>
+        </div>
+
+        <!-- 人脸打卡内容 -->
+        <section id="clock-in-content" class="space-y-8">
+            <!-- 人脸识别打卡 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">人脸识别打卡</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="text-center">
+                        <div class="face-scan w-64 h-64 mx-auto bg-white/10 rounded-2xl flex items-center justify-center mb-6 relative">
+                            <div class="text-center">
+                                <i class="fas fa-user text-6xl text-white/60 mb-4"></i>
+                                <p class="text-white/60">请将面部对准摄像头</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <button class="clock-animation w-full bg-green-500 hover:bg-green-600 text-white px-6 py-4 rounded-lg text-lg font-semibold">
+                                <i class="fas fa-fingerprint mr-2"></i>
+                                上班打卡
+                            </button>
+                            <button class="w-full bg-red-500 hover:bg-red-600 text-white px-6 py-4 rounded-lg text-lg font-semibold">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                下班打卡
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-white/10 rounded-xl p-6">
+                            <h3 class="text-white font-semibold mb-4">今日打卡状态</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">上班打卡</span>
+                                    <span class="text-green-400">08:45 已打卡</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">下班打卡</span>
+                                    <span class="text-white/40">未打卡</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">工作时长</span>
+                                    <span class="text-white">7小时15分钟</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-xl p-6">
+                            <h3 class="text-white font-semibold mb-4">打卡提醒</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-bell text-yellow-400"></i>
+                                    <span class="text-white/60">距离下班还有 45 分钟</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-info-circle text-blue-400"></i>
+                                    <span class="text-white/60">记得按时打卡哦</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-xl p-6">
+                            <h3 class="text-white font-semibold mb-4">快速操作</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                                    <i class="fas fa-calendar-plus mr-2"></i>
+                                    请假申请
+                                </button>
+                                <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                                    <i class="fas fa-exchange-alt mr-2"></i>
+                                    调班申请
+                                </button>
+                                <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    加班申请
+                                </button>
+                                <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                                    <i class="fas fa-file-alt mr-2"></i>
+                                    考勤说明
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实时考勤动态 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">实时考勤动态</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3 bg-white/10 rounded-lg p-4">
+                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user-check text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-white font-medium">张三 刚刚完成上班打卡</h4>
+                            <p class="text-white/60 text-sm">技术部 - 08:45</p>
+                        </div>
+                        <span class="text-green-400 text-sm">正常</span>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3 bg-white/10 rounded-lg p-4">
+                        <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-clock text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-white font-medium">李四 迟到 10 分钟</h4>
+                            <p class="text-white/60 text-sm">美发部 - 09:10</p>
+                        </div>
+                        <span class="text-yellow-400 text-sm">迟到</span>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3 bg-white/10 rounded-lg p-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-sign-out-alt text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-white font-medium">王五 刚刚完成下班打卡</h4>
+                            <p class="text-white/60 text-sm">客服部 - 18:30</p>
+                        </div>
+                        <span class="text-blue-400 text-sm">正常</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 考勤统计内容 -->
+        <section id="statistics-content" class="space-y-8 hidden">
+            <!-- 考勤统计图表 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">考勤统计分析</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">本月考勤趋势</h3>
+                        <div class="bg-white/10 rounded-lg p-6 h-64 flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-chart-line text-6xl text-blue-400 mb-4"></i>
+                                <p class="text-white/60">考勤趋势图表</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">部门出勤对比</h3>
+                        <div class="bg-white/10 rounded-lg p-6 h-64 flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-chart-pie text-6xl text-green-400 mb-4"></i>
+                                <p class="text-white/60">部门出勤对比图表</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 考勤数据表格 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">考勤记录</h2>
+                    <div class="flex items-center space-x-4">
+                        <input type="date" class="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                        <select class="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                            <option value="">全部员工</option>
+                            <option value="tech">技术部</option>
+                            <option value="hair">美发部</option>
+                            <option value="service">客服部</option>
+                        </select>
+                        <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                            <i class="fas fa-download mr-2"></i>
+                            导出
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 rounded-xl p-6">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white/20">
+                                <th class="text-left py-3 px-4">员工姓名</th>
+                                <th class="text-left py-3 px-4">部门</th>
+                                <th class="text-left py-3 px-4">上班打卡</th>
+                                <th class="text-left py-3 px-4">下班打卡</th>
+                                <th class="text-left py-3 px-4">工作时长</th>
+                                <th class="text-left py-3 px-4">状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">张三</td>
+                                <td class="py-3 px-4">技术部</td>
+                                <td class="py-3 px-4">08:45</td>
+                                <td class="py-3 px-4">18:30</td>
+                                <td class="py-3 px-4">9小时45分钟</td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm">正常</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <td class="py-3 px-4">李四</td>
+                                <td class="py-3 px-4">美发部</td>
+                                <td class="py-3 px-4">09:10</td>
+                                <td class="py-3 px-4">-</td>
+                                <td class="py-3 px-4">-</td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-sm">迟到</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 异常处理内容 -->
+        <section id="exceptions-content" class="space-y-8 hidden">
+            <!-- 异常统计 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-exclamation-triangle text-white"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white mb-2">5</div>
+                    <div class="text-white/60">待处理异常</div>
+                </div>
+                
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-clock text-white"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white mb-2">12</div>
+                    <div class="text-white/60">本月迟到</div>
+                </div>
+                
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user-times text-white"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white mb-2">3</div>
+                    <div class="text-white/60">本月缺勤</div>
+                </div>
+            </div>
+
+            <!-- 异常列表 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">异常处理列表</h2>
+                <div class="space-y-4">
+                    <div class="bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-exclamation-triangle text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">张三 - 未打卡</h4>
+                                    <p class="text-white/60 text-sm">技术部 - 2024-01-15</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-sm">高优先级</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">处理</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-clock text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">李四 - 迟到</h4>
+                                    <p class="text-white/60 text-sm">美发部 - 迟到15分钟</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-sm">中优先级</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">处理</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 排班管理内容 -->
+        <section id="schedule-content" class="space-y-8 hidden">
+            <!-- 排班日历 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">排班管理</h2>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-plus mr-2"></i>
+                        新增排班
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-7 gap-2 mb-4">
+                    <div class="text-center text-white/60 text-sm">日</div>
+                    <div class="text-center text-white/60 text-sm">一</div>
+                    <div class="text-center text-white/60 text-sm">二</div>
+                    <div class="text-center text-white/60 text-sm">三</div>
+                    <div class="text-center text-white/60 text-sm">四</div>
+                    <div class="text-center text-white/60 text-sm">五</div>
+                    <div class="text-center text-white/60 text-sm">六</div>
+                </div>
+                
+                <div class="grid grid-cols-7 gap-2">
+                    {Array.from({length: 35}, (_, i) => (
+                        <div key={i} class="bg-white/10 rounded-lg p-2 text-center hover:bg-white/20 cursor-pointer">
+                            <div class="text-white/60 text-sm">{i + 1}</div>
+                            {i === 14 && <div class="w-2 h-2 bg-blue-400 rounded-full mx-auto mt-1"></div>}
+                            {i === 20 && <div class="w-2 h-2 bg-green-400 rounded-full mx-auto mt-1"></div>}
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <!-- 班次设置 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">班次设置</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">早班</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">时间</span>
+                                <span class="text-white">08:00 - 16:00</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">人数</span>
+                                <span class="text-white">8人</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">负责人</span>
+                                <span class="text-white">张三</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">晚班</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">时间</span>
+                                <span class="text-white">16:00 - 24:00</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">人数</span>
+                                <span class="text-white">6人</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">负责人</span>
+                                <span class="text-white">李四</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 请假审批内容 -->
+        <section id="leave-content" class="space-y-8 hidden">
+            <!-- 请假统计 -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-hourglass-half text-white"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white mb-2">3</div>
+                    <div class="text-white/60">待审批</div>
+                </div>
+                
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-white"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white mb-2">15</div>
+                    <div class="text-white/60">已批准</div>
+                </div>
+                
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-times text-white"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white mb-2">2</div>
+                    <div class="text-white/60">已拒绝</div>
+                </div>
+                
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar text-white"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white mb-2">8</div>
+                    <div class="text-white/60">本月请假</div>
+                </div>
+            </div>
+
+            <!-- 请假申请列表 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">请假申请</h2>
+                <div class="space-y-4">
+                    <div class="leave-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
+                                     alt="员工头像" 
+                                     class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="text-white font-medium">张三 - 事假</h4>
+                                    <p class="text-white/60 text-sm">技术部 - 2024-01-16 至 2024-01-17</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-sm">待审批</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">审批</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="leave-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" 
+                                     alt="员工头像" 
+                                     class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="text-white font-medium">李四 - 病假</h4>
+                                    <p class="text-white/60 text-sm">美发部 - 2024-01-15 至 2024-01-16</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm">已批准</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">查看</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签切换
+        function switchTab(tab) {
+            // 移除所有active类
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-white/70');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            event.target.classList.remove('text-white/70');
+            
+            // 隐藏所有section
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // 显示对应的section
+            const sectionId = tab + '-content';
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
