@@ -19,6 +19,7 @@ import SHOPPING_CART from '../pages/shopping-cart.jsx';
 import CHECKOUT from '../pages/checkout.jsx';
 import ORDER_SUCCESS from '../pages/order-success.jsx';
 import ORDERS from '../pages/orders.jsx';
+import STORE_MANAGEMENT-SYSTEM from '../pages/store-management-system.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -82,4 +83,7 @@ export const routers = [{
 }, {
   id: "orders",
   component: ORDERS
+}, {
+  id: "store-management-system",
+  component: STORE_MANAGEMENT-SYSTEM
 }]
