@@ -1,0 +1,609 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户评价和反馈 - AI美发智能系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .star {
+            font-size: 1.5rem;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .star:hover,
+        .star.active {
+            color: #fbbf24;
+            transform: scale(1.1);
+        }
+        .review-card {
+            transition: all 0.3s ease;
+        }
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .feedback-type {
+            transition: all 0.3s ease;
+        }
+        .feedback-type.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: scale(1.05);
+        }
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #667eea;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">用户评价和反馈</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-history mr-2"></i>
+                        我的评价
+                    </button>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-bell mr-2"></i>
+                        通知
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 标签切换 -->
+        <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
+            <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium">
+                <i class="fas fa-star mr-2"></i>
+                用户评价
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                <i class="fas fa-comment-dots mr-2"></i>
+                意见反馈
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                <i class="fas fa-chart-bar mr-2"></i>
+                数据统计
+            </button>
+        </div>
+
+        <!-- 用户评价部分 -->
+        <section id="reviews-section">
+            <!-- 评价统计 -->
+            <div class="glass-effect rounded-2xl p-8 mb-8">
+                <h2 class="text-2xl font-bold text-white mb-6">评价统计</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="text-5xl font-bold text-white mb-2">4.8</div>
+                        <div class="star-rating justify-center mb-2">
+                            <i class="fas fa-star star active"></i>
+                            <i class="fas fa-star star active"></i>
+                            <i class="fas fa-star star active"></i>
+                            <i class="fas fa-star star active"></i>
+                            <i class="fas fa-star star active"></i>
+                        </div>
+                        <div class="text-white/60">基于 2,456 条评价</div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-white/60 w-12">5星</span>
+                            <div class="flex-1 bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-green-400 h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                            <span class="text-white/60 w-12 text-right">75%</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-white/60 w-12">4星</span>
+                            <div class="flex-1 bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-blue-400 h-2 rounded-full" style="width: 15%"></div>
+                            </div>
+                            <span class="text-white/60 w-12 text-right">15%</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-white/60 w-12">3星</span>
+                            <div class="flex-1 bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-yellow-400 h-2 rounded-full" style="width: 7%"></div>
+                            </div>
+                            <span class="text-white/60 w-12 text-right">7%</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-white/60 w-12">2星</span>
+                            <div class="flex-1 bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-orange-400 h-2 rounded-full" style="width: 2%"></div>
+                            </div>
+                            <span class="text-white/60 w-12 text-right">2%</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-white/60 w-12">1星</span>
+                            <div class="flex-1 bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-red-400 h-2 rounded-full" style="width: 1%"></div>
+                            </div>
+                            <span class="text-white/60 w-12 text-right">1%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-white mb-1">98%</div>
+                            <div class="text-white/60">推荐率</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-white mb-1">24h</div>
+                            <div class="text-white/60">平均回复时间</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 写评价 -->
+            <div class="glass-effect rounded-2xl p-8 mb-8">
+                <h2 class="text-2xl font-bold text-white mb-6">写评价</h2>
+                
+                <form class="space-y-6">
+                    <div>
+                        <label class="text-white text-sm mb-2 block">选择产品</label>
+                        <select class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                            <option value="">请选择要评价的产品</option>
+                            <option value="1">AI智能染发自动调色宝机</option>
+                            <option value="2">AI品牌染发膏管理系统</option>
+                            <option value="3">AI客户配方管理系统</option>
+                            <option value="4">AI美发连锁门店管理系统</option>
+                            <option value="5">AI美发客户管理系统CRM</option>
+                            <option value="6">AI染发色彩大师SaaS系统</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="text-white text-sm mb-2 block">评分</label>
+                        <div class="star-rating" id="starRating">
+                            <i class="fas fa-star star" data-rating="1"></i>
+                            <i class="fas fa-star star" data-rating="2"></i>
+                            <i class="fas fa-star star" data-rating="3"></i>
+                            <i class="fas fa-star star" data-rating="4"></i>
+                            <i class="fas fa-star star" data-rating="5"></i>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="text-white text-sm mb-2 block">评价标题</label>
+                        <input type="text" placeholder="请输入评价标题" class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
+                    </div>
+                    
+                    <div>
+                        <label class="text-white text-sm mb-2 block">评价内容</label>
+                        <textarea placeholder="请详细描述您的使用体验..." rows="4" class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="text-white text-sm mb-2 block">上传图片</label>
+                        <div class="upload-area rounded-lg p-8 text-center cursor-pointer">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-white/60 mb-4"></i>
+                            <p class="text-white/60 mb-2">点击或拖拽图片到此处上传</p>
+                            <p class="text-white/40 text-sm">支持 JPG、PNG 格式，最多上传5张图片</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            提交评价
+                        </button>
+                        <button type="button" class="glass-effect hover:bg-white/20 text-white px-6 py-2 rounded-lg">
+                            <i class="fas fa-save mr-2"></i>
+                            保存草稿
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 评价列表 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">用户评价</h2>
+                    <div class="flex items-center space-x-4">
+                        <select class="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                            <option value="">最新评价</option>
+                            <option value="rating">评分最高</option>
+                            <option value="helpful">最有帮助</option>
+                            <option value="verified">已验证购买</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- 评价卡片1 -->
+                    <div class="review-card bg-white/10 rounded-xl p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
+                                     alt="用户头像" 
+                                     class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="text-white font-medium">张店长</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="star-rating">
+                                            <i class="fas fa-star star active text-sm"></i>
+                                            <i class="fas fa-star star active text-sm"></i>
+                                            <i class="fas fa-star star active text-sm"></i>
+                                            <i class="fas fa-star star active text-sm"></i>
+                                            <i class="fas fa-star star active text-sm"></i>
+                                        </div>
+                                        <span class="text-white/60 text-sm">AI智能调色宝机</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-white/60 text-sm">2024-01-15</div>
+                                <div class="text-green-400 text-sm">已验证购买</div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-white font-medium mb-2">效果超出预期，强烈推荐！</h5>
+                        <p class="text-white/80 mb-4">
+                            使用AI智能调色宝机已经三个月了，效果真的超出预期。染发效率提升了300%，客户满意度也大幅提升。操作简单，员工上手很快，最重要的是染发效果非常精准，几乎没有失败的情况。投资回报率很高，强烈推荐给同行！
+                        </p>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-4">
+                            <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=200&h=150&fit=crop" 
+                                 alt="评价图片" 
+                                 class="w-full h-20 object-cover rounded-lg">
+                            <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=200&h=150&fit=crop" 
+                                 alt="评价图片" 
+                                 class="w-full h-20 object-cover rounded-lg">
+                            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=150&fit=crop" 
+                                 alt="评价图片" 
+                                 class="w-full h-20 object-cover rounded-lg">
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <button class="text-white/60 hover:text-white text-sm">
+                                    <i class="fas fa-thumbs-up mr-1"></i>
+                                    有帮助 (23)
+                                </button>
+                                <button class="text-white/60 hover:text-white text-sm">
+                                    <i class="fas fa-comment mr-1"></i>
+                                    回复 (5)
+                                </button>
+                            </div>
+                            <button class="text-white/60 hover:text-white text-sm">
+                                <i class="fas fa-flag mr-1"></i>
+                                举报
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 评价卡片2 -->
+                    <div class="review-card bg-white/10 rounded-xl p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" 
+                                     alt="用户头像" 
+                                     class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="text-white font-medium">李经理</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="star-rating">
+                                            <i class="fas fa-star star active text-sm"></i>
+                                            <i class="fas fa-star star active text-sm"></i>
+                                            <i class="fas fa-star star active text-sm"></i>
+                                            <i class="fas fa-star star active text-sm"></i>
+                                            <i class="far fa-star star text-sm"></i>
+                                        </div>
+                                        <span class="text-white/60 text-sm">染发膏管理系统</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-white/60 text-sm">2024-01-12</div>
+                                <div class="text-green-400 text-sm">已验证购买</div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="text-white font-medium mb-2">库存管理变得如此简单</h5>
+                        <p class="text-white/80 mb-4">
+                            作为一家10家连锁店的经营者，库存管理一直是个头疼的问题。自从使用了染发膏管理系统，库存准确率提升到了99.5%，浪费减少了80%。系统界面简洁，操作方便，员工培训成本很低。客服响应也很及时，遇到问题都能快速解决。
+                        </p>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <button class="text-white/60 hover:text-white text-sm">
+                                    <i class="fas fa-thumbs-up mr-1"></i>
+                                    有帮助 (18)
+                                </button>
+                                <button class="text-white/60 hover:text-white text-sm">
+                                    <i class="fas fa-comment mr-1"></i>
+                                    回复 (3)
+                                </button>
+                            </div>
+                            <button class="text-white/60 hover:text-white text-sm">
+                                <i class="fas fa-flag mr-1"></i>
+                                举报
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="flex items-center justify-center space-x-2 mt-8">
+                    <button class="glass-effect px-3 py-1 rounded text-white/60 hover:text-white">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="bg-blue-500 px-3 py-1 rounded text-white">1</button>
+                    <button class="glass-effect px-3 py-1 rounded text-white/60 hover:text-white">2</button>
+                    <button class="glass-effect px-3 py-1 rounded text-white/60 hover:text-white">3</button>
+                    <button class="glass-effect px-3 py-1 rounded text-white/60 hover:text-white">...</button>
+                    <button class="glass-effect px-3 py-1 rounded text-white/60 hover:text-white">10</button>
+                    <button class="glass-effect px-3 py-1 rounded text-white/60 hover:text-white">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 意见反馈部分 -->
+        <section id="feedback-section" class="hidden">
+            <!-- 反馈类型选择 -->
+            <div class="glass-effect rounded-2xl p-8 mb-8">
+                <h2 class="text-2xl font-bold text-white mb-6">选择反馈类型</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button class="feedback-type glass-effect rounded-xl p-6 text-left hover:bg-white/20">
+                        <i class="fas fa-bug text-red-400 text-2xl mb-3"></i>
+                        <h3 class="text-white font-semibold mb-2">问题反馈</h3>
+                        <p class="text-white/60 text-sm">报告产品问题或错误</p>
+                    </button>
+                    <button class="feedback-type glass-effect rounded-xl p-6 text-left hover:bg-white/20">
+                        <i class="fas fa-lightbulb text-yellow-400 text-2xl mb-3"></i>
+                        <h3 class="text-white font-semibold mb-2">功能建议</h3>
+                        <p class="text-white/60 text-sm">提出新功能或改进建议</p>
+                    </button>
+                    <button class="feedback-type glass-effect rounded-xl p-6 text-left hover:bg-white/20">
+                        <i class="fas fa-heart text-pink-400 text-2xl mb-3"></i>
+                        <h3 class="text-white font-semibold mb-2">其他反馈</h3>
+                        <p class="text-white/60 text-sm">其他意见和建议</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 反馈表单 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">提交反馈</h2>
+                
+                <form class="space-y-6">
+                    <div>
+                        <label class="text-white text-sm mb-2 block">反馈类型</label>
+                        <select class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                            <option value="">请选择反馈类型</option>
+                            <option value="bug">问题反馈</option>
+                            <option value="feature">功能建议</option>
+                            <option value="other">其他反馈</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="text-white text-sm mb-2 block">相关产品</label>
+                        <select class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                            <option value="">请选择相关产品</option>
+                            <option value="1">AI智能染发自动调色宝机</option>
+                            <option value="2">AI品牌染发膏管理系统</option>
+                            <option value="3">AI客户配方管理系统</option>
+                            <option value="4">AI美发连锁门店管理系统</option>
+                            <option value="5">AI美发客户管理系统CRM</option>
+                            <option value="6">AI染发色彩大师SaaS系统</option>
+                            <option value="all">全部产品</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="text-white text-sm mb-2 block">反馈标题</label>
+                        <input type="text" placeholder="请简要描述您的反馈" class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
+                    </div>
+                    
+                    <div>
+                        <label class="text-white text-sm mb-2 block">详细描述</label>
+                        <textarea placeholder="请详细描述您的问题或建议..." rows="6" class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="text-white text-sm mb-2 block">联系方式</label>
+                        <input type="email" placeholder="请输入您的邮箱地址" class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            提交反馈
+                        </button>
+                        <button type="button" class="glass-effect hover:bg-white/20 text-white px-6 py-2 rounded-lg">
+                            <i class="fas fa-history mr-2"></i>
+                            查看历史
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- 数据统计部分 -->
+        <section id="stats-section" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <i class="fas fa-star text-yellow-400 text-3xl mb-4"></i>
+                    <div class="text-3xl font-bold text-white mb-2">4.8</div>
+                    <div class="text-white/60">平均评分</div>
+                </div>
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <i class="fas fa-comments text-blue-400 text-3xl mb-4"></i>
+                    <div class="text-3xl font-bold text-white mb-2">2,456</div>
+                    <div class="text-white/60">总评价数</div>
+                </div>
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <i class="fas fa-comment-dots text-green-400 text-3xl mb-4"></i>
+                    <div class="text-3xl font-bold text-white mb-2">186</div>
+                    <div class="text-white/60">反馈数量</div>
+                </div>
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <i class="fas fa-check-circle text-purple-400 text-3xl mb-4"></i>
+                    <div class="text-3xl font-bold text-white mb-2">95%</div>
+                    <div class="text-white/60">解决率</div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">反馈趋势</h2>
+                <div class="bg-white/10 rounded-lg p-6 h-64 flex items-center justify-center">
+                    <p class="text-white/60">图表展示区域</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签切换
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.add('text-white/70');
+                });
+                // 添加active类到当前按钮
+                this.classList.add('active');
+                this.classList.remove('text-white/70');
+                
+                // 隐藏所有section
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // 显示对应的section
+                const sectionId = this.textContent.includes('用户评价') ? 'reviews-section' : 
+                                 this.textContent.includes('意见反馈') ? 'feedback-section' : 'stats-section';
+                document.getElementById(sectionId).classList.remove('hidden');
+            });
+        });
+
+        // 星级评分
+        let selectedRating = 0;
+        document.querySelectorAll('#starRating .star').forEach(star => {
+            star.addEventListener('click', function() {
+                selectedRating = parseInt(this.dataset.rating);
+                updateStars(selectedRating);
+            });
+            
+            star.addEventListener('mouseenter', function() {
+                const hoverRating = parseInt(this.dataset.rating);
+                updateStars(hoverRating);
+            });
+        });
+
+        document.getElementById('starRating').addEventListener('mouseleave', function() {
+            updateStars(selectedRating);
+        });
+
+        function updateStars(rating) {
+            document.querySelectorAll('#starRating .star').forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // 反馈类型选择
+        document.querySelectorAll('.feedback-type').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.feedback-type').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // 添加active类到当前按钮
+                this.classList.add('active');
+            });
+        });
+
+        // 文件上传
+        document.querySelector('.upload-area').addEventListener('click', function() {
+            // 模拟文件选择
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+            input.onchange = function(e) {
+                const files = e.target.files;
+                if (files.length > 0) {
+                    console.log('选择了文件:', files);
+                }
+            };
+            input.click();
+        });
+
+        // 拖拽上传
+        const uploadArea = document.querySelector('.upload-area');
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#667eea';
+            this.style.background = 'rgba(102, 126, 234, 0.1)';
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            this.style.background = 'transparent';
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            this.style.background = 'transparent';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                console.log('拖拽了文件:', files);
+            }
+        });
+    </script>
+</body>
+</html>

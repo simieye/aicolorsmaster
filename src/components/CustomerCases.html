@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户案例展示 - AI美发智能系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .case-card {
+            transition: all 0.3s ease;
+        }
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .stat-number {
+            animation: countUp 2s ease-out;
+        }
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: scale(1.05);
+        }
+        .image-carousel {
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+        }
+        .image-carousel img {
+            scroll-snap-align: start;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">客户案例</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-search mr-2"></i>
+                        搜索案例
+                    </button>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-filter mr-2"></i>
+                        筛选
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 页面标题和统计 -->
+        <section class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-white mb-4">成功案例展示</h1>
+            <p class="text-xl text-white/80 mb-8">看看AI美发系统如何帮助门店实现数字化转型</p>
+            
+            <!-- 统计数据 -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                <div class="glass-effect rounded-xl p-6">
+                    <div class="text-3xl font-bold text-white stat-number">1,200+</div>
+                    <div class="text-white/60">合作门店</div>
+                </div>
+                <div class="glass-effect rounded-xl p-6">
+                    <div class="text-3xl font-bold text-white stat-number">98%</div>
+                    <div class="text-white/60">客户满意度</div>
+                </div>
+                <div class="glass-effect rounded-xl p-6">
+                    <div class="text-3xl font-bold text-white stat-number">300%</div>
+                    <div class="text-white/60">效率提升</div>
+                </div>
+                <div class="glass-effect rounded-xl p-6">
+                    <div class="text-3xl font-bold text-white stat-number">40%</div>
+                    <div class="text-white/60">成本降低</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 筛选器 -->
+        <section class="glass-effect rounded-2xl p-6 mb-8">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap gap-2">
+                    <button class="filter-btn active px-4 py-2 rounded-full text-white border border-white/30">
+                        全部案例
+                    </button>
+                    <button class="filter-btn glass-effect px-4 py-2 rounded-full text-white border border-white/30 hover:bg-white/20">
+                        AI智能调色宝机
+                    </button>
+                    <button class="filter-btn glass-effect px-4 py-2 rounded-full text-white border border-white/30 hover:bg-white/20">
+                        染发膏管理系统
+                    </button>
+                    <button class="filter-btn glass-effect px-4 py-2 rounded-full text-white border border-white/30 hover:bg-white/20">
+                        客户配方管理
+                    </button>
+                    <button class="filter-btn glass-effect px-4 py-2 rounded-full text-white border border-white/30 hover:bg-white/20">
+                        连锁门店管理
+                    </button>
+                    <button class="filter-btn glass-effect px-4 py-2 rounded-full text-white border border-white/30 hover:bg-white/20">
+                        CRM系统
+                    </button>
+                    <button class="filter-btn glass-effect px-4 py-2 rounded-full text-white border border-white/30 hover:bg-white/20">
+                        SaaS平台
+                    </button>
+                </div>
+                <select class="glass-effect px-4 py-2 rounded-lg text-white border border-white/30 bg-transparent">
+                    <option value="latest">最新案例</option>
+                    <option value="popular">热门案例</option>
+                    <option value="rating">评分最高</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- 案例列表 -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <!-- 案例1 -->
+            <div class="case-card glass-effect rounded-2xl overflow-hidden">
+                <div class="relative">
+                    <div class="aspect-video bg-gray-800 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=225&fit=crop" 
+                             alt="案例图片" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm">
+                        AI智能调色宝机
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-white mb-2">时尚造型沙龙 - 数字化转型成功案例</h3>
+                    <p class="text-white/60 text-sm mb-4">通过引入AI智能调色宝机，该沙龙实现了染发效率提升300%，客户满意度达到99%</p>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" 
+                                 alt="客户头像" 
+                                 class="w-8 h-8 rounded-full">
+                            <span class="text-white text-sm">张店长</span>
+                        </div>
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-center text-white/80 text-sm mb-4">
+                        <div>
+                            <div class="font-bold text-white">300%</div>
+                            <div>效率提升</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white">40%</div>
+                            <div>成本降低</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white">99%</div>
+                            <div>满意度</div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full glass-effect py-2 rounded-lg text-white hover:bg-white/20">
+                        查看详情
+                    </button>
+                </div>
+            </div>
+
+            <!-- 案例2 -->
+            <div class="case-card glass-effect rounded-2xl overflow-hidden">
+                <div class="relative">
+                    <div class="aspect-video bg-gray-800 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=225&fit=crop" 
+                             alt="案例图片" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
+                        染发膏管理系统
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-white mb-2">美丽连锁 - 库存管理优化案例</h3>
+                    <p class="text-white/60 text-sm mb-4">10家连锁店统一管理，库存准确率提升至99.5%，浪费减少80%</p>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face" 
+                                 alt="客户头像" 
+                                 class="w-8 h-8 rounded-full">
+                            <span class="text-white text-sm">李经理</span>
+                        </div>
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-center text-white/80 text-sm mb-4">
+                        <div>
+                            <div class="font-bold text-white">99.5%</div>
+                            <div>库存准确率</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white">80%</div>
+                            <div>浪费减少</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white">25%</div>
+                            <div>成本节省</div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full glass-effect py-2 rounded-lg text-white hover:bg-white/20">
+                        查看详情
+                    </button>
+                </div>
+            </div>
+
+            <!-- 案例3 -->
+            <div class="case-card glass-effect rounded-2xl overflow-hidden">
+                <div class="relative">
+                    <div class="aspect-video bg-gray-800 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=225&fit=crop" 
+                             alt="案例图片" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute top-4 left-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm">
+                        客户配方管理
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-white mb-2">高端美发会所 - 客户体验升级案例</h3>
+                    <p class="text-white/60 text-sm mb-4">个性化配方管理让客户回头率提升60%，客单价增长35%</p>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face" 
+                                 alt="客户头像" 
+                                 class="w-8 h-8 rounded-full">
+                            <span class="text-white text-sm">王总监</span>
+                        </div>
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-center text-white/80 text-sm mb-4">
+                        <div>
+                            <div class="font-bold text-white">60%</div>
+                            <div>回头率提升</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white">35%</div>
+                            <div>客单价增长</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white">95%</div>
+                            <div>客户满意度</div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full glass-effect py-2 rounded-lg text-white hover:bg-white/20">
+                        查看详情
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 客户评价 -->
+        <section class="glass-effect rounded-2xl p-8 mb-12">
+            <h2 class="text-2xl font-bold text-white mb-6 text-center">客户真实评价</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="testimonial-card glass-effect rounded-xl p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" 
+                             alt="客户头像" 
+                             class="w-10 h-10 rounded-full">
+                        <div>
+                            <h4 class="text-white font-medium">张店长</h4>
+                            <p class="text-white/60 text-sm">时尚造型沙龙</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-3">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-white/80">
+                        "AI智能调色宝机彻底改变了我们的工作方式。现在染发时间缩短了一半，但效果却更加精准。客户满意度大幅提升，生意也越来越好！"
+                    </p>
+                </div>
+                
+                <div class="testimonial-card glass-effect rounded-xl p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" 
+                             alt="客户头像" 
+                             class="w-10 h-10 rounded-full">
+                        <div>
+                            <h4 class="text-white font-medium">李经理</h4>
+                            <p class="text-white/60 text-sm">美丽连锁</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-3">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-white/80">
+                        "染发膏管理系统让我们的库存管理变得如此简单。10家店的库存情况一目了然，浪费大大减少，成本控制得更好了。"
+                    </p>
+                </div>
+                
+                <div class="testimonial-card glass-effect rounded-xl p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" 
+                             alt="客户头像" 
+                             class="w-10 h-10 rounded-full">
+                        <div>
+                            <h4 class="text-white font-medium">王总监</h4>
+                            <p class="text-white/60 text-sm">高端美发会所</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-3">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-white/80">
+                        "客户配方管理系统帮助我们建立了完整的客户档案。现在每个客户都能享受到个性化的服务，回头率和客单价都有明显提升。"
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 成功数据展示 -->
+        <section class="glass-effect rounded-2xl p-8">
+            <h2 class="text-2xl font-bold text-white mb-6 text-center">成功数据展示</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-store text-white text-2xl"></i>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-2">1,200+</div>
+                    <div class="text-white/60">合作门店</div>
+                    <div class="text-white/80 text-sm mt-2">遍布全国200+城市</div>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-smile text-white text-2xl"></i>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-2">98%</div>
+                    <div class="text-white/60">客户满意度</div>
+                    <div class="text-white/80 text-sm mt-2">超过10万客户好评</div>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-2">300%</div>
+                    <div class="text-white/60">平均效率提升</div>
+                    <div class="text-white/80 text-sm mt-2">显著降低运营成本</div>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-award text-white text-2xl"></i>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-2">50+</div>
+                    <div class="text-white/60">行业奖项</div>
+                    <div class="text-white/80 text-sm mt-2">获得多项技术专利</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 筛选功能
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                // 添加active类到当前按钮
+                this.classList.add('active');
+            });
+        });
+
+        // 数字动画效果
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number');
+            numbers.forEach(num => {
+                const finalValue = num.textContent;
+                const numericValue = parseInt(finalValue.replace(/\D/g, ''));
+                let currentValue = 0;
+                const increment = numericValue / 50;
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= numericValue) {
+                        currentValue = numericValue;
+                        clearInterval(timer);
+                    }
+                    num.textContent = Math.floor(currentValue) + finalValue.replace(/\d/g, '');
+                }, 40);
+            });
+        }
+
+        // 页面加载时启动动画
+        window.addEventListener('load', animateNumbers);
+    </script>
+</body>
+</html>

@@ -21,6 +21,12 @@ import ORDER_SUCCESS from '../pages/order-success.jsx';
 import ORDERS from '../pages/orders.jsx';
 import STORE_MANAGEMENT-SYSTEM from '../pages/store-management-system.jsx';
 import SYSTEM_DETAIL from '../pages/system-detail.jsx';
+import SYSTEM_DEMO from '../pages/system-demo.jsx';
+import CUSTOMER_CASES from '../pages/customer-cases.jsx';
+import ONLINE_CONSULTATION from '../pages/online-consultation.jsx';
+import PRODUCT_COMPARISON from '../pages/product-comparison.jsx';
+import USER_FEEDBACK from '../pages/user-feedback.jsx';
+import STORE_MANAGEMENT-ENHANCED from '../pages/store-management-enhanced.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -90,4 +96,22 @@ export const routers = [{
 }, {
   id: "system-detail",
   component: SYSTEM_DETAIL
+}, {
+  id: "system-demo",
+  component: SYSTEM_DEMO
+}, {
+  id: "customer-cases",
+  component: CUSTOMER_CASES
+}, {
+  id: "online-consultation",
+  component: ONLINE_CONSULTATION
+}, {
+  id: "product-comparison",
+  component: PRODUCT_COMPARISON
+}, {
+  id: "user-feedback",
+  component: USER_FEEDBACK
+}, {
+  id: "store-management-enhanced",
+  component: STORE_MANAGEMENT-ENHANCED
 }]

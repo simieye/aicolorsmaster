@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI门店管理系统 - 增强版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .module-card {
+            transition: all 0.3s ease;
+        }
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #667eea;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">AI门店管理系统</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-white text-sm">系统正常</span>
+                    </div>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-cog mr-2"></i>
+                        设置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 数据概览 -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-dollar-sign text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">¥128,500</div>
+                <div class="text-white/60">今日收入</div>
+                <div class="text-green-400 text-sm mt-2">+12.5%</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">156</div>
+                <div class="text-white/60">今日客户</div>
+                <div class="text-green-400 text-sm mt-2">+8.3%</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-calendar-check text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">24</div>
+                <div class="text-white/60">员工出勤</div>
+                <div class="text-yellow-400 text-sm mt-2">2人请假</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-headset text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">98.5%</div>
+                <div class="text-white/60">客户满意度</div>
+                <div class="text-green-400 text-sm mt-2">+2.1%</div>
+            </div>
+        </section>
+
+        <!-- 功能模块 -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-white mb-6">功能模块</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                <!-- AI财务管理 -->
+                <div class="module-card glass-effect rounded-2xl p-6 text-center cursor-pointer">
+                    <div class="w-20 h-20 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">AI财务管理</h3>
+                    <p class="text-white/60 text-sm mb-4">智能财务分析、成本控制、收入统计</p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            实时财务监控
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            智能成本分析
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            利润预测
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI考勤打卡管理 -->
+                <div class="module-card glass-effect rounded-2xl p-6 text-center cursor-pointer">
+                    <div class="w-20 h-20 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-fingerprint text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">AI考勤管理</h3>
+                    <p class="text-white/60 text-sm mb-4">人脸识别打卡、考勤统计、排班管理</p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            人脸识别打卡
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            智能排班
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            考勤异常处理
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI企业文化管理 -->
+                <div class="module-card glass-effect rounded-2xl p-6 text-center cursor-pointer">
+                    <div class="w-20 h-20 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-building text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">AI企业文化</h3>
+                    <p class="text-white/60 text-sm mb-4">企业文化展示、员工活动、培训管理</p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            文化活动管理
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            员工培训
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            内部通知
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI客服系统 -->
+                <div class="module-card glass-effect rounded-2xl p-6 text-center cursor-pointer">
+                    <div class="w-20 h-20 bg-orange-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-robot text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">AI客服系统</h3>
+                    <p class="text-white/60 text-sm mb-4">智能客服机器人、在线咨询、工单管理</p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            智能客服机器人
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            工单管理
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            知识库管理
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI客户预约系统 -->
+                <div class="module-card glass-effect rounded-2xl p-6 text-center cursor-pointer">
+                    <div class="w-20 h-20 bg-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-alt text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">AI预约系统</h3>
+                    <p class="text-white/60 text-sm mb-4">在线预约、智能排期、客户管理</p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            智能排期
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            客户管理
+                        </div>
+                        <div class="flex items-center text-white/80 text-sm">
+                            <i class="fas fa-check text-green-400 mr-2"></i>
+                            服务提醒
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 详细功能展示 -->
+        <section class="glass-effect rounded-2xl p-8">
+            <h2 class="text-2xl font-bold text-white mb-6">今日重点数据</h2>
+            
+            <!-- 标签切换 -->
+            <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
+                <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium">
+                    财务概览
+                </button>
+                <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                    考勤状态
+                </button>
+                <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                    客服工单
+                </button>
+                <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                    预约情况
+                </button>
+            </div>
+
+            <!-- 财务概览内容 -->
+            <div id="finance-content" class="space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- 收入趋势 -->
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">本周收入趋势</h3>
+                        <div class="chart-container bg-white/5 rounded-lg flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-chart-area text-4xl text-blue-400 mb-4"></i>
+                                <p class="text-white/60">收入趋势图表</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 成本分析 -->
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">成本分析</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-white mb-2">
+                                    <span>人力成本</span>
+                                    <span>¥45,000</span>
+                                </div>
+                                <div class="bg-white/20 rounded-full h-2">
+                                    <div class="bg-blue-400 h-2 rounded-full" style="width: 35%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-white mb-2">
+                                    <span>材料成本</span>
+                                    <span>¥28,000</span>
+                                </div>
+                                <div class="bg-white/20 rounded-full h-2">
+                                    <div class="bg-green-400 h-2 rounded-full" style="width: 22%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-white mb-2">
+                                    <span>运营成本</span>
+                                    <span>¥15,000</span>
+                                </div>
+                                <div class="bg-white/20 rounded-full h-2">
+                                    <div class="bg-purple-400 h-2 rounded-full" style="width: 12%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-white mb-2">
+                                    <span>其他成本</span>
+                                    <span>¥8,000</span>
+                                </div>
+                                <div class="bg-white/20 rounded-full h-2">
+                                    <div class="bg-orange-400 h-2 rounded-full" style="width: 6%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI财务建议 -->
+                <div class="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl p-6 border border-blue-400/30">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-lightbulb text-white"></i>
+                        </div>
+                        <h3 class="text-white font-semibold">AI财务建议</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-arrow-up text-green-400 mt-1"></i>
+                            <div>
+                                <p class="text-white font-medium">收入增长机会</p>
+                                <p class="text-white/60 text-sm">根据历史数据分析，建议增加高端服务项目，预计可提升收入15%</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-arrow-down text-red-400 mt-1"></i>
+                            <div>
+                                <p class="text-white font-medium">成本优化建议</p>
+                                <p class="text-white/60 text-sm">材料成本占比偏高，建议优化供应链管理，预计可降低成本8%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 快速操作 -->
+        <section class="mt-8">
+            <h2 class="text-2xl font-bold text-white mb-6">快速操作</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button class="glass-effect rounded-xl p-4 text-left hover:bg-white/20">
+                    <i class="fas fa-plus-circle text-blue-400 text-xl mb-2"></i>
+                    <p class="text-white font-medium">新建工单</p>
+                </button>
+                <button class="glass-effect rounded-xl p-4 text-left hover:bg-white/20">
+                    <i class="fas fa-user-plus text-green-400 text-xl mb-2"></i>
+                    <p class="text-white font-medium">员工排班</p>
+                </button>
+                <button class="glass-effect rounded-xl p-4 text-left hover:bg-white/20">
+                    <i class="fas fa-file-invoice text-purple-400 text-xl mb-2"></i>
+                    <p class="text-white font-medium">生成报表</p>
+                </button>
+                <button class="glass-effect rounded-xl p-4 text-left hover:bg-white/20">
+                    <i class="fas fa-bell text-orange-400 text-xl mb-2"></i>
+                    <p class="text-white font-medium">发送通知</p>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签切换功能
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.add('text-white/70');
+                });
+                // 添加active类到当前按钮
+                this.classList.add('active');
+                this.classList.remove('text-white/70');
+            });
+        });
+
+        // 模块卡片点击效果
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // 添加点击动画
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+
+        // 数字动画效果
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.text-3xl');
+            numbers.forEach(num => {
+                const finalValue = num.textContent;
+                if (finalValue.includes('¥')) {
+                    const numericValue = parseInt(finalValue.replace(/\D/g, ''));
+                    let currentValue = 0;
+                    const increment = numericValue / 50;
+                    const timer = setInterval(() => {
+                        currentValue += increment;
+                        if (currentValue >= numericValue) {
+                            currentValue = numericValue;
+                            clearInterval(timer);
+                        }
+                        num.textContent = '¥' + Math.floor(currentValue).toLocaleString();
+                    }, 40);
+                }
+            });
+        }
+
+        // 页面加载时启动动画
+        window.addEventListener('load', animateNumbers);
+    </script>
+</body>
+</html>
