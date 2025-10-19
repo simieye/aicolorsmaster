@@ -24,3 +24,7 @@ export * from './StoreManagementEnhanced.jsx';
 export * from './FinanceManagement.jsx';
 export * from './UserFeedbackSystem.jsx';
 export * from './AttendanceManagement.jsx';
+export * from './UserReviewFeedback.jsx';
+export * from './CorporateCulture.jsx';
+export * from './AICustomerService.jsx';
+export * from './AIBookingSystem.jsx';

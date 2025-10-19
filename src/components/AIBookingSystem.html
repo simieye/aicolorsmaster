@@ -1,0 +1,662 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI客户预约系统 - AI美发智能系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .calendar-day {
+            transition: all 0.3s ease;
+        }
+        .calendar-day:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .calendar-day.selected {
+            background: rgba(102, 126, 234, 0.3);
+            border: 2px solid #667eea;
+        }
+        .calendar-day.has-appointment {
+            position: relative;
+        }
+        .calendar-day.has-appointment::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: #10b981;
+            border-radius: 50%;
+        }
+        .time-slot {
+            transition: all 0.3s ease;
+        }
+        .time-slot:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .time-slot.selected {
+            background: rgba(102, 126, 234, 0.3);
+            border-left: 3px solid #667eea;
+        }
+        .time-slot.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .customer-card {
+            transition: all 0.3s ease;
+        }
+        .customer-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .service-item {
+            transition: all 0.3s ease;
+        }
+        .service-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #667eea;
+        }
+        .appointment-card {
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .reminder-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">AI客户预约系统</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-plus mr-2"></i>
+                        新建预约
+                    </button>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-bell mr-2"></i>
+                        提醒设置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 标签切换 -->
+        <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
+            <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                预约日历
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                <i class="fas fa-users mr-2"></i>
+                客户管理
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                <i class="fas fa-cut mr-2"></i>
+                服务项目
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                <i class="fas fa-bell mr-2"></i>
+                提醒管理
+            </button>
+        </div>
+
+        <!-- 预约日历内容 -->
+        <section id="calendar-content" class="space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 日历视图 -->
+                <div class="lg:col-span-2">
+                    <div class="glass-effect rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-bold text-white">2024年1月</h2>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-white/60 hover:text-white">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="text-white/60 hover:text-white">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-7 gap-2 text-center mb-4">
+                            <div class="text-white/60 text-sm">日</div>
+                            <div class="text-white/60 text-sm">一</div>
+                            <div class="text-white/60 text-sm">二</div>
+                            <div class="text-white/60 text-sm">三</div>
+                            <div class="text-white/60 text-sm">四</div>
+                            <div class="text-white/60 text-sm">五</div>
+                            <div class="text-white/60 text-sm">六</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-7 gap-2">
+                            {Array.from({length: 35}, (_, i) => (
+                                <div key={i} class={`calendar-day bg-white/5 rounded-lg p-3 text-center cursor-pointer ${i === 15 ? 'selected has-appointment' : ''} ${i === 18 ? 'has-appointment' : ''} ${i === 22 ? 'has-appointment' : ''}`}>
+                                    <div class="text-white text-sm">{i - 2 > 0 && i - 2 <= 31 ? i - 2 : ''}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <!-- 时间段选择 -->
+                    <div class="glass-effect rounded-2xl p-6 mt-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">选择时间段</h3>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="time-slot bg-white/10 rounded-lg p-3 cursor-pointer">
+                                <div class="text-white text-sm font-medium">09:00</div>
+                                <div class="text-white/60 text-xs">可预约</div>
+                            </div>
+                            <div class="time-slot bg-white/10 rounded-lg p-3 cursor-pointer">
+                                <div class="text-white text-sm font-medium">10:00</div>
+                                <div class="text-white/60 text-xs">可预约</div>
+                            </div>
+                            <div class="time-slot bg-white/10 rounded-lg p-3 cursor-pointer selected">
+                                <div class="text-white text-sm font-medium">11:00</div>
+                                <div class="text-white/60 text-xs">已选择</div>
+                            </div>
+                            <div class="time-slot bg-white/10 rounded-lg p-3 cursor-pointer disabled">
+                                <div class="text-white text-sm font-medium">14:00</div>
+                                <div class="text-white/60 text-xs">已预约</div>
+                            </div>
+                            <div class="time-slot bg-white/10 rounded-lg p-3 cursor-pointer">
+                                <div class="text-white text-sm font-medium">15:00</div>
+                                <div class="text-white/60 text-xs">可预约</div>
+                            </div>
+                            <div class="time-slot bg-white/10 rounded-lg p-3 cursor-pointer">
+                                <div class="text-white text-sm font-medium">16:00</div>
+                                <div class="text-white/60 text-xs">可预约</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 侧边栏 -->
+                <div class="space-y-6">
+                    <!-- 今日预约 -->
+                    <div class="glass-effect rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">今日预约</h3>
+                        <div class="space-y-3">
+                            <div class="appointment-card bg-white/10 rounded-lg p-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-white text-sm font-medium">张女士</span>
+                                    <span class="text-white/60 text-xs">10:00</span>
+                                </div>
+                                <div class="text-white/60 text-xs">染发 + 护理</div>
+                            </div>
+                            <div class="appointment-card bg-white/10 rounded-lg p-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-white text-sm font-medium">李先生</span>
+                                    <span class="text-white/60 text-xs">14:00</span>
+                                </div>
+                                <div class="text-white/60 text-xs">剪发 + 造型</div>
+                            </div>
+                            <div class="appointment-card bg-white/10 rounded-lg p-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-white text-sm font-medium">王女士</span>
+                                    <span class="text-white/60 text-xs">16:00</span>
+                                </div>
+                                <div class="text-white/60 text-xs">烫发 + 染发</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 预约统计 -->
+                    <div class="glass-effect rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">预约统计</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">今日预约</span>
+                                <span class="text-white text-sm">8个</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">本周预约</span>
+                                <span class="text-white text-sm">45个</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">本月预约</span>
+                                <span class="text-white text-sm">186个</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">完成率</span>
+                                <span class="text-white text-sm">95%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI智能推荐 -->
+                    <div class="glass-effect rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">AI智能推荐</h3>
+                        <div class="bg-white/10 rounded-lg p-4">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <i class="fas fa-robot text-blue-400"></i>
+                                <span class="text-white text-sm font-medium">最佳时间段</span>
+                            </div>
+                            <p class="text-white/60 text-xs mb-3">基于历史数据分析，推荐以下时间段：</p>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between bg-white/5 rounded p-2">
+                                    <span class="text-white text-xs">明天 10:00</span>
+                                    <span class="text-green-400 text-xs">空闲率高</span>
+                                </div>
+                                <div class="flex items-center justify-between bg-white/5 rounded p-2">
+                                    <span class="text-white text-xs">明天 15:00</span>
+                                    <span class="text-green-400 text-xs">客户偏好</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 客户管理内容 -->
+        <section id="customers-content" class="space-y-8 hidden">
+            <!-- 客户搜索 -->
+            <div class="glass-effect rounded-2xl p-6">
+                <div class="flex items-center space-x-4">
+                    <div class="flex-1 relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60"></i>
+                        <input type="text" placeholder="搜索客户姓名、电话..." class="w-full bg-white/10 border border-white/30 rounded-lg pl-10 pr-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
+                    </div>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg">
+                        <i class="fas fa-plus mr-2"></i>
+                        添加客户
+                    </button>
+                </div>
+            </div>
+
+            <!-- 客户列表 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="customer-card glass-effect rounded-xl overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img src="https://images.unsplash.com/photo-1494790108755-2616b332c1ca?w=60&h=60&fit=crop&crop=face" 
+                                 alt="客户头像" 
+                                 class="w-12 h-12 rounded-full">
+                            <div>
+                                <h3 class="text-white font-semibold">张女士</h3>
+                                <p class="text-white/60 text-sm">VIP客户</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex items-center text-white/60">
+                                <i class="fas fa-phone mr-2 w-4"></i>
+                                138****5678
+                            </div>
+                            <div class="flex items-center text-white/60">
+                                <i class="fas fa-envelope mr-2 w-4"></i>
+                                zhang@email.com
+                            </div>
+                            <div class="flex items-center text-white/60">
+                                <i class="fas fa-history mr-2 w-4"></i>
+                                最近预约：3天前
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/20">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-xs">总预约次数</span>
+                                <span class="text-white text-xs">28次</span>
+                            </div>
+                            <div class="flex items-center justify-between mt-1">
+                                <span class="text-white/60 text-xs">偏好服务</span>
+                                <span class="text-white text-xs">染发、护理</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="customer-card glass-effect rounded-xl overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" 
+                                 alt="客户头像" 
+                                 class="w-12 h-12 rounded-full">
+                            <div>
+                                <h3 class="text-white font-semibold">李先生</h3>
+                                <p class="text-white/60 text-sm">普通客户</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex items-center text-white/60">
+                                <i class="fas fa-phone mr-2 w-4"></i>
+                                139****1234
+                            </div>
+                            <div class="flex items-center text-white/60">
+                                <i class="fas fa-envelope mr-2 w-4"></i>
+                                li@email.com
+                            </div>
+                            <div class="flex items-center text-white/60">
+                                <i class="fas fa-history mr-2 w-4"></i>
+                                最近预约：1周前
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/20">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-xs">总预约次数</span>
+                                <span class="text-white text-xs">15次</span>
+                            </div>
+                            <div class="flex items-center justify-between mt-1">
+                                <span class="text-white/60 text-xs">偏好服务</span>
+                                <span class="text-white text-xs">剪发、造型</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="customer-card glass-effect rounded-xl overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" 
+                                 alt="客户头像" 
+                                 class="w-12 h-12 rounded-full">
+                            <div>
+                                <h3 class="text-white font-semibold">王女士</h3>
+                                <p class="text-white/60 text-sm">新客户</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex items-center text-white/60">
+                                <i class="fas fa-phone mr-2 w-4"></i>
+                                137****9876
+                            </div>
+                            <div class="flex items-center text-white/60">
+                                <i class="fas fa-envelope mr-2 w-4"></i>
+                                wang@email.com
+                            </div>
+                            <div class="flex items-center text-white/60">
+                                <i class="fas fa-history mr-2 w-4"></i>
+                                最近预约：2周前
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/20">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-xs">总预约次数</span>
+                                <span class="text-white text-xs">3次</span>
+                            </div>
+                            <div class="flex items-center justify-between mt-1">
+                                <span class="text-white/60 text-xs">偏好服务</span>
+                                <span class="text-white text-xs">烫发、染发</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 服务项目内容 -->
+        <section id="services-content" class="space-y-8 hidden">
+            <!-- 服务分类 -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-cut text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">剪发服务</h3>
+                    <p class="text-white/60 text-sm">15个项目</p>
+                </div>
+                
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-palette text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">染发服务</h3>
+                    <p class="text-white/60 text-sm">12个项目</p>
+                </div>
+                
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-fire text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">烫发服务</h3>
+                    <p class="text-white/60 text-sm">8个项目</p>
+                </div>
+                
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-spa text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-semibold mb-2">护理服务</h3>
+                    <p class="text-white/60 text-sm">10个项目</p>
+                </div>
+            </div>
+
+            <!-- 服务列表 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">服务项目</h2>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-plus mr-2"></i>
+                        添加服务
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="service-item glass-effect rounded-xl overflow-hidden">
+                        <div class="h-32 bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                            <i class="fas fa-cut text-white text-4xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-white font-semibold mb-2">精剪造型</h3>
+                            <p class="text-white/60 text-sm mb-4">专业剪发，个性化造型设计</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white text-lg font-bold">¥88</span>
+                                <span class="text-white/60 text-sm">45分钟</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item glass-effect rounded-xl overflow-hidden">
+                        <div class="h-32 bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center">
+                            <i class="fas fa-palette text-white text-4xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-white font-semibold mb-2">全头染发</h3>
+                            <p class="text-white/60 text-sm mb-4">进口染发剂，色彩持久亮丽</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white text-lg font-bold">¥288</span>
+                                <span class="text-white/60 text-sm">120分钟</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item glass-effect rounded-xl overflow-hidden">
+                        <div class="h-32 bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                            <i class="fas fa-fire text-white text-4xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-white font-semibold mb-2">数码烫发</h3>
+                            <p class="text-white/60 text-sm mb-4">最新烫发技术，效果自然持久</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white text-lg font-bold">¥388</span>
+                                <span class="text-white/60 text-sm">150分钟</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 提醒管理内容 -->
+        <section id="reminders-content" class="space-y-8 hidden">
+            <!-- 提醒设置 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass-effect rounded-2xl p-8">
+                    <h2 class="text-2xl font-bold text-white mb-6">提醒设置</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-white text-sm mb-2 block">预约提醒时间</label>
+                            <select class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                                <option value="1">提前1小时</option>
+                                <option value="2">提前2小时</option>
+                                <option value="24">提前1天</option>
+                                <option value="48">提前2天</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="text-white text-sm mb-2 block">提醒方式</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" checked class="rounded">
+                                    <span class="text-white text-sm">短信提醒</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" checked class="rounded">
+                                    <span class="text-white text-sm">微信提醒</span>
+                                </label>
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" class="rounded">
+                                    <span class="text-white text-sm">电话提醒</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="text-white text-sm mb-2 block">提醒模板</label>
+                            <textarea placeholder="输入提醒内容模板..." rows="4" class="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50"></textarea>
+                        </div>
+                        
+                        <button class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            保存设置
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-8">
+                    <h2 class="text-2xl font-bold text-white mb-6">今日提醒</h2>
+                    <div class="space-y-4">
+                        <div class="bg-white/10 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <div class="reminder-badge w-2 h-2 bg-green-400 rounded-full"></div>
+                                    <span class="text-white text-sm font-medium">张女士 - 预约提醒</span>
+                                </div>
+                                <span class="text-white/60 text-xs">10:00</span>
+                            </div>
+                            <p class="text-white/60 text-xs">明天10:00染发预约，请准时到店</p>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <div class="reminder-badge w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                    <span class="text-white text-sm font-medium">李先生 - 生日提醒</span>
+                                </div>
+                                <span class="text-white/60 text-xs">全天</span>
+                            </div>
+                            <p class="text-white/60 text-xs">客户生日，可发送祝福和优惠</p>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <div class="reminder-badge w-2 h-2 bg-blue-400 rounded-full"></div>
+                                    <span class="text-white text-sm font-medium">王女士 - 护理提醒</span>
+                                </div>
+                                <span class="text-white/60 text-xs">14:00</span>
+                            </div>
+                            <p class="text-white/60 text-xs">距离上次护理已过3周，建议预约</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签切换
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.add('text-white/70');
+                });
+                // 添加active类到当前按钮
+                this.classList.add('active');
+                this.classList.remove('text-white/70');
+                
+                // 隐藏所有section
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // 显示对应的section
+                const sectionId = this.textContent.includes('预约日历') ? 'calendar-content' : 
+                                 this.textContent.includes('客户管理') ? 'customers-content' : 
+                                 this.textContent.includes('服务项目') ? 'services-content' : 'reminders-content';
+                document.getElementById(sectionId).classList.remove('hidden');
+            });
+        });
+
+        // 日历日期选择
+        document.querySelectorAll('.calendar-day').forEach(day => {
+            day.addEventListener('click', function() {
+                // 移除所有选中状态
+                document.querySelectorAll('.calendar-day').forEach(d => {
+                    d.classList.remove('selected');
+                });
+                // 添加选中状态
+                this.classList.add('selected');
+            });
+        });
+
+        // 时间段选择
+        document.querySelectorAll('.time-slot:not(.disabled)').forEach(slot => {
+            slot.addEventListener('click', function() {
+                // 移除所有选中状态
+                document.querySelectorAll('.time-slot').forEach(s => {
+                    s.classList.remove('selected');
+                });
+                // 添加选中状态
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>
