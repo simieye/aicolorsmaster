@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // @ts-ignore;
 import { Button } from '@/components/ui';
 // @ts-ignore;
-import { Menu, X, Home, ShoppingBag as ShoppingBagIcon, Store, Users, MessageSquare, Settings, CreditCard, UserCheck, Heart, HeadphonesIcon, Calendar, DollarSign, Crown, GraduationCap } from 'lucide-react';
+import { Menu, X, Home, ShoppingBag, Store, Users, MessageSquare, Settings, CreditCard, UserCheck, Heart, HeadphonesIcon, Calendar, DollarSign, Crown, GraduationCap } from 'lucide-react';
 
 export const TopNavigation = ({
   currentPage,
@@ -81,7 +81,7 @@ export const TopNavigation = ({
     }, {
       id: 'micro-store',
       label: 'AI微店开店通商城系统',
-      icon: ShoppingBagIcon,
+      icon: ShoppingBag,
       price: '4980'
     }]
   }];
