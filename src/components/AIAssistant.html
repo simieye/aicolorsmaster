@@ -1,0 +1,601 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI全能助手设置</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .assistant-card {
+            transition: all 0.3s ease;
+        }
+        .assistant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #667eea;
+        }
+        .system-item {
+            transition: all 0.3s ease;
+        }
+        .system-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .task-item {
+            transition: all 0.3s ease;
+        }
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .setting-item {
+            transition: all 0.3s ease;
+        }
+        .setting-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .chat-bubble {
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-indicator {
+            animation: typing 1.5s infinite;
+        }
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">AI全能助手设置</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-white text-sm">AI助手在线</span>
+                    </div>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-cog mr-2"></i>
+                        设置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- AI助手状态概览 -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="assistant-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-robot text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">全能</div>
+                <div class="text-white/60">助手模式</div>
+                <div class="text-purple-400 text-sm mt-2">已激活</div>
+            </div>
+            
+            <div class="assistant-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-cogs text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">14</div>
+                <div class="text-white/60">集成系统</div>
+                <div class="text-blue-400 text-sm mt-2">全部连接</div>
+            </div>
+            
+            <div class="assistant-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-tasks text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">8</div>
+                <div class="text-white/60">运行任务</div>
+                <div class="text-green-400 text-sm mt-2">正常执行</div>
+            </div>
+            
+            <div class="assistant-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-brain text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">98%</div>
+                <div class="text-white/60">智能评分</div>
+                <div class="text-pink-400 text-sm mt-2">优秀水平</div>
+            </div>
+        </section>
+
+        <!-- 标签切换 -->
+        <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
+            <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium" onclick="switchTab('chat')">
+                <i class="fas fa-comments mr-2"></i>
+                AI对话
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('systems')">
+                <i class="fas fa-network-wired mr-2"></i>
+                系统集成
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('tasks')">
+                <i class="fas fa-tasks mr-2"></i>
+                任务管理
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium" onclick="switchTab('settings')">
+                <i class="fas fa-sliders-h mr-2"></i>
+                个性化设置
+            </button>
+        </div>
+
+        <!-- AI对话内容 -->
+        <section id="chat-content" class="space-y-8">
+            <!-- 对话界面 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">AI智能对话</h2>
+                <div class="bg-white/10 rounded-xl p-6 h-96 overflow-y-auto mb-6">
+                    <div class="space-y-4">
+                        <div class="chat-bubble flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                            <div class="bg-white/20 rounded-lg p-3 max-w-md">
+                                <p class="text-white">您好！我是您的AI全能助手，可以帮您管理所有AI系统。请问有什么可以帮助您的吗？</p>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-bubble flex items-start space-x-3 justify-end">
+                            <div class="bg-blue-500 rounded-lg p-3 max-w-md">
+                                <p class="text-white">帮我查看今天的财务报表</p>
+                            </div>
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-bubble flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                            <div class="bg-white/20 rounded-lg p-3 max-w-md">
+                                <p class="text-white">好的，我正在为您连接AI财务管理系统...</p>
+                                <div class="flex items-center space-x-2 mt-2">
+                                    <div class="w-2 h-2 bg-white rounded-full typing-indicator"></div>
+                                    <div class="w-2 h-2 bg-white rounded-full typing-indicator" style="animation-delay: 0.2s;"></div>
+                                    <div class="w-2 h-2 bg-white rounded-full typing-indicator" style="animation-delay: 0.4s;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <input type="text" placeholder="输入您的问题或指令..." class="flex-1 bg-white/10 border border-white/30 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
+                    <button class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        发送
+                    </button>
+                </div>
+            </div>
+
+            <!-- 快捷功能 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">快捷功能</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button class="bg-white/10 rounded-lg p-4 text-center hover:bg-white/20 transition-all">
+                        <i class="fas fa-chart-line text-2xl text-blue-400 mb-2"></i>
+                        <p class="text-white text-sm">财务报表</p>
+                    </button>
+                    <button class="bg-white/10 rounded-lg p-4 text-center hover:bg-white/20 transition-all">
+                        <i class="fas fa-users text-2xl text-green-400 mb-2"></i>
+                        <p class="text-white text-sm">考勤管理</p>
+                    </button>
+                    <button class="bg-white/10 rounded-lg p-4 text-center hover:bg-white/20 transition-all">
+                        <i class="fas fa-calendar text-2xl text-purple-400 mb-2"></i>
+                        <p class="text-white text-sm">预约管理</p>
+                    </button>
+                    <button class="bg-white/10 rounded-lg p-4 text-center hover:bg-white/20 transition-all">
+                        <i class="fas fa-headset text-2xl text-pink-400 mb-2"></i>
+                        <p class="text-white text-sm">客服系统</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 系统集成内容 -->
+        <section id="systems-content" class="space-y-8 hidden">
+            <!-- 系统连接状态 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">系统集成状态</h2>
+                <div class="space-y-4">
+                    <div class="system-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-dollar-sign text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">AI财务管理系统</h3>
+                                    <p class="text-white/60 text-sm">智能财务管理，自动化报表</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
+                                <span class="text-green-400 text-sm">已连接</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    配置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="system-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user-check text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">AI考勤管理系统</h3>
+                                    <p class="text-white/60 text-sm">人脸识别考勤，智能排班</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
+                                <span class="text-green-400 text-sm">已连接</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    配置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="system-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-heart text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">AI文化管理系统</h3>
+                                    <p class="text-white/60 text-sm">企业文化展示，员工活动管理</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
+                                <span class="text-green-400 text-sm">已连接</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    配置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="system-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-headset text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">AI客服系统</h3>
+                                    <p class="text-white/60 text-sm">智能客服机器人，在线咨询</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
+                                <span class="text-green-400 text-sm">已连接</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    配置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="system-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-calendar-alt text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">AI客户预约系统</h3>
+                                    <p class="text-white/60 text-sm">在线预约，智能排期管理</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
+                                <span class="text-green-400 text-sm">已连接</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    配置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="system-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-graduation-cap text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">AI员工成长业务培训系统</h3>
+                                    <p class="text-white/60 text-sm">员工培训，成长管理</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
+                                <span class="text-green-400 text-sm">已连接</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    配置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="system-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-store text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">AI微店开店通商城系统</h3>
+                                    <p class="text-white/60 text-sm">微店管理，电商运营</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
+                                <span class="text-green-400 text-sm">已连接</span>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    配置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 任务管理内容 -->
+        <section id="tasks-content" class="space-y-8 hidden">
+            <!-- 任务列表 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">任务管理</h2>
+                    <button class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-plus mr-2"></i>
+                        新建任务
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="task-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-chart-line text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">生成月度财务报表</h3>
+                                    <p class="text-white/60 text-sm">AI财务管理系统 - 正在执行</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="text-blue-400 text-sm">75%</div>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    查看
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="bg-blue-400 h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-users text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">员工考勤统计</h3>
+                                    <p class="text-white/60 text-sm">AI考勤管理系统 - 已完成</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="text-green-400 text-sm">100%</div>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    查看
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="bg-green-400 h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-calendar text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">预约提醒发送</h3>
+                                    <p class="text-white/60 text-sm">AI客户预约系统 - 等待中</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="text-yellow-400 text-sm">0%</div>
+                                <button class="glass-effect px-3 py-1 rounded text-white hover:bg-white/20">
+                                    开始
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="bg-yellow-400 h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 个性化设置内容 -->
+        <section id="settings-content" class="space-y-8 hidden">
+            <!-- 基础设置 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">基础设置</h2>
+                <div class="space-y-6">
+                    <div class="setting-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-medium">助手名称</h3>
+                                <p class="text-white/60 text-sm">自定义AI助手的名称</p>
+                            </div>
+                            <input type="text" value="AI全能助手" class="bg-white/20 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-medium">响应速度</h3>
+                                <p class="text-white/60 text-sm">调整AI助手的响应速度</p>
+                            </div>
+                            <select class="bg-white/20 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                                <option value="fast">快速</option>
+                                <option value="normal" selected>标准</option>
+                                <option value="slow">详细</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-medium">语言风格</h3>
+                                <p class="text-white/60 text-sm">选择AI助手的对话风格</p>
+                            </div>
+                            <select class="bg-white/20 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                                <option value="professional">专业</option>
+                                <option value="friendly" selected>友好</option>
+                                <option value="casual">随意</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 功能设置 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">功能设置</h2>
+                <div class="space-y-6">
+                    <div class="setting-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-medium">自动任务执行</h3>
+                                <p class="text-white/60 text-sm">允许AI助手自动执行常规任务</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-medium">智能提醒</h3>
+                                <p class="text-white/60 text-sm">启用智能提醒和建议</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-medium">学习模式</h3>
+                                <p class="text-white/60 text-sm">让AI助手学习您的使用习惯</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签切换
+        function switchTab(tab) {
+            // 移除所有active类
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-white/70');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            event.target.classList.remove('text-white/70');
+            
+            // 隐藏所有section
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // 显示对应的section
+            const sectionId = tab + '-content';
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -152,6 +152,38 @@ export default function ProductsPage(props) {
     category: "AI系统",
     description: "全店智能管理，决策支持系统",
     features: ["AI财务管理系统", "AI考勤管理系统", "AI文化管理系统", "AI染发膏库存管理系统", "AI客户配方管理系统", "AI客户（会员）管理系统CRM", "AI员工管理系统", "AI发型师管理系统", "AI社区管理系统", "AI客服系统", "AI客户预约系统"]
+  }, {
+    id: 11,
+    name: "AI客服系统",
+    price: 2680,
+    image: "https://images.unsplash.com/photo-1531297484013-562f0126c8a5?w=300&h=300&fit=crop",
+    category: "AI系统",
+    description: "智能客服机器人，在线咨询",
+    features: ["智能客服", "在线咨询", "工单管理", "知识库"]
+  }, {
+    id: 12,
+    name: "AI客户预约系统",
+    price: 2680,
+    image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=300&h=300&fit=crop",
+    category: "AI系统",
+    description: "在线预约，智能排期管理",
+    features: ["在线预约", "智能排期", "客户管理", "服务提醒"]
+  }, {
+    id: 13,
+    name: "AI员工成长业务培训系统",
+    price: 3680,
+    image: "https://images.unsplash.com/photo-1515378791036-0648a814d764?w=300&h=300&fit=crop",
+    category: "AI系统",
+    description: "员工培训，成长管理",
+    features: ["培训管理", "成长跟踪", "技能评估", "职业规划"]
+  }, {
+    id: 14,
+    name: "AI微店开店通商城系统",
+    price: 4980,
+    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=300&h=300&fit=crop",
+    category: "AI系统",
+    description: "微店管理，电商运营",
+    features: ["微店管理", "商品管理", "订单处理", "营销推广"]
   }]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');

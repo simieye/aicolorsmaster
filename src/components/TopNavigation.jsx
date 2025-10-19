@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // @ts-ignore;
 import { Button } from '@/components/ui';
 // @ts-ignore;
-import { Menu, X, Home, ShoppingBag, Store, Users, MessageSquare, Settings, CreditCard, UserCheck, Heart, HeadphonesIcon, Calendar, DollarSign, Crown } from 'lucide-react';
+import { Menu, X, Home, ShoppingBag as ShoppingBagIcon, Store, Users, MessageSquare, Settings, CreditCard, UserCheck, Heart, HeadphonesIcon, Calendar, DollarSign, Crown, GraduationCap } from 'lucide-react';
 
 export const TopNavigation = ({
   currentPage,
@@ -67,12 +67,22 @@ export const TopNavigation = ({
       id: 'customer-service',
       label: 'AI客服系统',
       icon: HeadphonesIcon,
-      price: '待定'
+      price: '2680'
     }, {
       id: 'appointment-system',
       label: 'AI客户预约系统',
       icon: Calendar,
-      price: '待定'
+      price: '2680'
+    }, {
+      id: 'employee-training',
+      label: 'AI员工成长业务培训系统',
+      icon: GraduationCap,
+      price: '3680'
+    }, {
+      id: 'micro-store',
+      label: 'AI微店开店通商城系统',
+      icon: ShoppingBagIcon,
+      price: '4980'
     }]
   }];
   const handleNavigation = pageId => {
@@ -105,7 +115,7 @@ export const TopNavigation = ({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
-                    <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <div className="absolute top-full left-0 mt-1 w-80 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                       {item.dropdownItems.map(dropdownItem => {
                     const DropdownIcon = dropdownItem.icon;
                     return <button key={dropdownItem.id} onClick={() => handleNavigation(dropdownItem.id)} className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg transition-colors">
