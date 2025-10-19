@@ -1,0 +1,475 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI考勤打卡管理 - AI美发智能系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .attendance-card {
+            transition: all 0.3s ease;
+        }
+        .attendance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #667eea;
+        }
+        .clock-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .face-scan {
+            position: relative;
+            overflow: hidden;
+        }
+        .face-scan::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.4), transparent);
+            animation: scan 2s infinite;
+        }
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        .schedule-item {
+            transition: all 0.3s ease;
+        }
+        .schedule-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .status-badge {
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-white/80 hover:text-white">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg">AI考勤打卡管理</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-white text-sm">系统正常</span>
+                    </div>
+                    <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                        <i class="fas fa-cog mr-2"></i>
+                        设置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 考勤统计概览 -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="attendance-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-check text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">24</div>
+                <div class="text-white/60">今日出勤</div>
+                <div class="text-green-400 text-sm mt-2">正常出勤</div>
+            </div>
+            
+            <div class="attendance-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clock text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">2</div>
+                <div class="text-white/60">迟到人数</div>
+                <div class="text-yellow-400 text-sm mt-2">需要关注</div>
+            </div>
+            
+            <div class="attendance-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-times text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">1</div>
+                <div class="text-white/60">缺勤人数</div>
+                <div class="text-red-400 text-sm mt-2">请假中</div>
+            </div>
+            
+            <div class="attendance-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-percentage text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">96%</div>
+                <div class="text-white/60">出勤率</div>
+                <div class="text-green-400 text-sm mt-2">+2.1%</div>
+            </div>
+        </section>
+
+        <!-- 标签切换 -->
+        <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
+            <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium">
+                <i class="fas fa-fingerprint mr-2"></i>
+                打卡签到
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                考勤记录
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                <i class="fas fa-calendar-check mr-2"></i>
+                排班管理
+            </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                <i class="fas fa-chart-bar mr-2"></i>
+                统计分析
+            </button>
+        </div>
+
+        <!-- 打卡签到内容 -->
+        <section id="clock-in-content" class="space-y-8">
+            <!-- 人脸识别打卡 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">人脸识别打卡</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="text-center">
+                        <div class="face-scan w-64 h-64 mx-auto bg-white/10 rounded-2xl flex items-center justify-center mb-6 relative">
+                            <div class="text-center">
+                                <i class="fas fa-user text-6xl text-white/60 mb-4"></i>
+                                <p class="text-white/60">请将面部对准摄像头</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <button class="clock-animation w-full bg-green-500 hover:bg-green-600 text-white px-6 py-4 rounded-lg text-lg font-semibold">
+                                <i class="fas fa-fingerprint mr-2"></i>
+                                上班打卡
+                            </button>
+                            <button class="w-full bg-red-500 hover:bg-red-600 text-white px-6 py-4 rounded-lg text-lg font-semibold">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                下班打卡
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-white/10 rounded-xl p-6">
+                            <h3 class="text-white font-semibold mb-4">今日打卡状态</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">上班打卡</span>
+                                    <span class="text-green-400">08:45 已打卡</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">下班打卡</span>
+                                    <span class="text-white/40">未打卡</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">工作时长</span>
+                                    <span class="text-white">7小时15分钟</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-xl p-6">
+                            <h3 class="text-white font-semibold mb-4">打卡提醒</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-bell text-yellow-400"></i>
+                                    <span class="text-white/60">距离下班还有 45 分钟</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-info-circle text-blue-400"></i>
+                                    <span class="text-white/60">记得按时打卡哦</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white/10 rounded-xl p-6">
+                            <h3 class="text-white font-semibold mb-4">快速操作</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                                    <i class="fas fa-calendar-plus mr-2"></i>
+                                    请假申请
+                                </button>
+                                <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                                    <i class="fas fa-exchange-alt mr-2"></i>
+                                    调班申请
+                                </button>
+                                <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    加班申请
+                                </button>
+                                <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                                    <i class="fas fa-file-alt mr-2"></i>
+                                    考勤说明
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 今日考勤概览 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">今日考勤概览</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">部门出勤情况</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">技术部</span>
+                                <span class="text-green-400">8/8</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">美发部</span>
+                                <span class="text-green-400">12/12</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">客服部</span>
+                                <span class="text-yellow-400">3/4</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60">管理部</span>
+                                <span class="text-green-400">2/2</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">异常情况</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                <span class="text-white/60">张三 - 迟到 10 分钟</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-red-400 rounded-full"></div>
+                                <span class="text-white/60">李四 - 请假</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                <span class="text-white/60">王五 - 迟到 5 分钟</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">实时动态</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-user-check text-green-400"></i>
+                                <span class="text-white/60 text-sm">赵六 刚刚完成上班打卡</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-sign-out-alt text-blue-400"></i>
+                                <span class="text-white/60 text-sm">钱七 刚刚完成下班打卡</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                <span class="text-white/60 text-sm">孙八 打卡异常，需要处理</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 考勤记录内容 -->
+        <section id="attendance-records-content" class="space-y-8 hidden">
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">考勤记录</h2>
+                    <div class="flex items-center space-x-4">
+                        <input type="date" class="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                        <select class="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
+                            <option value="">全部员工</option>
+                            <option value="tech">技术部</option>
+                            <option value="hair">美发部</option>
+                            <option value="service">客服部</option>
+                            <option value="manage">管理部</option>
+                        </select>
+                        <button class="glass-effect px-4 py-2 rounded-lg text-white hover:bg-white/20">
+                            <i class="fas fa-download mr-2"></i>
+                            导出
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white/20">
+                                <th class="text-left py-3 px-4">员工姓名</th>
+                                <th class="text-left py-3 px-4">部门</th>
+                                <th class="text-left py-3 px-4">上班打卡</th>
+                                <th class="text-left py-3 px-4">下班打卡</th>
+                                <th class="text-left py-3 px-4">工作时长</th>
+                                <th class="text-left py-3 px-4">状态</th>
+                                <th class="text-left py-3 px-4">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-white/10 hover:bg-white/5">
+                                <td class="py-3 px-4">张三</td>
+                                <td class="py-3 px-4">技术部</td>
+                                <td class="py-3 px-4">08:45</td>
+                                <td class="py-3 px-4">18:30</td>
+                                <td class="py-3 px-4">9小时45分钟</td>
+                                <td class="py-3 px-4">
+                                    <span class="status-badge bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm">正常</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-400 hover:text-blue-300">详情</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-white/10 hover:bg-white/5">
+                                <td class="py-3 px-4">李四</td>
+                                <td class="py-3 px-4">美发部</td>
+                                <td class="py-3 px-4">09:10</td>
+                                <td class="py-3 px-4">-</td>
+                                <td class="py-3 px-4">-</td>
+                                <td class="py-3 px-4">
+                                    <span class="status-badge bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-sm">迟到</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <button class="text-blue-400 hover:text-blue-300">详情</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 排班管理内容 -->
+        <section id="schedule-content" class="space-y-8 hidden">
+            <div class="glass-effect rounded-2xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">排班管理</h2>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-plus mr-2"></i>
+                        新增排班
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-7 gap-4">
+                    {['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map((day, index) => (
+                        <div key={index} class="bg-white/10 rounded-xl p-4">
+                            <h3 class="text-white font-semibold mb-3 text-center">{day}</h3>
+                            <div class="space-y-2">
+                                <div class="schedule-item bg-white/5 rounded-lg p-2 cursor-pointer">
+                                    <div class="text-white text-sm">张三</div>
+                                    <div class="text-white/60 text-xs">09:00-18:00</div>
+                                </div>
+                                <div class="schedule-item bg-white/5 rounded-lg p-2 cursor-pointer">
+                                    <div class="text-white text-sm">李四</div>
+                                    <div class="text-white/60 text-xs">10:00-19:00</div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+
+        <!-- 统计分析内容 -->
+        <section id="stats-content" class="space-y-8 hidden">
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">考勤统计分析</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">本月考勤趋势</h3>
+                        <div class="h-64 flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-chart-line text-6xl text-blue-400 mb-4"></i>
+                                <p class="text-white/60">考勤趋势图表</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">部门出勤对比</h3>
+                        <div class="h-64 flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-chart-pie text-6xl text-green-400 mb-4"></i>
+                                <p class="text-white/60">部门出勤对比图表</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签切换
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.add('text-white/70');
+                });
+                // 添加active类到当前按钮
+                this.classList.add('active');
+                this.classList.remove('text-white/70');
+                
+                // 隐藏所有section
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // 显示对应的section
+                const sectionId = this.textContent.includes('打卡签到') ? 'clock-in-content' : 
+                                 this.textContent.includes('考勤记录') ? 'attendance-records-content' : 
+                                 this.textContent.includes('排班管理') ? 'schedule-content' : 'stats-content';
+                document.getElementById(sectionId).classList.remove('hidden');
+            });
+        });
+
+        // 模拟人脸识别扫描
+        let scanInterval;
+        document.querySelector('.clock-animation').addEventListener('click', function() {
+            const faceScan = document.querySelector('.face-scan');
+            faceScan.classList.add('scanning');
+            
+            // 模拟扫描过程
+            setTimeout(() => {
+                faceScan.classList.remove('scanning');
+                alert('打卡成功！');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

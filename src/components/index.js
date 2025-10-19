@@ -22,3 +22,5 @@ export * from './ProductComparison.jsx';
 export * from './UserFeedback.jsx';
 export * from './StoreManagementEnhanced.jsx';
 export * from './FinanceManagement.jsx';
+export * from './UserFeedbackSystem.jsx';
+export * from './AttendanceManagement.jsx';

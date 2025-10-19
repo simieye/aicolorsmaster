@@ -28,6 +28,8 @@ import PRODUCT_COMPARISON from '../pages/product-comparison.jsx';
 import USER_FEEDBACK from '../pages/user-feedback.jsx';
 import STORE_MANAGEMENT-ENHANCED from '../pages/store-management-enhanced.jsx';
 import FINANCE_MANAGEMENT from '../pages/finance-management.jsx';
+import USER_FEEDBACK-SYSTEM from '../pages/user-feedback-system.jsx';
+import ATTENDANCE_MANAGEMENT from '../pages/attendance-management.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -118,4 +120,10 @@ export const routers = [{
 }, {
   id: "finance-management",
   component: FINANCE_MANAGEMENT
+}, {
+  id: "user-feedback-system",
+  component: USER_FEEDBACK-SYSTEM
+}, {
+  id: "attendance-management",
+  component: ATTENDANCE_MANAGEMENT
 }]
