@@ -3,48 +3,50 @@ import React, { useState, useEffect } from 'react';
 // @ts-ignore;
 import { Card, CardContent, CardHeader, CardTitle, Button, useToast } from '@/components/ui';
 // @ts-ignore;
-import { ArrowLeft, Bell, CalendarPlus, Heart, CalendarAlt, GraduationCap, Bullhorn, Lightbulb, Users, Award, Eye, Flag, Clock, MapPin, User, Robot, HandSparkles, TrendingUp, Exclamation, CalendarCheck, Plus, PaperPlane, Search, Filter } from 'lucide-react';
+import { ArrowLeft, Settings, Users, CalendarAlt, GraduationCap, Bell, Heart, CalendarCheck, ChalkboardTeacher, Bullhorn, Plus, EllipsisVertical, Exclamation, Info, Check, UserCheck, TrendingUp, Award, Target, Lightbulb } from 'lucide-react';
 
 export const CorporateCulture = ({
   onBack,
-  onPublishNotification,
-  onCreateActivity
+  onSettings
 }) => {
   const {
     toast
   } = useToast();
   const [activeTab, setActiveTab] = useState('culture');
-  const [selectedCourseType, setSelectedCourseType] = useState('');
-  const [notificationType, setNotificationType] = useState('');
-  const [notificationPriority, setNotificationPriority] = useState('normal');
-  const [notificationTitle, setNotificationTitle] = useState('');
-  const [notificationContent, setNotificationContent] = useState('');
 
-  // 企业价值观数据
-  const [cultureValues] = useState([{
+  // 文化统计数据
+  const [cultureStats] = useState([{
     id: 1,
-    title: '创新',
-    description: '持续创新，引领行业发展',
-    icon: Lightbulb,
-    color: 'bg-blue-500'
+    title: '员工总数',
+    value: 156,
+    icon: Users,
+    color: 'bg-blue-500',
+    change: '+12 本月',
+    changeColor: 'text-green-400'
   }, {
     id: 2,
-    title: '团队',
-    description: '团结协作，共同成长',
-    icon: Users,
-    color: 'bg-green-500'
+    title: '本月活动',
+    value: 24,
+    icon: CalendarAlt,
+    color: 'bg-purple-500',
+    change: '+8 vs 上月',
+    changeColor: 'text-green-400'
   }, {
     id: 3,
-    title: '品质',
-    description: '追求卓越，品质第一',
-    icon: Award,
-    color: 'bg-purple-500'
+    title: '培训课程',
+    value: 18,
+    icon: GraduationCap,
+    color: 'bg-green-500',
+    change: '+3 本月',
+    changeColor: 'text-green-400'
   }, {
     id: 4,
-    title: '服务',
-    description: '客户至上，用心服务',
+    title: '参与率',
+    value: 89,
     icon: Heart,
-    color: 'bg-orange-500'
+    color: 'bg-yellow-500',
+    change: '+5.2%',
+    changeColor: 'text-green-400'
   }]);
 
   // 文化活动数据
@@ -56,8 +58,8 @@ export const CorporateCulture = ({
     date: '2024-01-15'
   }, {
     id: 2,
-    title: '技术分享会',
-    description: '分享最新技术，促进知识交流',
+    title: '技能培训大会',
+    description: '提升专业技能，分享最新技术',
     image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop',
     date: '2024-01-10'
   }, {
@@ -65,127 +67,123 @@ export const CorporateCulture = ({
     title: '年度庆典',
     description: '庆祝成就，展望未来',
     image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=250&fit=crop',
-    date: '2023-12-31'
+    date: '2024-01-05'
   }]);
 
-  // 员工活动数据
-  const [employeeActivities] = useState([{
+  // 员工风采数据
+  const [employeeShowcase] = useState([{
     id: 1,
-    title: '团队建设活动',
-    description: '增强团队凝聚力，提升协作效率',
-    date: '1月15日',
-    time: '14:00-17:00',
-    location: '会议室A',
-    participants: 45,
-    status: '即将开始',
-    statusColor: 'bg-green-500/20 text-green-300',
-    icon: Users,
-    iconColor: 'bg-blue-500'
+    name: '张明',
+    position: '技术总监',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
   }, {
     id: 2,
-    title: '技术分享会',
-    description: '分享最新技术，促进知识交流',
-    date: '1月22日',
-    time: '10:00-12:00',
-    location: '培训室',
-    participants: 28,
-    status: '报名中',
-    statusColor: 'bg-blue-500/20 text-blue-300',
-    icon: Robot,
-    iconColor: 'bg-green-500'
+    name: '李娜',
+    position: '市场经理',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face'
+  }, {
+    id: 3,
+    name: '王强',
+    position: '产品经理',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+  }, {
+    id: 4,
+    name: '刘芳',
+    position: '设计总监',
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face'
+  }]);
+
+  // 活动列表数据
+  const [activities] = useState([{
+    id: 1,
+    title: '团队建设活动',
+    date: '2024-01-20 14:00',
+    type: 'team',
+    icon: Users,
+    color: 'bg-blue-500',
+    status: '进行中',
+    statusColor: 'bg-blue-500/20 text-blue-300'
+  }, {
+    id: 2,
+    title: '技能培训',
+    date: '2024-01-25 09:00',
+    type: 'training',
+    icon: GraduationCap,
+    color: 'bg-green-500',
+    status: '即将开始',
+    statusColor: 'bg-yellow-500/20 text-yellow-300'
   }]);
 
   // 培训课程数据
   const [trainingCourses] = useState([{
     id: 1,
-    title: 'AI技术应用培训',
-    description: '学习AI在美发行业的应用技术',
-    type: '技术培训',
-    typeColor: 'bg-blue-500/20 text-blue-300',
+    title: 'AI技术基础培训',
+    description: '学习AI基础知识，了解行业应用',
+    progress: 65,
+    startDate: '2024-01-01',
     status: '进行中',
-    statusColor: 'bg-green-500/20 text-green-300',
-    instructor: '张老师',
-    instructorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=24&h=24&fit=crop&crop=face',
-    icon: Robot,
-    gradient: 'from-blue-500 to-purple-500'
+    statusColor: 'bg-green-500/20 text-green-300'
   }, {
     id: 2,
     title: '客户服务技巧',
-    description: '提升客户服务质量的专业技能',
-    type: '服务培训',
-    typeColor: 'bg-green-500/20 text-green-300',
-    status: '即将开始',
-    statusColor: 'bg-yellow-500/20 text-yellow-300',
-    instructor: '李老师',
-    instructorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=24&h=24&fit=crop&crop=face',
-    icon: HandSparkles,
-    gradient: 'from-green-500 to-teal-500'
-  }, {
-    id: 3,
-    title: '门店运营管理',
-    description: '学习高效的门店运营管理方法',
-    type: '管理培训',
-    typeColor: 'bg-purple-500/20 text-purple-300',
+    description: '提升客户服务质量，增强满意度',
+    progress: 100,
+    endDate: '2024-01-10',
     status: '已完成',
-    statusColor: 'bg-blue-500/20 text-blue-300',
-    instructor: '王老师',
-    instructorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=24&h=24&fit=crop&crop=face',
-    icon: TrendingUp,
-    gradient: 'from-orange-500 to-red-500'
+    statusColor: 'bg-blue-500/20 text-blue-300'
   }]);
 
-  // 通知数据
+  // 内部通知数据
   const [notifications] = useState([{
     id: 1,
-    title: '系统维护通知',
-    content: '系统将于今晚22:00-24:00进行维护升级，期间服务可能暂时无法使用，请提前做好准备。',
-    type: '公告通知',
-    typeColor: 'bg-blue-500/20 text-blue-300',
-    priority: '紧急',
-    priorityColor: 'bg-red-500/20 text-red-300',
-    author: '管理员',
-    date: '2024-01-15',
-    readCount: 156,
+    title: '重要通知：系统维护',
+    content: '系统将于本周六凌晨2点进行维护，预计持续2小时',
+    time: '2024-01-15 10:30',
+    type: 'important',
     icon: Exclamation,
-    iconColor: 'bg-red-500'
+    color: 'bg-red-500',
+    isNew: true
   }, {
     id: 2,
-    title: '春节放假安排',
-    content: '根据国家法定假期安排，结合公司实际情况，现将春节放假安排通知如下：2月9日至2月17日放假，共9天。',
-    type: '活动通知',
-    typeColor: 'bg-green-500/20 text-green-300',
-    priority: '重要',
-    priorityColor: 'bg-yellow-500/20 text-yellow-300',
-    author: '人事部',
-    date: '2024-01-10',
-    readCount: 234,
-    icon: CalendarCheck,
-    iconColor: 'bg-green-500'
-  }]);
-
-  // 学习进度数据
-  const [learningProgress] = useState([{
-    title: 'AI技术应用培训',
-    progress: 65
+    title: '新功能上线',
+    content: 'AI智能客服系统正式上线，欢迎体验',
+    time: '2024-01-14 15:20',
+    type: 'info',
+    icon: Info,
+    color: 'bg-blue-500',
+    isNew: false
   }, {
-    title: '客户服务技巧',
-    progress: 30
+    id: 3,
+    title: '培训完成通知',
+    content: '恭喜您完成AI技术基础培训',
+    time: '2024-01-13 09:15',
+    type: 'success',
+    icon: Check,
+    color: 'bg-green-500',
+    isNew: false
   }]);
 
-  // 学习统计数据
-  const [learningStats] = useState({
-    completedCourses: 12,
-    studyHours: 48,
-    certificates: 8,
-    averageScore: 4.8
-  });
+  // 核心价值观
+  const [coreValues] = useState([{
+    title: '创新驱动',
+    description: '持续技术创新，引领行业发展',
+    color: 'bg-blue-400'
+  }, {
+    title: '客户至上',
+    description: '以客户需求为中心，提供优质服务',
+    color: 'bg-green-400'
+  }, {
+    title: '团队协作',
+    description: '共同成长，共创辉煌',
+    color: 'bg-purple-400'
+  }, {
+    title: '诚信经营',
+    description: '诚实守信，赢得客户信赖',
+    color: 'bg-yellow-400'
+  }]);
 
-  // 活动统计数据
-  const [activityStats] = useState({
-    monthlyActivities: 8,
-    participants: 156,
-    satisfaction: 4.8
-  });
+  // 文化标语
+  const [cultureSlogans] = useState(['智能美发，美丽未来', '科技赋能，服务至上', '创新引领，品质保证']);
 
   // 处理标签切换
   const handleTabChange = tab => {
@@ -196,71 +194,46 @@ export const CorporateCulture = ({
   const handleActivityDetail = activityId => {
     toast({
       title: "活动详情",
-      description: `查看活动 ${activityId} 的详细信息`
+      description: "正在查看活动详情"
     });
   };
 
-  // 处理课程学习
-  const handleCourseLearning = (courseId, action) => {
+  // 处理继续学习
+  const handleContinueLearning = courseId => {
     toast({
-      title: "课程操作",
-      description: `${action}课程 ${courseId}`
+      title: "继续学习",
+      description: "正在进入培训课程"
     });
   };
 
-  // 处理通知标记已读
-  const handleMarkAsRead = notificationId => {
+  // 处理查看证书
+  const handleViewCertificate = courseId => {
     toast({
-      title: "标记已读",
-      description: `通知 ${notificationId} 已标记为已读`
+      title: "查看证书",
+      description: "正在生成培训证书"
     });
   };
 
-  // 处理通知发布
-  const handleNotificationPublish = e => {
-    e.preventDefault();
-    if (!notificationType || !notificationTitle || !notificationContent) {
-      toast({
-        title: "请完善信息",
-        description: "请填写所有必填项",
-        variant: "destructive"
-      });
-      return;
-    }
-    toast({
-      title: "通知发布成功",
-      description: "通知已成功发布给指定员工"
-    });
-
-    // 重置表单
-    setNotificationType('');
-    setNotificationPriority('normal');
-    setNotificationTitle('');
-    setNotificationContent('');
-  };
-
-  // 渲染企业价值观卡片
-  const renderCultureValueCard = value => {
-    const Icon = value.icon;
-    return <div key={value.id} className="culture-value culture-card bg-white/10 backdrop-blur-md rounded-xl p-6 text-center hover:bg-white/15 transition-all duration-300">
-        <div className={`w-16 h-16 ${value.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
+  // 渲染统计卡片
+  const renderStatCard = stat => {
+    const Icon = stat.icon;
+    return <div key={stat.id} className="stat-card bg-white/10 backdrop-blur-md rounded-xl p-6 text-center hover:bg-white/15 transition-all duration-300">
+        <div className={`w-16 h-16 ${stat.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
           <Icon className="w-8 h-8 text-white" />
         </div>
-        <h3 className="text-white font-semibold mb-2">{value.title}</h3>
-        <p className="text-white/60 text-sm">{value.description}</p>
+        <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
+        <div className="text-white/60">{stat.title}</div>
+        <div className={`text-sm mt-2 ${stat.changeColor}`}>{stat.change}</div>
       </div>;
   };
 
   // 渲染文化活动卡片
   const renderCultureActivityCard = activity => {
     return <Card key={activity.id} className="culture-card bg-white/10 backdrop-blur-md border-white/20 overflow-hidden hover:bg-white/15 transition-all duration-300">
-        <div className="relative">
-          <img src={activity.image} alt={activity.title} className="w-full h-48 object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        </div>
-        <CardContent className="p-6">
+        <img src={activity.image} alt={activity.title} className="w-full h-48 object-cover" />
+        <CardContent className="p-4">
           <h3 className="text-white font-semibold mb-2">{activity.title}</h3>
-          <p className="text-white/60 text-sm mb-4">{activity.description}</p>
+          <p className="text-white/60 text-sm mb-3">{activity.description}</p>
           <div className="flex items-center justify-between">
             <span className="text-white/40 text-xs">{activity.date}</span>
             <Button variant="ghost" size="sm" onClick={() => handleActivityDetail(activity.id)} className="text-blue-400 hover:text-blue-300">
@@ -271,65 +244,69 @@ export const CorporateCulture = ({
       </Card>;
   };
 
-  // 渲染员工活动项
-  const renderEmployeeActivityItem = activity => {
+  // 渲染员工风采
+  const renderEmployeeShowcase = employee => {
+    return <div key={employee.id} className="text-center">
+        <img src={employee.avatar} alt={employee.name} className="w-24 h-24 rounded-full mx-auto mb-3" />
+        <h4 className="text-white font-medium">{employee.name}</h4>
+        <p className="text-white/60 text-sm">{employee.position}</p>
+      </div>;
+  };
+
+  // 渲染活动项
+  const renderActivityItem = activity => {
     const Icon = activity.icon;
-    return <div key={activity.id} className="activity-item bg-white/10 rounded-xl p-6 cursor-pointer hover:bg-white/15 transition-all duration-300">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start space-x-4">
-            <div className={`w-12 h-12 ${activity.iconColor} rounded-full flex items-center justify-center`}>
+    return <div key={activity.id} className="activity-item bg-white/10 rounded-xl p-4 hover:bg-white/15 transition-all duration-300">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className={`w-12 h-12 ${activity.color} rounded-full flex items-center justify-center`}>
               <Icon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-white font-semibold mb-2">{activity.title}</h3>
-              <p className="text-white/60 text-sm mb-2">{activity.description}</p>
-              <div className="flex items-center space-x-4 text-white/40 text-xs">
-                <span>
-                  <CalendarAlt className="w-3 h-3 inline mr-1" />
-                  {activity.date}
-                </span>
-                <span>
-                  <Clock className="w-3 h-3 inline mr-1" />
-                  {activity.time}
-                </span>
-                <span>
-                  <MapPin className="w-3 h-3 inline mr-1" />
-                  {activity.location}
-                </span>
-              </div>
+              <h3 className="text-white font-medium">{activity.title}</h3>
+              <p className="text-white/60 text-sm">{activity.date}</p>
             </div>
           </div>
-          <div className="text-right">
-            <span className={`${activity.statusColor} px-2 py-1 rounded-full text-xs`}>
+          <div className="flex items-center space-x-2">
+            <span className={`${activity.statusColor} px-2 py-1 rounded-full text-sm`}>
               {activity.status}
             </span>
-            <div className="text-white/60 text-sm mt-2">{activity.participants}人参与</div>
+            <Button variant="ghost" size="sm" className="text-white/60 hover:text-white">
+              <EllipsisVertical className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>;
   };
 
   // 渲染培训课程卡片
-  const renderTrainingCourseCard = course => {
-    const Icon = course.icon;
-    return <Card key={course.id} className="training-card bg-white/10 backdrop-blur-md border-white/20 overflow-hidden hover:bg-white/15 transition-all duration-300">
-        <div className={`h-32 bg-gradient-to-r ${course.gradient} flex items-center justify-center`}>
-          <Icon className="w-16 h-16 text-white" />
-        </div>
+  const renderTrainingCard = course => {
+    return <Card key={course.id} className="training-card bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-all duration-300">
         <CardContent className="p-6">
-          <div className="flex items-center space-x-2 mb-2">
-            <span className={course.typeColor}>{course.type}</span>
-            <span className={course.statusColor}>{course.status}</span>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-white font-semibold">{course.title}</h3>
+            <span className={`${course.statusColor} px-2 py-1 rounded-full text-sm`}>
+              {course.status}
+            </span>
           </div>
-          <h3 className="text-white font-semibold mb-2">{course.title}</h3>
           <p className="text-white/60 text-sm mb-4">{course.description}</p>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <img src={course.instructorAvatar} alt={course.instructor} className="w-6 h-6 rounded-full" />
-              <span className="text-white/40 text-xs">{course.instructor}</span>
+          <div className="mb-4">
+            <div className="flex justify-between text-white/60 text-sm mb-1">
+              <span>进度</span>
+              <span>{course.progress}%</span>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => handleCourseLearning(course.id, course.status === '已完成' ? '查看回放' : course.status === '即将开始' ? '立即报名' : '立即学习')} className="text-blue-400 hover:text-blue-300">
-              {course.status === '已完成' ? '查看回放' : course.status === '即将开始' ? '立即报名' : '立即学习'}
+            <div className="bg-white/20 rounded-full h-2">
+              <div className={`h-2 rounded-full ${course.progress === 100 ? 'bg-green-400' : 'bg-blue-400'}`} style={{
+              width: `${course.progress}%`
+            }}></div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-white/40 text-xs">
+              {course.progress === 100 ? `完成时间: ${course.endDate}` : `开始时间: ${course.startDate}`}
+            </span>
+            <Button variant="ghost" size="sm" onClick={() => course.progress === 100 ? handleViewCertificate(course.id) : handleContinueLearning(course.id)} className="text-blue-400 hover:text-blue-300">
+              {course.progress === 100 ? '查看证书' : '继续学习'}
             </Button>
           </div>
         </CardContent>
@@ -339,38 +316,19 @@ export const CorporateCulture = ({
   // 渲染通知项
   const renderNotificationItem = notification => {
     const Icon = notification.icon;
-    return <div key={notification.id} className="notification-item bg-white/10 rounded-xl p-6">
+    return <div key={notification.id} className="bg-white/10 rounded-xl p-4">
         <div className="flex items-start justify-between">
-          <div className="flex items-start space-x-4">
-            <div className={`w-10 h-10 ${notification.iconColor} rounded-full flex items-center justify-center`}>
+          <div className="flex items-start space-x-3">
+            <div className={`w-10 h-10 ${notification.color} rounded-full flex items-center justify-center flex-shrink-0`}>
               <Icon className="w-5 h-5 text-white" />
             </div>
             <div>
-              <div className="flex items-center space-x-2 mb-2">
-                <span className={notification.priorityColor}>{notification.priority}</span>
-                <span className={notification.typeColor}>{notification.type}</span>
-              </div>
-              <h3 className="text-white font-semibold mb-2">{notification.title}</h3>
+              <h3 className="text-white font-medium mb-1">{notification.title}</h3>
               <p className="text-white/60 text-sm mb-2">{notification.content}</p>
-              <div className="flex items-center space-x-4 text-white/40 text-xs">
-                <span>
-                  <User className="w-3 h-3 inline mr-1" />
-                  {notification.author}
-                </span>
-                <span>
-                  <CalendarAlt className="w-3 h-3 inline mr-1" />
-                  {notification.date}
-                </span>
-                <span>
-                  <Eye className="w-3 h-3 inline mr-1" />
-                  {notification.readCount}人已读
-                </span>
-              </div>
+              <span className="text-white/40 text-xs">{notification.time}</span>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => handleMarkAsRead(notification.id)} className="text-blue-400 hover:text-blue-300">
-            标记已读
-          </Button>
+          {notification.isNew && <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>}
         </div>
       </div>;
   };
@@ -385,31 +343,36 @@ export const CorporateCulture = ({
             <h1 className="text-xl font-semibold text-white">AI企业文化管理</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <Button onClick={onPublishNotification} className="bg-white/10 hover:bg-white/20 text-white border border-white/30">
-              <Bell className="w-4 h-4 mr-2" />
-              发布通知
-            </Button>
-            <Button onClick={onCreateActivity} className="bg-white/10 hover:bg-white/20 text-white border border-white/30">
-              <CalendarPlus className="w-4 h-4 mr-2" />
-              创建活动
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-white text-sm">系统正常</span>
+            </div>
+            <Button onClick={onSettings} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/30">
+              <Settings className="w-4 h-4 mr-2" />
+              设置
             </Button>
           </div>
         </div>
       </header>
 
+      {/* 文化统计概览 */}
+      <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {cultureStats.map(renderStatCard)}
+      </section>
+
       {/* 标签切换 */}
       <div className="flex items-center space-x-1 bg-white/10 rounded-lg p-1">
         <Button variant={activeTab === 'culture' ? 'default' : 'ghost'} onClick={() => handleTabChange('culture')} className={`flex-1 ${activeTab === 'culture' ? 'bg-white/20 border-b-2 border-blue-400' : 'text-white/70 hover:text-white'}`}>
           <Heart className="w-4 h-4 mr-2" />
-          企业文化
+          文化展示
         </Button>
         <Button variant={activeTab === 'activities' ? 'default' : 'ghost'} onClick={() => handleTabChange('activities')} className={`flex-1 ${activeTab === 'activities' ? 'bg-white/20 border-b-2 border-blue-400' : 'text-white/70 hover:text-white'}`}>
-          <CalendarAlt className="w-4 h-4 mr-2" />
+          <CalendarCheck className="w-4 h-4 mr-2" />
           员工活动
         </Button>
         <Button variant={activeTab === 'training' ? 'default' : 'ghost'} onClick={() => handleTabChange('training')} className={`flex-1 ${activeTab === 'training' ? 'bg-white/20 border-b-2 border-blue-400' : 'text-white/70 hover:text-white'}`}>
-          <GraduationCap className="w-4 h-4 mr-2" />
-          培训系统
+          <ChalkboardTeacher className="w-4 h-4 mr-2" />
+          培训管理
         </Button>
         <Button variant={activeTab === 'notifications' ? 'default' : 'ghost'} onClick={() => handleTabChange('notifications')} className={`flex-1 ${activeTab === 'notifications' ? 'bg-white/20 border-b-2 border-blue-400' : 'text-white/70 hover:text-white'}`}>
           <Bullhorn className="w-4 h-4 mr-2" />
@@ -417,45 +380,42 @@ export const CorporateCulture = ({
         </Button>
       </div>
 
-      {/* 企业文化内容 */}
+      {/* 文化展示内容 */}
       {activeTab === 'culture' && <div className="space-y-8">
-          {/* 企业价值观 */}
+          {/* 企业文化介绍 */}
           <Card className="bg-white/10 backdrop-blur-md border-white/20">
             <CardContent className="p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">企业价值观</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {cultureValues.map(renderCultureValueCard)}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 企业愿景使命 */}
-          <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">愿景与使命</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">企业文化理念</h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-white/10 rounded-xl p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                      <Eye className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-white font-semibold text-lg">企业愿景</h3>
-                  </div>
-                  <p className="text-white/80 leading-relaxed">
-                    成为全球领先的AI美发智能解决方案提供商，通过科技创新推动美发行业的数字化转型，让每一位美发从业者都能享受到AI技术带来的便利和效率提升。
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-4">我们的使命</h3>
+                  <p className="text-white/80 mb-6">
+                    通过AI智能技术，为美发行业提供最专业的解决方案，帮助门店提升服务质量，实现数字化转型，让每一位客户都能享受到个性化的美发体验。
                   </p>
+                  
+                  <h3 className="text-xl font-semibold text-white mb-4">核心价值观</h3>
+                  <div className="space-y-3">
+                    {coreValues.map((value, index) => <div key={index} className="flex items-center space-x-3">
+                        <div className={`w-3 h-3 ${value.color} rounded-full`}></div>
+                        <span className="text-white/80">{value.title} - {value.description}</span>
+                      </div>)}
+                  </div>
                 </div>
                 
-                <div className="bg-white/10 rounded-xl p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                      <Flag className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-white font-semibold text-lg">企业使命</h3>
-                  </div>
-                  <p className="text-white/80 leading-relaxed">
-                    通过AI技术赋能美发行业，提供智能化、个性化的解决方案，帮助美发企业提升服务质量、降低运营成本、增强竞争力，创造更大的商业价值。
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-4">企业愿景</h3>
+                  <p className="text-white/80 mb-6">
+                    成为全球领先的美发行业AI解决方案提供商，推动整个行业的智能化升级，让美发变得更加简单、精准、个性化。
                   </p>
+                  
+                  <div className="bg-white/10 rounded-xl p-6">
+                    <h4 className="text-white font-semibold mb-4">文化标语</h4>
+                    <div className="space-y-2">
+                      {cultureSlogans.map((slogan, index) => <p key={index} className="text-white/80 italic">
+                          "{slogan}"
+                        </p>)}
+                    </div>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -465,8 +425,18 @@ export const CorporateCulture = ({
           <Card className="bg-white/10 backdrop-blur-md border-white/20">
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-white mb-6">文化活动展示</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {cultureActivities.map(renderCultureActivityCard)}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 员工风采 */}
+          <Card className="bg-white/10 backdrop-blur-md border-white/20">
+            <CardContent className="p-8">
+              <h2 className="text-2xl font-bold text-white mb-6">员工风采</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {employeeShowcase.map(renderEmployeeShowcase)}
               </div>
             </CardContent>
           </Card>
@@ -479,64 +449,26 @@ export const CorporateCulture = ({
             <CardContent className="p-8">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-white">活动日历</h2>
-                <Button onClick={onCreateActivity} className="bg-blue-500 hover:bg-blue-600 text-white">
+                <Button className="bg-blue-500 hover:bg-blue-600 text-white">
                   <Plus className="w-4 h-4 mr-2" />
-                  创建活动
+                  新建活动
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                  <div className="bg-white/10 rounded-xl p-6">
-                    <div className="grid grid-cols-7 gap-2 text-center mb-4">
-                      {['日', '一', '二', '三', '四', '五', '六'].map(day => <div key={day} className="text-white/60 text-sm">{day}</div>)}
-                    </div>
-                    <div className="grid grid-cols-7 gap-2">
-                      {Array.from({
-                    length: 35
-                  }, (_, i) => <div key={i} className="bg-white/5 rounded-lg p-2 text-center hover:bg-white/10 cursor-pointer">
-                          <div className="text-white/60 text-sm">{i - 2 > 0 && i - 2 <= 31 ? i - 2 : ''}</div>
-                          {i === 15 && <div className="w-2 h-2 bg-blue-400 rounded-full mx-auto mt-1"></div>}
-                          {i === 22 && <div className="w-2 h-2 bg-green-400 rounded-full mx-auto mt-1"></div>}
-                        </div>)}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="bg-white/10 rounded-xl p-4">
-                    <h3 className="text-white font-semibold mb-3">即将举行</h3>
-                    <div className="space-y-3">
-                      {employeeActivities.slice(0, 2).map(activity => <div key={activity.id} className="activity-item bg-white/5 rounded-lg p-3 cursor-pointer hover:bg-white/10">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                            <div className="flex-1">
-                              <div className="text-white text-sm">{activity.title}</div>
-                              <div className="text-white/40 text-xs">{activity.date} {activity.time.split('-')[0]}</div>
-                            </div>
-                          </div>
-                        </div>)}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/10 rounded-xl p-4">
-                    <h3 className="text-white font-semibold mb-3">活动统计</h3>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-white/60 text-sm">本月活动</span>
-                        <span className="text-white text-sm">{activityStats.monthlyActivities}场</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-white/60 text-sm">参与人数</span>
-                        <span className="text-white text-sm">{activityStats.participants}人</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-white/60 text-sm">满意度</span>
-                        <span className="text-white text-sm">{activityStats.satisfaction}分</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="grid grid-cols-7 gap-2 mb-4">
+                {['日', '一', '二', '三', '四', '五', '六'].map(day => <div key={day} className="text-center text-white/60 text-sm">
+                    {day}
+                  </div>)}
+              </div>
+              
+              <div className="grid grid-cols-7 gap-2">
+                {Array.from({
+              length: 35
+            }, (_, i) => <div key={i} className="bg-white/10 rounded-lg p-2 text-center hover:bg-white/20 cursor-pointer">
+                    <div className="text-white/60 text-sm">{i + 1}</div>
+                    {i === 14 && <div className="w-2 h-2 bg-blue-400 rounded-full mx-auto mt-1"></div>}
+                    {i === 20 && <div className="w-2 h-2 bg-green-400 rounded-full mx-auto mt-1"></div>}
+                  </div>)}
               </div>
             </CardContent>
           </Card>
@@ -546,155 +478,63 @@ export const CorporateCulture = ({
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-white mb-6">活动列表</h2>
               <div className="space-y-4">
-                {employeeActivities.map(renderEmployeeActivityItem)}
+                {activities.map(renderActivityItem)}
               </div>
             </CardContent>
           </Card>
         </div>}
 
-      {/* 培训系统内容 */}
+      {/* 培训管理内容 */}
       {activeTab === 'training' && <div className="space-y-8">
+          {/* 培训统计 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center">
+              <div className="text-3xl font-bold text-white mb-2">156</div>
+              <div className="text-white/60">总培训人次</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center">
+              <div className="text-3xl font-bold text-white mb-2">92%</div>
+              <div className="text-white/60">完成率</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center">
+              <div className="text-3xl font-bold text-white mb-2">4.8</div>
+              <div className="text-white/60">平均评分</div>
+            </div>
+          </div>
+
           {/* 培训课程 */}
           <Card className="bg-white/10 backdrop-blur-md border-white/20">
             <CardContent className="p-8">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-white">培训课程</h2>
-                <div className="flex items-center space-x-4">
-                  <select value={selectedCourseType} onChange={e => setSelectedCourseType(e.target.value)} className="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
-                    <option value="">全部课程</option>
-                    <option value="tech">技术培训</option>
-                    <option value="service">服务培训</option>
-                    <option value="management">管理培训</option>
-                  </select>
-                  <Button className="bg-blue-500 hover:bg-blue-600 text-white">
-                    <Plus className="w-4 h-4 mr-2" />
-                    创建课程
-                  </Button>
-                </div>
+                <Button className="bg-blue-500 hover:bg-blue-600 text-white">
+                  <Plus className="w-4 h-4 mr-2" />
+                  新建课程
+                </Button>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {trainingCourses.map(renderTrainingCourseCard)}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 学习进度 */}
-          <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">我的学习进度</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white/10 rounded-xl p-6">
-                  <h3 className="text-white font-semibold mb-4">当前学习</h3>
-                  <div className="space-y-4">
-                    {learningProgress.map((course, index) => <div key={index}>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-white text-sm">{course.title}</span>
-                          <span className="text-white/60 text-sm">{course.progress}%</span>
-                        </div>
-                        <div className="bg-white/20 rounded-full h-2">
-                          <div className="bg-blue-400 h-2 rounded-full transition-all duration-500" style={{
-                      width: `${course.progress}%`
-                    }}></div>
-                        </div>
-                      </div>)}
-                  </div>
-                </div>
-                
-                <div className="bg-white/10 rounded-xl p-6">
-                  <h3 className="text-white font-semibold mb-4">学习统计</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-white mb-1">{learningStats.completedCourses}</div>
-                      <div className="text-white/60 text-sm">已完成课程</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-white mb-1">{learningStats.studyHours}h</div>
-                      <div className="text-white/60 text-sm">学习时长</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-white mb-1">{learningStats.certificates}</div>
-                      <div className="text-white/60 text-sm">获得证书</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-white mb-1">{learningStats.averageScore}</div>
-                      <div className="text-white/60 text-sm">平均评分</div>
-                    </div>
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {trainingCourses.map(renderTrainingCard)}
               </div>
             </CardContent>
           </Card>
         </div>}
 
       {/* 内部通知内容 */}
-      {activeTab === 'notifications' && <div className="space-y-8">
-          {/* 通知发布 */}
-          <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white">发布通知</h2>
-                <Button onClick={onPublishNotification} className="bg-blue-500 hover:bg-blue-600 text-white">
-                  <PaperPlane className="w-4 h-4 mr-2" />
-                  立即发布
-                </Button>
-              </div>
-              
-              <form onSubmit={handleNotificationPublish} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-white text-sm mb-2 block">通知类型</label>
-                    <select value={notificationType} onChange={e => setNotificationType(e.target.value)} className="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
-                      <option value="">请选择通知类型</option>
-                      <option value="announcement">公告通知</option>
-                      <option value="policy">政策更新</option>
-                      <option value="activity">活动通知</option>
-                      <option value="holiday">假期安排</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="text-white text-sm mb-2 block">优先级</label>
-                    <select value={notificationPriority} onChange={e => setNotificationPriority(e.target.value)} className="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/50">
-                      <option value="normal">普通</option>
-                      <option value="important">重要</option>
-                      <option value="urgent">紧急</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="text-white text-sm mb-2 block">通知标题</label>
-                  <input type="text" value={notificationTitle} onChange={e => setNotificationTitle(e.target.value)} placeholder="请输入通知标题" className="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50" />
-                </div>
-                
-                <div>
-                  <label className="text-white text-sm mb-2 block">通知内容</label>
-                  <textarea value={notificationContent} onChange={e => setNotificationContent(e.target.value)} placeholder="请输入通知内容..." rows={6} className="w-full bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50" />
-                </div>
-                
-                <div>
-                  <label className="text-white text-sm mb-2 block">接收对象</label>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {['全体员工', '技术部', '美发部', '管理部'].map(dept => <label key={dept} className="flex items-center space-x-2">
-                        <input type="checkbox" className="rounded" />
-                        <span className="text-white text-sm">{dept}</span>
-                      </label>)}
-                  </div>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-
-          {/* 通知列表 */}
-          <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">通知列表</h2>
-              <div className="space-y-4">
-                {notifications.map(renderNotificationItem)}
-              </div>
-            </CardContent>
-          </Card>
-        </div>}
+      {activeTab === 'notifications' && <Card className="bg-white/10 backdrop-blur-md border-white/20">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">内部通知</h2>
+              <Button className="bg-blue-500 hover:bg-blue-600 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                发布通知
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              {notifications.map(renderNotificationItem)}
+            </div>
+          </CardContent>
+        </Card>}
     </div>;
 };

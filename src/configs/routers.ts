@@ -30,11 +30,8 @@ import STORE_MANAGEMENT-ENHANCED from '../pages/store-management-enhanced.jsx';
 import FINANCE_MANAGEMENT from '../pages/finance-management.jsx';
 import USER_FEEDBACK-SYSTEM from '../pages/user-feedback-system.jsx';
 import ATTENDANCE_MANAGEMENT from '../pages/attendance-management.jsx';
-import USER_REVIEW-FEEDBACK from '../pages/user-review-feedback.jsx';
+import USER_FEEDBACK-COMPLETE from '../pages/user-feedback-complete.jsx';
 import CORPORATE_CULTURE from '../pages/corporate-culture.jsx';
-import AI_CUSTOMER-SERVICE from '../pages/ai-customer-service.jsx';
-import AI_BOOKING-SYSTEM from '../pages/ai-booking-system.jsx';
-import SETTINGS from '../pages/settings.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -132,18 +129,9 @@ export const routers = [{
   id: "attendance-management",
   component: ATTENDANCE_MANAGEMENT
 }, {
-  id: "user-review-feedback",
-  component: USER_REVIEW-FEEDBACK
+  id: "user-feedback-complete",
+  component: USER_FEEDBACK-COMPLETE
 }, {
   id: "corporate-culture",
   component: CORPORATE_CULTURE
-}, {
-  id: "ai-customer-service",
-  component: AI_CUSTOMER-SERVICE
-}, {
-  id: "ai-booking-system",
-  component: AI_BOOKING-SYSTEM
-}, {
-  id: "settings",
-  component: SETTINGS
 }]

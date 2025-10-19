@@ -30,19 +30,11 @@ export default function CorporateCulturePage(props) {
     }
   };
 
-  // 处理发布通知
-  const handlePublishNotification = () => {
+  // 处理设置
+  const handleSettings = () => {
     toast({
-      title: "发布通知",
-      description: "打开通知发布页面"
-    });
-  };
-
-  // 处理创建活动
-  const handleCreateActivity = () => {
-    toast({
-      title: "创建活动",
-      description: "打开活动创建页面"
+      title: "企业文化设置",
+      description: "打开企业文化管理设置"
     });
   };
   return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
@@ -51,7 +43,7 @@ export default function CorporateCulturePage(props) {
       
       {/* 主内容区 */}
       <main className="container mx-auto px-4 py-8 pb-24">
-        <CorporateCulture onBack={handleBack} onPublishNotification={handlePublishNotification} onCreateActivity={handleCreateActivity} />
+        <CorporateCulture onBack={handleBack} onSettings={handleSettings} />
       </main>
 
       {/* 底部导航 */}

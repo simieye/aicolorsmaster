@@ -44,11 +44,13 @@
             transform: scale(1.02);
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .notification-item {
-            transition: all 0.3s ease;
+        .notification-badge {
+            animation: pulse 2s infinite;
         }
-        .notification-item:hover {
-            background: rgba(255, 255, 255, 0.15);
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
         .progress-bar {
             transition: width 0.5s ease;
@@ -58,20 +60,6 @@
         }
         .stat-card:hover {
             transform: translateY(-5px);
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .slide-in {
-            animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
         }
     </style>
 </head>
@@ -114,8 +102,8 @@
             </div>
             
             <div class="stat-card glass-effect rounded-xl p-6 text-center">
-                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-calendar-check text-white text-2xl"></i>
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-calendar-alt text-white text-2xl"></i>
                 </div>
                 <div class="text-3xl font-bold text-white mb-2">24</div>
                 <div class="text-white/60">本月活动</div>
@@ -123,12 +111,12 @@
             </div>
             
             <div class="stat-card glass-effect rounded-xl p-6 text-center">
-                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-graduation-cap text-white text-2xl"></i>
                 </div>
                 <div class="text-3xl font-bold text-white mb-2">18</div>
                 <div class="text-white/60">培训课程</div>
-                <div class="text-green-400 text-sm mt-2">+5 本月</div>
+                <div class="text-green-400 text-sm mt-2">+3 本月</div>
             </div>
             
             <div class="stat-card glass-effect rounded-xl p-6 text-center">
@@ -144,111 +132,68 @@
         <!-- 标签切换 -->
         <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
             <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium">
-                <i class="fas fa-flag mr-2"></i>
-                企业文化
+                <i class="fas fa-heart mr-2"></i>
+                文化展示
             </button>
             <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
-                <i class="fas fa-calendar-alt mr-2"></i>
+                <i class="fas fa-calendar-check mr-2"></i>
                 员工活动
             </button>
             <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
-                <i class="fas fa-graduation-cap mr-2"></i>
+                <i class="fas fa-chalkboard-teacher mr-2"></i>
                 培训管理
             </button>
             <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
-                <i class="fas fa-bell mr-2"></i>
+                <i class="fas fa-bullhorn mr-2"></i>
                 内部通知
             </button>
         </div>
 
-        <!-- 企业文化内容 -->
-        <section id="culture-content" class="space-y-8 fade-in">
-            <!-- 企业价值观 -->
+        <!-- 文化展示内容 -->
+        <section id="culture-content" class="space-y-8">
+            <!-- 企业文化介绍 -->
             <div class="glass-effect rounded-2xl p-8">
-                <h2 class="text-2xl font-bold text-white mb-6">企业价值观</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="culture-card bg-white/10 rounded-xl p-6 text-center">
-                        <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-heart text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-white font-semibold mb-2">客户至上</h3>
-                        <p class="text-white/60 text-sm">以客户需求为中心，提供最优质的服务</p>
-                    </div>
-                    
-                    <div class="culture-card bg-white/10 rounded-xl p-6 text-center">
-                        <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-lightbulb text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-white font-semibold mb-2">创新驱动</h3>
-                        <p class="text-white/60 text-sm">持续创新，引领行业发展</p>
-                    </div>
-                    
-                    <div class="culture-card bg-white/10 rounded-xl p-6 text-center">
-                        <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-users text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-white font-semibold mb-2">团队协作</h3>
-                        <p class="text-white/60 text-sm">团结协作，共同成长</p>
-                    </div>
-                    
-                    <div class="culture-card bg-white/10 rounded-xl p-6 text-center">
-                        <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-trophy text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-white font-semibold mb-2">追求卓越</h3>
-                        <p class="text-white/60 text-sm">精益求精，追求卓越品质</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 企业愿景使命 -->
-            <div class="glass-effect rounded-2xl p-8">
-                <h2 class="text-2xl font-bold text-white mb-6">企业愿景与使命</h2>
+                <h2 class="text-2xl font-bold text-white mb-6">企业文化理念</h2>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white/10 rounded-xl p-6">
-                        <h3 class="text-white font-semibold mb-4">
-                            <i class="fas fa-eye text-blue-400 mr-2"></i>
-                            企业愿景
-                        </h3>
-                        <p class="text-white/80 mb-4">
-                            成为全球领先的AI美发智能解决方案提供商，通过科技创新推动美发行业的数字化转型，让每一位美发从业者都能享受到AI技术带来的便利和效率提升。
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">我们的使命</h3>
+                        <p class="text-white/80 mb-6">
+                            通过AI智能技术，为美发行业提供最专业的解决方案，帮助门店提升服务质量，实现数字化转型，让每一位客户都能享受到个性化的美发体验。
                         </p>
-                        <div class="flex items-center space-x-4">
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-blue-400">100+</div>
-                                <div class="text-white/60 text-sm">合作伙伴</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-green-400">50万+</div>
-                                <div class="text-white/60 text-sm">服务用户</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-purple-400">30+</div>
-                                <div class="text-white/60 text-sm">覆盖城市</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white/10 rounded-xl p-6">
-                        <h3 class="text-white font-semibold mb-4">
-                            <i class="fas fa-bullseye text-green-400 mr-2"></i>
-                            企业使命
-                        </h3>
-                        <p class="text-white/80 mb-4">
-                            通过AI技术创新，为美发行业提供智能化、数字化的解决方案，帮助美发企业提升运营效率，降低成本，提高服务质量，推动整个行业的升级和发展。
-                        </p>
+                        
+                        <h3 class="text-xl font-semibold text-white mb-4">核心价值观</h3>
                         <div class="space-y-3">
                             <div class="flex items-center space-x-3">
-                                <i class="fas fa-check-circle text-green-400"></i>
-                                <span class="text-white/80">技术创新驱动行业发展</span>
+                                <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
+                                <span class="text-white/80">创新驱动 - 持续技术创新，引领行业发展</span>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <i class="fas fa-check-circle text-green-400"></i>
-                                <span class="text-white/80">为客户创造最大价值</span>
+                                <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                                <span class="text-white/80">客户至上 - 以客户需求为中心，提供优质服务</span>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <i class="fas fa-check-circle text-green-400"></i>
-                                <span class="text-white/80">推动行业数字化转型</span>
+                                <div class="w-3 h-3 bg-purple-400 rounded-full"></div>
+                                <span class="text-white/80">团队协作 - 共同成长，共创辉煌</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                                <span class="text-white/80">诚信经营 - 诚实守信，赢得客户信赖</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold text-white mb-4">企业愿景</h3>
+                        <p class="text-white/80 mb-6">
+                            成为全球领先的美发行业AI解决方案提供商，推动整个行业的智能化升级，让美发变得更加简单、精准、个性化。
+                        </p>
+                        
+                        <div class="bg-white/10 rounded-xl p-6">
+                            <h4 class="text-white font-semibold mb-4">文化标语</h4>
+                            <div class="space-y-2">
+                                <p class="text-white/80 italic">"智能美发，美丽未来"</p>
+                                <p class="text-white/80 italic">"科技赋能，服务至上"</p>
+                                <p class="text-white/80 italic">"创新引领，品质保证"</p>
                             </div>
                         </div>
                     </div>
@@ -258,31 +203,31 @@
             <!-- 文化活动展示 -->
             <div class="glass-effect rounded-2xl p-8">
                 <h2 class="text-2xl font-bold text-white mb-6">文化活动展示</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="culture-card bg-white/10 rounded-xl overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=250&fit=crop" 
-                             alt="团建活动" 
+                             alt="团队建设" 
                              class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-white font-semibold mb-2">春季团建活动</h3>
-                            <p class="text-white/60 text-sm mb-4">增进团队凝聚力，提升协作能力</p>
+                        <div class="p-4">
+                            <h3 class="text-white font-semibold mb-2">团队建设活动</h3>
+                            <p class="text-white/60 text-sm mb-3">增强团队凝聚力，提升协作效率</p>
                             <div class="flex items-center justify-between">
-                                <span class="text-white/40 text-sm">2024-03-15</span>
-                                <span class="text-blue-400 text-sm">156人参与</span>
+                                <span class="text-white/40 text-xs">2024-01-15</span>
+                                <button class="text-blue-400 text-sm hover:text-blue-300">查看详情</button>
                             </div>
                         </div>
                     </div>
                     
                     <div class="culture-card bg-white/10 rounded-xl overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop" 
-                             alt="技术分享" 
+                             alt="技能培训" 
                              class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-white font-semibold mb-2">技术分享大会</h3>
-                            <p class="text-white/60 text-sm mb-4">分享最新技术成果，促进知识交流</p>
+                        <div class="p-4">
+                            <h3 class="text-white font-semibold mb-2">技能培训大会</h3>
+                            <p class="text-white/60 text-sm mb-3">提升专业技能，分享最新技术</p>
                             <div class="flex items-center justify-between">
-                                <span class="text-white/40 text-sm">2024-03-10</span>
-                                <span class="text-blue-400 text-sm">89人参与</span>
+                                <span class="text-white/40 text-xs">2024-01-10</span>
+                                <button class="text-blue-400 text-sm hover:text-blue-300">查看详情</button>
                             </div>
                         </div>
                     </div>
@@ -291,14 +236,49 @@
                         <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=250&fit=crop" 
                              alt="年度庆典" 
                              class="w-full h-48 object-cover">
-                        <div class="p-6">
+                        <div class="p-4">
                             <h3 class="text-white font-semibold mb-2">年度庆典</h3>
-                            <p class="text-white/60 text-sm mb-4">庆祝年度成就，展望未来发展</p>
+                            <p class="text-white/60 text-sm mb-3">庆祝成就，展望未来</p>
                             <div class="flex items-center justify-between">
-                                <span class="text-white/40 text-sm">2024-01-20</span>
-                                <span class="text-blue-400 text-sm">200人参与</span>
+                                <span class="text-white/40 text-xs">2024-01-05</span>
+                                <button class="text-blue-400 text-sm hover:text-blue-300">查看详情</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 员工风采 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">员工风采</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
+                             alt="员工" 
+                             class="w-24 h-24 rounded-full mx-auto mb-3">
+                        <h4 class="text-white font-medium">张明</h4>
+                        <p class="text-white/60 text-sm">技术总监</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face" 
+                             alt="员工" 
+                             class="w-24 h-24 rounded-full mx-auto mb-3">
+                        <h4 class="text-white font-medium">李娜</h4>
+                        <p class="text-white/60 text-sm">市场经理</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" 
+                             alt="员工" 
+                             class="w-24 h-24 rounded-full mx-auto mb-3">
+                        <h4 class="text-white font-medium">王强</h4>
+                        <p class="text-white/60 text-sm">产品经理</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" 
+                             alt="员工" 
+                             class="w-24 h-24 rounded-full mx-auto mb-3">
+                        <h4 class="text-white font-medium">刘芳</h4>
+                        <p class="text-white/60 text-sm">设计总监</p>
                     </div>
                 </div>
             </div>
@@ -316,79 +296,24 @@
                     </button>
                 </div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2">
-                        <div class="bg-white/10 rounded-xl p-6">
-                            <div class="grid grid-cols-7 gap-2 text-center mb-4">
-                                <div class="text-white/60 text-sm">日</div>
-                                <div class="text-white/60 text-sm">一</div>
-                                <div class="text-white/60 text-sm">二</div>
-                                <div class="text-white/60 text-sm">三</div>
-                                <div class="text-white/60 text-sm">四</div>
-                                <div class="text-white/60 text-sm">五</div>
-                                <div class="text-white/60 text-sm">六</div>
-                            </div>
-                            <div class="grid grid-cols-7 gap-2">
-                                <!-- 日期格子 -->
-                                <div class="text-white/40 p-2">29</div>
-                                <div class="text-white/40 p-2">30</div>
-                                <div class="text-white/40 p-2">31</div>
-                                <div class="text-white p-2">1</div>
-                                <div class="text-white p-2">2</div>
-                                <div class="text-white p-2">3</div>
-                                <div class="text-white p-2">4</div>
-                                <div class="text-white p-2">5</div>
-                                <div class="text-white p-2">6</div>
-                                <div class="text-white p-2">7</div>
-                                <div class="text-white p-2">8</div>
-                                <div class="text-white p-2">9</div>
-                                <div class="text-white p-2">10</div>
-                                <div class="text-white p-2">11</div>
-                                <div class="text-white p-2">12</div>
-                                <div="text-white p-2">13</div>
-                                <div class="text-white p-2">14</div>
-                                <div class="bg-blue-500 text-white p-2 rounded">15</div>
-                                <div class="text-white p-2">16</div>
-                                <div class="text-white p-2">17</div>
-                                <div class="text-white p-2">18</div>
-                            </div>
+                <div class="grid grid-cols-7 gap-2 mb-4">
+                    <div class="text-center text-white/60 text-sm">日</div>
+                    <div class="text-center text-white/60 text-sm">一</div>
+                    <div class="text-center text-white/60 text-sm">二</div>
+                    <div class="text-center text-white/60 text-sm">三</div>
+                    <div class="text-center text-white/60 text-sm">四</div>
+                    <div class="text-center text-white/60 text-sm">五</div>
+                    <div class="text-center text-white/60 text-sm">六</div>
+                </div>
+                
+                <div class="grid grid-cols-7 gap-2">
+                    {Array.from({length: 35}, (_, i) => (
+                        <div key={i} class="bg-white/10 rounded-lg p-2 text-center hover:bg-white/20 cursor-pointer">
+                            <div class="text-white/60 text-sm">{i + 1}</div>
+                            {i === 14 && <div class="w-2 h-2 bg-blue-400 rounded-full mx-auto mt-1"></div>}
+                            {i === 20 && <div class="w-2 h-2 bg-green-400 rounded-full mx-auto mt-1"></div>}
                         </div>
-                    </div>
-                    
-                    <div>
-                        <div class="bg-white/10 rounded-xl p-6">
-                            <h3 class="text-white font-semibold mb-4">即将举行</h3>
-                            <div class="space-y-3">
-                                <div class="activity-item bg-white/5 rounded-lg p-3 cursor-pointer">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
-                                        <div>
-                                            <div class="text-white font-medium">技术培训</div>
-                                            <div class="text-white/60 text-sm">3月15日 14:00</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="activity-item bg-white/5 rounded-lg p-3 cursor-pointer">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                                        <div>
-                                            <div class="text-white font-medium">团建活动</div>
-                                            <div class="text-white/60 text-sm">3月20日 09:00</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="activity-item bg-white/5 rounded-lg p-3 cursor-pointer">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-2 h-2 bg-purple-400 rounded-full"></div>
-                                        <div>
-                                            <div class="text-white font-medium">生日会</div>
-                                            <div class="text-white/60 text-sm">3月25日 16:00</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
 
@@ -396,51 +321,41 @@
             <div class="glass-effect rounded-2xl p-8">
                 <h2 class="text-2xl font-bold text-white mb-6">活动列表</h2>
                 <div class="space-y-4">
-                    <div class="bg-white/10 rounded-xl p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="flex items-start space-x-4">
+                    <div class="activity-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
                                 <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-graduation-cap text-white"></i>
+                                    <i class="fas fa-users text-white"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-white font-semibold mb-2">AI技术培训</h3>
-                                    <p class="text-white/60 text-sm mb-2">提升员工AI技术应用能力</p>
-                                    <div class="flex items-center space-x-4 text-white/40 text-sm">
-                                        <span><i class="fas fa-calendar mr-1"></i>3月15日</span>
-                                        <span><i class="fas fa-clock mr-1"></i>14:00-17:00</span>
-                                        <span><i class="fas fa-map-marker-alt mr-1"></i>培训室A</span>
-                                    </div>
+                                    <h3 class="text-white font-medium">团队建设活动</h3>
+                                    <p class="text-white/60 text-sm">2024-01-20 14:00</p>
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <div class="text-green-400 text-sm mb-2">进行中</div>
-                                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                                    查看详情
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-sm">进行中</span>
+                                <button class="text-white/60 hover:text-white">
+                                    <i class="fas fa-ellipsis-v"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="bg-white/10 rounded-xl p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="flex items-start space-x-4">
+                    <div class="activity-item bg-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
                                 <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-users text-white"></i>
+                                    <i class="fas fa-graduation-cap text-white"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-white font-semibold mb-2">春季团建</h3>
-                                    <p class="text-white/60 text-sm mb-2">增进团队凝聚力，提升协作能力</p>
-                                    <div class="flex items-center space-x-4 text-white/40 text-sm">
-                                        <span><i class="fas fa-calendar mr-1"></i>3月20日</span>
-                                        <span><i class="fas fa-clock mr-1"></i>09:00-18:00</span>
-                                        <span><i class="fas fa-map-marker-alt mr-1"></i>郊外度假村</span>
-                                    </div>
+                                    <h3 class="text-white font-medium">技能培训</h3>
+                                    <p class="text-white/60 text-sm">2024-01-25 09:00</p>
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <div class="text-yellow-400 text-sm mb-2">即将开始</div>
-                                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                                    查看详情
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-sm">即将开始</span>
+                                <button class="text-white/60 hover:text-white">
+                                    <i class="fas fa-ellipsis-v"></i>
                                 </button>
                             </div>
                         </div>
@@ -452,24 +367,18 @@
         <!-- 培训管理内容 -->
         <section id="training-content" class="space-y-8 hidden">
             <!-- 培训统计 -->
-            <div class="glass-effect rounded-2xl p-8">
-                <h2 class="text-2xl font-bold text-white mb-6">培训统计</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white/10 rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-white mb-2">156</div>
-                        <div class="text-white/60">总培训人次</div>
-                        <div class="text-green-400 text-sm mt-2">+23% vs 上月</div>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-white mb-2">92%</div>
-                        <div class="text-white/60">完成率</div>
-                        <div class="text-green-400 text-sm mt-2">+5% vs 上月</div>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-white mb-2">4.8</div>
-                        <div class="text-white/60">平均评分</div>
-                        <div class="text-green-400 text-sm mt-2">+0.3 vs 上月</div>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-white mb-2">156</div>
+                    <div class="text-white/60">总培训人次</div>
+                </div>
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-white mb-2">92%</div>
+                    <div class="text-white/60">完成率</div>
+                </div>
+                <div class="glass-effect rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-white mb-2">4.8</div>
+                    <div class="text-white/60">平均评分</div>
                 </div>
             </div>
 
@@ -483,64 +392,46 @@
                     </button>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="training-card bg-white/10 rounded-xl overflow-hidden">
-                        <div class="h-32 bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-                            <i class="fas fa-robot text-white text-4xl"></i>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="training-card bg-white/10 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-white font-semibold">AI技术基础培训</h3>
+                            <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm">进行中</span>
                         </div>
-                        <div class="p-6">
-                            <h3 class="text-white font-semibold mb-2">AI技术应用</h3>
-                            <p class="text-white/60 text-sm mb-4">学习AI在美发行业的应用</p>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-white/40 text-sm">12课时</span>
-                                <span class="text-blue-400 text-sm">45人已报名</span>
+                        <p class="text-white/60 text-sm mb-4">学习AI基础知识，了解行业应用</p>
+                        <div class="mb-4">
+                            <div class="flex justify-between text-white/60 text-sm mb-1">
+                                <span>进度</span>
+                                <span>65%</span>
                             </div>
-                            <div class="w-full bg-white/20 rounded-full h-2 mb-4">
-                                <div class="progress-bar bg-blue-400 h-2 rounded-full" style="width: 75%"></div>
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-blue-400 h-2 rounded-full" style="width: 65%"></div>
                             </div>
-                            <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">
-                                开始学习
-                            </button>
                         </div>
-                    </div>
-                    
-                    <div class="training-card bg-white/10 rounded-xl overflow-hidden">
-                        <div class="h-32 bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center">
-                            <i class="fas fa-palette text-white text-4xl"></i>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-white font-semibold mb-2">色彩搭配技巧</h3>
-                            <p class="text-white/60 text-sm mb-4">掌握专业的色彩搭配知识</p>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-white/40 text-sm">8课时</span>
-                                <span class="text-green-400 text-sm">32人已报名</span>
-                            </div>
-                            <div class="w-full bg-white/20 rounded-full h-2 mb-4">
-                                <div class="progress-bar bg-green-400 h-2 rounded-full" style="width: 60%"></div>
-                            </div>
-                            <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">
-                                开始学习
-                            </button>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white/40 text-xs">开始时间: 2024-01-01</span>
+                            <button class="text-blue-400 text-sm hover:text-blue-300">继续学习</button>
                         </div>
                     </div>
                     
-                    <div class="training-card bg-white/10 rounded-xl overflow-hidden">
-                        <div class="h-32 bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-                            <i class="fas fa-comments text-white text-4xl"></i>
+                    <div class="training-card bg-white/10 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-white font-semibold">客户服务技巧</h3>
+                            <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-sm">已完成</span>
                         </div>
-                        <div class="p-6">
-                            <h3 class="text-white font-semibold mb-2">客户服务技巧</h3>
-                            <p class="text-white/60 text-sm mb-4">提升客户服务质量</p>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-white/40 text-sm">6课时</span>
-                                <span class="text-purple-400 text-sm">28人已报名</span>
+                        <p class="text-white/60 text-sm mb-4">提升客户服务质量，增强满意度</p>
+                        <div class="mb-4">
+                            <div class="flex justify-between text-white/60 text-sm mb-1">
+                                <span>进度</span>
+                                <span>100%</span>
                             </div>
-                            <div class="w-full bg-white/20 rounded-full h-2 mb-4">
-                                <div class="progress-bar bg-purple-400 h-2 rounded-full" style="width: 40%"></div>
+                            <div class="bg-white/20 rounded-full h-2">
+                                <div class="progress-bar bg-green-400 h-2 rounded-full" style="width: 100%"></div>
                             </div>
-                            <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">
-                                开始学习
-                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white/40 text-xs">完成时间: 2024-01-10</span>
+                            <button class="text-blue-400 text-sm hover:text-blue-300">查看证书</button>
                         </div>
                     </div>
                 </div>
@@ -549,33 +440,10 @@
 
         <!-- 内部通知内容 -->
         <section id="notifications-content" class="space-y-8 hidden">
-            <!-- 通知统计 -->
-            <div class="glass-effect rounded-2xl p-8">
-                <h2 class="text-2xl font-bold text-white mb-6">通知统计</h2>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="bg-white/10 rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-white mb-2">45</div>
-                        <div class="text-white/60">本月通知</div>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-white mb-2">89%</div>
-                        <div class="text-white/60">阅读率</div>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-white mb-2">156</div>
-                        <div class="text-white/60">总阅读数</div>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-6 text-center">
-                        <div class="text-3xl font-bold text-white mb-2">4.2h</div>
-                        <div class="text-white/60">平均阅读时间</div>
-                    </div>
-                </div>
-            </div>
-
             <!-- 通知列表 -->
             <div class="glass-effect rounded-2xl p-8">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-white">通知列表</h2>
+                    <h2 class="text-2xl font-bold text-white">内部通知</h2>
                     <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
                         <i class="fas fa-plus mr-2"></i>
                         发布通知
@@ -583,68 +451,44 @@
                 </div>
                 
                 <div class="space-y-4">
-                    <div class="notification-item bg-white/10 rounded-xl p-6">
+                    <div class="bg-white/10 rounded-xl p-4">
                         <div class="flex items-start justify-between">
-                            <div class="flex items-start space-x-4">
-                                <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-exclamation-triangle text-white"></i>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-exclamation text-white"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-white font-semibold mb-2">重要通知</h3>
-                                    <p class="text-white/80 mb-2">关于系统升级维护的通知</p>
-                                    <div class="flex items-center space-x-4 text-white/40 text-sm">
-                                        <span><i class="fas fa-user mr-1"></i>系统管理员</span>
-                                        <span><i class="fas fa-calendar mr-1"></i>2024-03-15</span>
-                                        <span><i class="fas fa-eye mr-1"></i>156人已读</span>
-                                    </div>
+                                    <h3 class="text-white font-medium mb-1">重要通知：系统维护</h3>
+                                    <p class="text-white/60 text-sm mb-2">系统将于本周六凌晨2点进行维护，预计持续2小时</p>
+                                    <span class="text-white/40 text-xs">2024-01-15 10:30</span>
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <span class="bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-sm">重要</span>
+                            <div class="notification-badge w-2 h-2 bg-red-400 rounded-full"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-info text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-medium mb-1">新功能上线</h3>
+                                <p class="text-white/60 text-sm mb-2">AI智能客服系统正式上线，欢迎体验</p>
+                                <span class="text-white/40 text-xs">2024-01-14 15:20</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="notification-item bg-white/10 rounded-xl p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="flex items-start space-x-4">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-info-circle text-white"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-white font-semibold mb-2">培训通知</h3>
-                                    <p class="text-white/80 mb-2">AI技术培训将于下周三举行</p>
-                                    <div class="flex items-center space-x-4 text-white/40 text-sm">
-                                        <span><i class="fas fa-user mr-1"></i>培训部</span>
-                                        <span><i class="fas fa-calendar mr-1"></i>2024-03-14</span>
-                                        <span><i class="fas fa-eye mr-1"></i>89人已读</span>
-                                    </div>
-                                </div>
+                    <div class="bg-white/10 rounded-xl p-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-check text-white"></i>
                             </div>
-                            <div class="text-right">
-                                <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-sm">培训</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="notification-item bg-white/10 rounded-xl p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="flex items-start space-x-4">
-                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-calendar-check text-white"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-white font-semibold mb-2">活动通知</h3>
-                                    <p class="text-white/80 mb-2">春季团建活动报名开始</p>
-                                    <div class="flex items-center space-x-4 text-white/40 text-sm">
-                                        <span><i class="fas fa-user mr-1"></i>行政部</span>
-                                        <span><i class="fas fa-calendar mr-1"></i>2024-03-13</span>
-                                        <span><i class="fas fa-eye mr-1"></i>120人已读</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm">活动</span>
+                            <div>
+                                <h3 class="text-white font-medium mb-1">培训完成通知</h3>
+                                <p class="text-white/60 text-sm mb-2">恭喜您完成AI技术基础培训</p>
+                                <span class="text-white/40 text-xs">2024-01-13 09:15</span>
                             </div>
                         </div>
                     </div>
@@ -672,7 +516,7 @@
                 });
                 
                 // 显示对应的section
-                const sectionId = this.textContent.includes('企业文化') ? 'culture-content' : 
+                const sectionId = this.textContent.includes('文化展示') ? 'culture-content' : 
                                  this.textContent.includes('员工活动') ? 'activities-content' : 
                                  this.textContent.includes('培训管理') ? 'training-content' : 'notifications-content';
                 document.getElementById(sectionId).classList.remove('hidden');
