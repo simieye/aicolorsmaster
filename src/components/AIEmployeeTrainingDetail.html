@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .gradient-bg {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
         .glass-effect {
             background: rgba(255, 255, 255, 0.1);
@@ -20,35 +20,43 @@
             transition: all 0.3s ease;
         }
         .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
         .course-card {
             transition: all 0.3s ease;
         }
         .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
         }
         .path-step {
             transition: all 0.3s ease;
         }
         .path-step:hover {
+            transform: translateX(10px);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .assessment-card {
+            transition: all 0.3s ease;
+        }
+        .assessment-card:hover {
             transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
         .price-card {
             transition: all 0.3s ease;
         }
         .price-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
         }
-        .tech-item {
+        .testimonial-card {
             transition: all 0.3s ease;
         }
-        .tech-item:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.15);
+        .testimonial-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         .pulse-dot {
             animation: pulse 2s infinite;
@@ -65,388 +73,450 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
         .gradient-text {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .sticky-nav {
-            position: sticky;
-            top: 0;
-            z-index: 40;
+        .tab-button {
+            transition: all 0.3s ease;
         }
-        .learning-path {
-            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        .tab-button.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
         }
         .progress-bar {
-            transition: width 0.3s ease;
+            transition: width 1s ease;
         }
-        .course-module {
-            transition: all 0.2s ease;
+        .skill-progress {
+            transition: all 0.3s ease;
         }
-        .course-module:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .skill-progress:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body class="bg-gray-50">
     <!-- 顶部导航 -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-violet-600 rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold text-sm">AI</span>
-                    </div>
-                    <span class="text-xl font-bold text-gray-900">美发智能系统</span>
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-bold text-gray-900">AI员工成长业务培训系统</h1>
                 </div>
-                <nav class="hidden md:flex space-x-8">
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium">首页</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium">产品中心</a>
-                    <a href="#" class="text-purple-600 font-medium">AI员工成长业务培训系统</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium">解决方案</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium">关于我们</a>
-                </nav>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-share-alt text-xl"></i>
+                    </button>
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-heart text-xl"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- 快速导航 -->
-    <div class="sticky-nav bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center space-x-8 py-3 overflow-x-auto">
-                <a href="#overview" class="text-gray-600 hover:text-purple-600 font-medium whitespace-nowrap">系统概览</a>
-                <a href="#courses" class="text-gray-600 hover:text-purple-600 font-medium whitespace-nowrap">培训课程</a>
-                <a href="#learning-path" class="text-gray-600 hover:text-purple-600 font-medium whitespace-nowrap">学习路径</a>
-                <a href="#pricing" class="text-gray-600 hover:text-purple-600 font-medium whitespace-nowrap">价格信息</a>
-                <a href="#technology" class="text-gray-600 hover:text-purple-600 font-medium whitespace-nowrap">技术特点</a>
-            </div>
-        </div>
-    </div>
-
     <!-- 主内容区 -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- 系统概览 -->
-        <section id="overview" class="mb-20 slide-in">
-            <div class="gradient-bg rounded-2xl p-12 text-white">
-                <div class="flex items-center justify-between">
+    <main>
+        <!-- 产品头部 -->
+        <section class="gradient-bg text-white py-16">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div>
-                        <div class="flex items-center space-x-3 mb-6">
-                            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                                <i class="fas fa-graduation-cap text-3xl"></i>
-                            </div>
-                            <h1 class="text-4xl font-bold">AI员工成长业务培训系统</h1>
+                        <div class="flex items-center space-x-2 mb-4">
+                            <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">新品上市</span>
+                            <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm">AI驱动</span>
+                            <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">智能学习</span>
                         </div>
-                        <p class="text-xl text-white/90 mb-8 max-w-3xl">
-                            基于人工智能技术的智能培训平台，为美发行业提供全方位的员工成长解决方案。
-                            个性化学习路径、智能课程推荐、实时学习跟踪，全面提升员工技能和业务水平。
+                        <h1 class="text-4xl font-bold mb-4">AI员工成长业务培训系统</h1>
+                        <p class="text-xl mb-6 text-green-100">
+                            智能化培训管理，个性化学习路径，提升员工技能，促进业务发展
                         </p>
-                        <div class="flex items-center space-x-6">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-green-400 rounded-full pulse-dot"></div>
-                                <span class="text-white/80">个性化学习</span>
+                        <div class="flex items-center space-x-6 mb-8">
+                            <div>
+                                <div class="text-3xl font-bold">¥3,680</div>
+                                <div class="text-green-200">一次性购买</div>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-blue-400 rounded-full pulse-dot"></div>
-                                <span class="text-white/80">智能推荐</span>
+                            <div>
+                                <div class="text-3xl font-bold">4.9</div>
+                                <div class="text-green-200">用户评分</div>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-purple-400 rounded-full pulse-dot"></div>
-                                <span class="text-white/80">实时跟踪</span>
+                            <div>
+                                <div class="text-3xl font-bold">234+</div>
+                                <div class="text-green-200">客户选择</div>
                             </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <button class="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-medium transition-colors">
+                                立即购买
+                            </button>
+                            <button class="bg-green-700 text-white hover:bg-green-800 px-8 py-3 rounded-lg font-medium transition-colors">
+                                免费试用
+                            </button>
+                            <button class="border border-white text-white hover:bg-white hover:text-green-600 px-6 py-3 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-play mr-2"></i>
+                                观看演示
+                            </button>
                         </div>
                     </div>
-                    <div class="hidden lg:block">
-                        <div class="w-48 h-48 bg-white/10 rounded-full flex items-center justify-center">
-                            <i class="fas fa-book-open text-8xl text-white/30"></i>
+                    <div class="text-center">
+                        <div class="float-animation">
+                            <i class="fas fa-graduation-cap text-8xl mb-4"></i>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 mt-8">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold">智能</div>
+                                <div class="text-green-200 text-sm">个性化推荐</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold">实时</div>
+                                <div class="text-green-200 text-sm">进度跟踪</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold">自动</div>
+                                <div class="text-green-200 text-sm">证书颁发</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 核心优势 -->
-        <section class="mb-20">
-            <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">核心优势</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-brain text-purple-600 text-3xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">智能学习</h3>
-                    <p class="text-gray-600">基于AI的个性化学习推荐，根据员工特点定制培训内容</p>
+        <!-- 标签切换 -->
+        <section class="py-8 bg-white border-b">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-center space-x-8">
+                    <button class="tab-button active px-6 py-3 rounded-lg font-medium transition-colors">
+                        系统介绍
+                    </button>
+                    <button class="tab-button px-6 py-3 rounded-lg font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                        培训课程
+                    </button>
+                    <button class="tab-button px-6 py-3 rounded-lg font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                        学习路径
+                    </button>
+                    <button class="tab-button px-6 py-3 rounded-lg font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                        考核评估
+                    </button>
+                    <button class="tab-button px-6 py-3 rounded-lg font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                        价格方案
+                    </button>
+                    <button class="tab-button px-6 py-3 rounded-lg font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                        用户评价
+                    </button>
                 </div>
-                <div class="text-center">
-                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-chart-line text-blue-600 text-3xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">效果追踪</h3>
-                    <p class="text-gray-600">实时学习进度监控，数据分析培训效果，持续优化</p>
+            </div>
+        </section>
+
+        <!-- 系统介绍 -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">系统介绍</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        基于AI技术的智能培训管理系统，为企业提供全方位的员工培训解决方案
+                    </p>
                 </div>
-                <div class="text-center">
-                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-certificate text-green-600 text-3xl"></i>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">核心优势</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-brain text-green-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">AI智能推荐</h4>
+                                    <p class="text-sm text-gray-600">基于员工能力和岗位需求，智能推荐个性化学习内容</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-chart-line text-blue-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">进度跟踪</h4>
+                                    <p class="text-sm text-gray-600">实时监控学习进度和效果，数据可视化展示培训成果</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-certificate text-purple-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">证书管理</h4>
+                                    <p class="text-sm text-gray-600">自动颁发培训证书，支持多种证书模板和验证功能</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-clipboard-check text-yellow-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">考试测评</h4>
+                                    <p class="text-sm text-gray-600">在线考试系统，自动评分，智能分析学习效果</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">认证体系</h3>
-                    <p class="text-gray-600">完善的技能认证体系，专业证书颁发，提升职业价值</p>
+                    
+                    <div class="bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">适用场景</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center p-4 bg-green-50 rounded-lg">
+                                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-user-plus text-green-600"></i>
+                                </div>
+                                <h4 class="font-medium text-gray-900 mb-1">新员工培训</h4>
+                                <p class="text-sm text-gray-600">入职培训、企业文化、规章制度</p>
+                            </div>
+                            <div class="text-center p-4 bg-blue-50 rounded-lg">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-tools text-blue-600"></i>
+                                </div>
+                                <h4 class="font-medium text-gray-900 mb-1">技能提升</h4>
+                                <p class="text-sm text-gray-600">专业技能培训、技术认证</p>
+                            </div>
+                            <div class="text-center p-4 bg-purple-50 rounded-lg">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-users-cog text-purple-600"></i>
+                                </div>
+                                <h4 class="font-medium text-gray-900 mb-1">管理培训</h4>
+                                <p class="text-sm text-gray-600">领导力培养、管理技能</p>
+                            </div>
+                            <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-shield-alt text-yellow-600"></i>
+                                </div>
+                                <h4 class="font-medium text-gray-900 mb-1">合规培训</h4>
+                                <p class="text-sm text-gray-600">法律法规、合规要求</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- 培训课程 -->
-        <section id="courses" class="mb-20">
-            <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">培训课程</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="course-card bg-white rounded-xl shadow-lg p-6">
-                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-cut text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">美发技术基础</h3>
-                    <p class="text-gray-600 mb-4">从基础到高级的美发技术培训，包含剪发、染发、烫发等核心技术</p>
-                    <ul class="space-y-2 mb-4">
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            基础剪发技巧
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            染发技术原理
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            烫发造型设计
-                        </li>
-                    </ul>
-                    <div class="flex items-center justify-between text-sm text-gray-500">
-                        <span><i class="fas fa-clock mr-1"></i>40课时</span>
-                        <span><i class="fas fa-signal mr-1"></i>初级</span>
-                    </div>
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">培训课程</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        丰富的课程资源，满足不同岗位和层级的培训需求
+                    </p>
                 </div>
-
-                <div class="course-card bg-white rounded-xl shadow-lg p-6">
-                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-palette text-white text-xl"></i>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="course-card bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">必修</span>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <span class="text-sm text-gray-600 ml-1">4.5</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">新员工入职培训</h3>
+                        <p class="text-gray-600 text-sm mb-4">企业文化、规章制度、岗位职责等基础培训</p>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span><i class="fas fa-clock mr-1"></i>12小时</span>
+                            <span><i class="fas fa-users mr-1"></i>156人</span>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">色彩设计</h3>
-                    <p class="text-gray-600 mb-4">专业的色彩理论和搭配技巧，培养色彩设计师的专业能力</p>
-                    <ul class="space-y-2 mb-4">
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            色彩理论基础
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            个性化配色
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            流行色彩趋势
-                        </li>
-                    </ul>
-                    <div class="flex items-center justify-between text-sm text-gray-500">
-                        <span><i class="fas fa-clock mr-1"></i>32课时</span>
-                        <span><i class="fas fa-signal mr-1"></i>中级</span>
+                    
+                    <div class="course-card bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">选修</span>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <span class="text-sm text-gray-600 ml-1">5.0</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">领导力提升</h3>
+                        <p class="text-gray-600 text-sm mb-4">管理技能、团队建设、决策能力培养</p>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span><i class="fas fa-clock mr-1"></i>8小时</span>
+                            <span><i class="fas fa-users mr-1"></i>89人</span>
+                        </div>
                     </div>
-                </div>
-
-                <div class="course-card bg-white rounded-xl shadow-lg p-6">
-                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-users text-white text-xl"></i>
+                    
+                    <div class="course-card bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-medium">进阶</span>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <span class="text-sm text-gray-600 ml-1">4.0</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">专业技能提升</h3>
+                        <p class="text-gray-600 text-sm mb-4">行业知识、技术技能、实操能力训练</p>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span><i class="fas fa-clock mr-1"></i>16小时</span>
+                            <span><i class="fas fa-users mr-1"></i>234人</span>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">客户服务</h3>
-                    <p class="text-gray-600 mb-4">提升客户沟通和服务能力，打造专业的服务体验</p>
-                    <ul class="space-y-2 mb-4">
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            沟通技巧培训
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            客户需求分析
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            投诉处理技巧
-                        </li>
-                    </ul>
-                    <div class="flex items-center justify-between text-sm text-gray-500">
-                        <span><i class="fas fa-clock mr-1"></i>24课时</span>
-                        <span><i class="fas fa-signal mr-1"></i>初级</span>
+                    
+                    <div class="course-card bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">热门</span>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <span class="text-sm text-gray-600 ml-1">4.5</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">沟通与协作</h3>
+                        <p class="text-gray-600 text-sm mb-4">有效沟通、团队协作、冲突处理技巧</p>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span><i class="fas fa-clock mr-1"></i>6小时</span>
+                            <span><i class="fas fa-users mr-1"></i>178人</span>
+                        </div>
                     </div>
-                </div>
-
-                <div class="course-card bg-white rounded-xl shadow-lg p-6">
-                    <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-store text-white text-xl"></i>
+                    
+                    <div class="course-card bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">认证</span>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <span class="text-sm text-gray-600 ml-1">5.0</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">安全生产培训</h3>
+                        <p class="text-gray-600 text-sm mb-4">安全意识、应急处理、风险防范知识</p>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span><i class="fas fa-clock mr-1"></i>10小时</span>
+                            <span><i class="fas fa-users mr-1"></i>267人</span>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">门店管理</h3>
-                    <p class="text-gray-600 mb-4">门店运营管理知识，培养管理型人才</p>
-                    <ul class="space-y-2 mb-4">
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            人员管理
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            库存管理
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            财务基础
-                        </li>
-                    </ul>
-                    <div class="flex items-center justify-between text-sm text-gray-500">
-                        <span><i class="fas fa-clock mr-1"></i>36课时</span>
-                        <span><i class="fas fa-signal mr-1"></i>高级</span>
-                    </div>
-                </div>
-
-                <div class="course-card bg-white rounded-xl shadow-lg p-6">
-                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-bullhorn text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">营销推广</h3>
-                    <p class="text-gray-600 mb-4">现代营销理念和推广技巧，提升门店业绩</p>
-                    <ul class="space-y-2 mb-4">
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            社交媒体营销
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            活动策划执行
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            品牌建设
-                        </li>
-                    </ul>
-                    <div class="flex items-center justify-between text-sm text-gray-500">
-                        <span><i class="fas fa-clock mr-1"></i>28课时</span>
-                        <span><i class="fas fa-signal mr-1"></i>中级</span>
-                    </div>
-                </div>
-
-                <div class="course-card bg-white rounded-xl shadow-lg p-6">
-                    <div class="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-mobile-alt text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">数字化运营</h3>
-                    <p class="text-gray-600 mb-4">数字化工具使用和线上运营能力培养</p>
-                    <ul class="space-y-2 mb-4">
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            预约系统使用
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            数据分析基础
-                        </li>
-                    </ul>
-                    <div class="flex items-center justify-between text-sm text-gray-500">
-                        <span><i class="fas fa-clock mr-1"></i>20课时</span>
-                        <span><i class="fas fa-signal mr-1"></i>中级</span>
+                    
+                    <div class="course-card bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs font-medium">定制</span>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <span class="text-sm text-gray-600 ml-1">4.0</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">创新思维训练</h3>
+                        <p class="text-gray-600 text-sm mb-4">创新方法、思维模式、问题解决能力</p>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span><i class="fas fa-clock mr-1"></i>14小时</span>
+                            <span><i class="fas fa-users mr-1"></i>92人</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 学习路径 -->
-        <section id="learning-path" class="mb-20">
-            <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">学习路径</h2>
-            <div class="learning-path rounded-xl p-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-6">新员工成长路径</h3>
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">学习路径</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        AI驱动的个性化学习路径，让每个员工都能获得最适合的培训体验
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">智能学习路径</h3>
                         <div class="space-y-4">
-                            <div class="course-module bg-white rounded-lg p-4 border-l-4 border-green-500">
+                            <div class="path-step bg-green-50 rounded-lg p-4 border-l-4 border-green-500">
                                 <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-medium text-gray-900">入职培训</h4>
-                                    <span class="text-sm text-gray-500">1-2周</span>
+                                    <h4 class="font-medium text-gray-900">1. 能力评估</h4>
+                                    <span class="text-sm text-green-600">已完成</span>
                                 </div>
-                                <p class="text-gray-600 text-sm mb-2">企业文化、规章制度、基础技能</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-green-500 h-2 rounded-full" style="width: 100%"></div>
-                                </div>
+                                <p class="text-sm text-gray-600">AI智能评估员工当前技能水平，识别知识盲点</p>
                             </div>
-                            <div class="course-module bg-white rounded-lg p-4 border-l-4 border-blue-500">
+                            
+                            <div class="path-step bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
                                 <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-medium text-gray-900">基础技能培训</h4>
-                                    <span class="text-sm text-gray-500">1-3个月</span>
+                                    <h4 class="font-medium text-gray-900">2. 课程推荐</h4>
+                                    <span class="text-sm text-blue-600">进行中</span>
                                 </div>
-                                <p class="text-gray-600 text-sm mb-2">美发技术基础、服务标准</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
-                                </div>
+                                <p class="text-sm text-gray-600">基于评估结果，推荐最适合的学习课程和资源</p>
                             </div>
-                            <div class="course-module bg-white rounded-lg p-4 border-l-4 border-purple-500">
+                            
+                            <div class="path-step bg-purple-50 rounded-lg p-4 border-l-4 border-purple-300">
                                 <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-medium text-gray-900">进阶技能提升</h4>
-                                    <span class="text-sm text-gray-500">3-6个月</span>
+                                    <h4 class="font-medium text-gray-900">3. 学习实践</h4>
+                                    <span class="text-sm text-purple-600">待开始</span>
                                 </div>
-                                <p class="text-gray-600 text-sm mb-2">高级技术、创意设计</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-purple-500 h-2 rounded-full" style="width: 50%"></div>
-                                </div>
+                                <p class="text-sm text-gray-600">通过理论学��、案例分析、实操练习巩固知识</p>
                             </div>
-                            <div class="course-module bg-white rounded-lg p-4 border-l-4 border-yellow-500">
+                            
+                            <div class="path-step bg-yellow-50 rounded-lg p-4 border-l-4 border-yellow-300">
                                 <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-medium text-gray-900">专业技能认证</h4>
-                                    <span class="text-sm text-gray-500">6-12个月</span>
+                                    <h4 class="font-medium text-gray-900">4. 效果评估</h4>
+                                    <span class="text-sm text-yellow-600">待开始</span>
                                 </div>
-                                <p class="text-gray-600 text-sm mb-2">专业技能考核、证书获取</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-yellow-500 h-2 rounded-full" style="width: 25%"></div>
-                                </div>
+                                <p class="text-sm text-gray-600">考试测评，检验学习成果，生成能力报告</p>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-6">在职员工提升路径</h3>
+                    
+                    <div class="bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">学习进度统计</h3>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-700">总体完成度</span>
+                                <span class="text-green-600 font-semibold">75%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-3">
+                                <div class="bg-green-600 h-3 rounded-full progress-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        
                         <div class="space-y-4">
-                            <div class="course-module bg-white rounded-lg p-4 border-l-4 border-indigo-500">
+                            <div class="skill-progress">
                                 <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-medium text-gray-900">技能评估</h4>
-                                    <span class="text-sm text-gray-500">1周</span>
+                                    <span class="text-gray-700">专业技能</span>
+                                    <span class="text-green-600 font-semibold">85%</span>
                                 </div>
-                                <p class="text-gray-600 text-sm mb-2">现有技能水平评估、个性化方案制定</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-indigo-500 h-2 rounded-full" style="width: 90%"></div>
+                                <div class="bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 85%"></div>
                                 </div>
                             </div>
-                            <div class="course-module bg-white rounded-lg p-4 border-l-4 border-red-500">
+                            
+                            <div class="skill-progress">
                                 <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-medium text-gray-900">针对性培训</h4>
-                                    <span class="text-sm text-gray-500">2-4周</span>
+                                    <span class="text-gray-700">管理能力</span>
+                                    <span class="text-blue-600 font-semibold">70%</span>
                                 </div>
-                                <p class="text-gray-600 text-sm mb-2">根据评估结果进行专项技能提升</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-red-500 h-2 rounded-full" style="width: 60%"></div>
+                                <div class="bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 70%"></div>
                                 </div>
                             </div>
-                            <div class="course-module bg-white rounded-lg p-4 border-l-4 border-teal-500">
+                            
+                            <div class="skill-progress">
                                 <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-medium text-gray-900">管理能力培养</h4>
-                                    <span class="text-sm text-gray-500">3-6个月</span>
+                                    <span class="text-gray-700">沟通协作</span>
+                                    <span class="text-purple-600 font-semibold">90%</span>
                                 </div>
-                                <p class="text-gray-600 text-sm mb-2">团队管理、门店运营培训</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-teal-500 h-2 rounded-full" style="width: 40%"></div>
+                                <div class="bg-gray-200 rounded-full h-2">
+                                    <div class="bg-purple-500 h-2 rounded-full" style="width: 90%"></div>
                                 </div>
                             </div>
-                            <div class="course-module bg-white rounded-lg p-4 border-l-4 border-orange-500">
+                            
+                            <div class="skill-progress">
                                 <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-medium text-gray-900">职业发展规划</h4>
-                                    <span class="text-sm text-gray-500">长期</span>
+                                    <span class="text-gray-700">创新思维</span>
+                                    <span class="text-yellow-600 font-semibold">60%</span>
                                 </div>
-                                <p class="text-gray-600 text-sm mb-2">职业路径规划、持续学习指导</p>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="progress-bar bg-orange-500 h-2 rounded-full" style="width: 30%"></div>
+                                <div class="bg-gray-200 rounded-full h-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 60%"></div>
                                 </div>
                             </div>
                         </div>
@@ -455,218 +525,327 @@
             </div>
         </section>
 
-        <!-- 价格信息 -->
-        <section id="pricing" class="mb-20">
-            <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">价格信息</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="price-card bg-white rounded-xl shadow-lg p-8 border-2 border-gray-200">
-                    <div class="text-center mb-6">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">标准版</h3>
-                        <div class="text-4xl font-bold text-purple-600 mb-2">¥3,680</div>
-                        <p class="text-gray-600">适合中小型门店</p>
+        <!-- 考核评估 -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">考核评估</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        完善的考核体系，科学评估学习效果，确保培训质量
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="assessment-card bg-white rounded-xl p-6 shadow-lg text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-clipboard-list text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">在线考试</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            多种题型支持，自动评分系统
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>单选题</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>多选题</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>判断题</li>
+                        </ul>
                     </div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            基础培训课程
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            最多20个员工账号
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            学习进度跟踪
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            基础考试测评
-                        </li>
-                        <li class="flex items-center text-gray-600">
-                            <i class="fas fa-check text-green-500 mr-2"></i>
-                            邮件技术支持
-                        </li>
-                        <li class="flex items-center text-gray-400">
-                            <i class="fas fa-times text-red-500 mr-2"></i>
-                            定制化课程
-                        </li>
-                        <li class="flex items-center text-gray-400">
-                            <i class="fas fa-times text-red-500 mr-2"></i>
-                            线下培训
-                        </li>
-                    </ul>
-                    <button class="w-full bg-purple-500 text-white py-3 rounded-lg font-medium hover:bg-purple-600 transition-colors">
+                    
+                    <div class="assessment-card bg-white rounded-xl p-6 shadow-lg text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-bar text-blue-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">成绩分析</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            详细的成绩统计和分析报告
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>成绩趋势</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>知识掌握度</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>能力提升</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="assessment-card bg-white rounded-xl p-6 shadow-lg text-center">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-certificate text-purple-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">证书颁发</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            自动生成培训证书，支持验证
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>电子证书</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>在线验证</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>批量生成</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="assessment-card bg-white rounded-xl p-6 shadow-lg text-center">
+                        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-trophy text-yellow-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">激励机制</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            多样化的激励措施，提升学习积极性
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>积分奖励</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>排行榜</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>徽章系统</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 价格方案 -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">价格方案</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        透明的价格体系，选择最适合您需求的方案
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="price-card bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">基础版</h3>
+                        <div class="text-3xl font-bold text-gray-900 mb-4">¥2,680</div>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                基础培训功能
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                50个用户账号
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                基础课程管理
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                7×8小时技术支持
+                            </li>
+                        </ul>
+                        <button class="w-full bg-gray-100 text-gray-700 hover:bg-gray-200 px-6 py-3 rounded-lg font-medium transition-colors">
+                            选择方案
+                        </button>
+                    </div>
+                    
+                    <div class="price-card bg-gradient-to-br from-green-600 to-teal-600 text-white rounded-xl p-8 shadow-lg transform scale-105">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-semibold">专业版</h3>
+                            <span class="bg-yellow-400 text-green-900 px-2 py-1 rounded-full text-sm">推荐</span>
+                        </div>
+                        <div class="text-3xl font-bold mb-4">¥3,680</div>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-white mr-2"></i>
+                                完整培训功能
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-white mr-2"></i>
+                                200个用户账号
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-white mr-2"></i>
+                                AI智能推荐
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-white mr-2"></i>
+                                高级数据分析
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-white mr-2"></i>
+                                7×24小时技术支持
+                            </li>
+                        </ul>
+                        <button class="w-full bg-white text-green-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition-colors">
+                            选择方案
+                        </button>
+                    </div>
+                    
+                    <div class="price-card bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">企业版</h3>
+                        <div class="text-3xl font-bold text-gray-900 mb-4">¥5,980</div>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                定制化功能
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                无限用户账号
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                企业级安全
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                专属客户经理
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                私有化部署
+                            </li>
+                        </ul>
+                        <button class="w-full bg-gray-100 text-gray-700 hover:bg-gray-200 px-6 py-3 rounded-lg font-medium transition-colors">
+                            选择方案
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 用户评价 -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">用户评价</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        来自真实用户的使用反馈和评价
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="testimonial-card bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center mb-4">
+                            <img src="https://picsum.photos/seed/hr1/50/50.jpg" alt="用户头像" class="w-12 h-12 rounded-full mr-3">
+                            <div>
+                                <h4 class="font-semibold text-gray-900">张总监</h4>
+                                <p class="text-gray-600 text-sm">人力资源部</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            AI培训系统大大提升了我们的培训效率，个性化推荐功能让每个员工都能获得最适合自己的学习内容。
+                        </p>
+                    </div>
+                    
+                    <div class="testimonial-card bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center mb-4">
+                            <img src="https://picsum.photos/seed/manager1/50/50.jpg" alt="用户头像" class="w-12 h-12 rounded-full mr-3">
+                            <div>
+                                <h4 class="font-semibold text-gray-900">李经理</h4>
+                                <p class="text-gray-600 text-sm">培训部</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-gray-300"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            智能学习路径设计很科学，进度跟踪功能让管理者能够实时了解培训效果，大大提升了培训质量。
+                        </p>
+                    </div>
+                    
+                    <div class="testimonial-card bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center mb-4">
+                            <img src="https://picsum.photos/seed/ceo1/50/50.jpg" alt="用户头像" class="w-12 h-12 rounded-full mr-3">
+                            <div>
+                                <h4 class="font-semibold text-gray-900">王总</h4>
+                                <p class="text-gray-600 text-sm">科技公司</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            系统功能完善，特别是证书管理和考试测评功能，为我们的培训体系提供了强有力的技术支撑。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 购买咨询 -->
+        <section class="py-16 bg-gradient-to-r from-green-600 to-teal-600 text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl font-bold mb-4">准备好提升员工能力了吗？</h2>
+                <p class="text-green-100 mb-8 max-w-2xl mx-auto">
+                    立即体验AI员工成长业务培训系统，让您的培训管理更智能、更高效、更精准
+                </p>
+                <div class="flex items-center justify-center space-x-4">
+                    <button class="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-medium transition-colors">
                         立即购买
                     </button>
-                </div>
-
-                <div class="price-card bg-gradient-to-br from-purple-600 to-violet-600 rounded-xl shadow-lg p-8 text-white relative">
-                    <div class="absolute -top-4 right-4 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-sm font-bold">
-                        推荐
-                    </div>
-                    <div class="text-center mb-6">
-                        <h3 class="text-2xl font-bold mb-2">企业版</h3>
-                        <div class="text-4xl font-bold mb-2">¥6,980</div>
-                        <p class="text-white/80">适合大型连锁品牌</p>
-                    </div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-300 mr-2"></i>
-                            全部培训课程
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-300 mr-2"></i>
-                            无限员工账号
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-300 mr-2"></i>
-                            高级学习分析
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-300 mr-2"></i>
-                            专业认证考试
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-300 mr-2"></i>
-                            7×24小时技术支持
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-300 mr-2"></i>
-                            定制化课程
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-300 mr-2"></i>
-                            线下培训支持
-                        </li>
-                    </ul>
-                    <button class="w-full bg-white text-purple-600 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
-                        立即购买
+                    <button class="bg-green-700 text-white hover:bg-green-800 px-8 py-3 rounded-lg font-medium transition-colors">
+                        免费试用
+                    </button>
+                    <button class="border border-white text-white hover:bg-white hover:text-green-600 px-6 py-3 rounded-lg font-medium transition-colors">
+                        <i class="fas fa-phone mr-2"></i>
+                        联系我们
                     </button>
                 </div>
-            </div>
-        </section>
-
-        <!-- 技术特点 -->
-        <section id="technology" class="mb-20">
-            <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">技术特点</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-xl shadow-lg p-8">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <i class="fas fa-microchip text-purple-500 mr-3"></i>
-                        核心技术
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="tech-item bg-gray-50 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">智能推荐算法</h4>
-                            <p class="text-gray-600 text-sm">基于机器学习的个性化课程推荐，根据员工能力和学习习惯优化学习路径</p>
-                        </div>
-                        <div class="tech-item bg-gray-50 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">学习行为分析</h4>
-                            <p class="text-gray-600 text-sm">深度学习分析学习行为，识别学习难点，提供针对性辅导</p>
-                        </div>
-                        <div class="tech-item bg-gray-50 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">多媒体教学</h4>
-                            <p class="text-gray-600 text-sm">支持视频、音频、图文等多种教学形式，提升学习体验</p>
-                        </div>
-                        <div class="tech-item bg-gray-50 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">移动学习</h4>
-                            <p class="text-gray-600 text-sm">完美适配移动设备，支持随时随地学习</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-lg p-8">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <i class="fas fa-shield-alt text-blue-500 mr-3"></i>
-                        安全保障
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="tech-item bg-gray-50 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">数据安全</h4>
-                            <p class="text-gray-600 text-sm">采用企业级数据加密，保护员工隐私和学习数据</p>
-                        </div>
-                        <div class="tech-item bg-gray-50 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">内容版权</h4>
-                            <p class="text-gray-600 text-sm">所有课程内容均有合法版权，确保培训质量</p>
-                        </div>
-                        <div class="tech-item bg-gray-50 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">系统稳定</h4>
-                            <p class="text-gray-600 text-sm">高可用架构设计，确保学习平台稳定运行</p>
-                        </div>
-                        <div class="tech-item bg-gray-50 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">备份恢复</h4>
-                            <p class="text-gray-600 text-sm">多重数据备份，保障学习记录不丢失</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 行动号召 -->
-        <section class="text-center bg-gradient-to-r from-purple-600 to-violet-600 rounded-2xl p-12 text-white">
-            <h2 class="text-3xl font-bold mb-4">开启员工成长新时代</h2>
-            <p class="text-xl mb-8 text-white/90">立即体验AI员工成长业务培训系统，提升团队专业能力，增强企业竞争力</p>
-            <div class="flex items-center justify-center space-x-4">
-                <button class="bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
-                    立即购买
-                </button>
-                <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors">
-                    申请试用
-                </button>
-                <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors">
-                    预约演示
-                </button>
             </div>
         </section>
     </main>
 
-    <!-- 页脚 -->
-    <footer class="bg-gray-900 text-white py-12 mt-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <p class="text-gray-400">© 2024 美发智能系统. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        // 平滑滚动
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+        // 标签切换功能
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.add('text-gray-600');
+                });
+                // 添加active类到当前按钮
+                this.classList.add('active');
+                this.classList.remove('text-gray-600');
             });
         });
 
-        // 滚动时高亮导航
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.sticky-nav a');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
-            });
+        // 添加滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-            navLinks.forEach(link => {
-                link.classList.remove('text-purple-600');
-                link.classList.add('text-gray-600');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.remove('text-gray-600');
-                    link.classList.add('text-purple-600');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
                 }
             });
+        }, observerOptions);
+
+        document.querySelectorAll('.slide-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
         });
+
+        // 进度条动画
+        setTimeout(() => {
+            document.querySelectorAll('.progress-bar').forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        }, 500);
     </script>
 </body>
 </html>

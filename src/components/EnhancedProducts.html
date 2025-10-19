@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI系统产品中心</title>
+    <title>产品中心 - 美发智能系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,10 +16,10 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .product-card {
+        .system-card {
             transition: all 0.3s ease;
         }
-        .product-card:hover {
+        .system-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 25px 50px rgba(0,0,0,0.15);
         }
@@ -30,18 +30,19 @@
             transform: translateX(5px);
             background: rgba(255, 255, 255, 0.15);
         }
-        .price-tag {
+        .price-card {
             transition: all 0.3s ease;
         }
-        .price-tag:hover {
+        .price-card:hover {
             transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
         .scenario-card {
             transition: all 0.3s ease;
         }
         .scenario-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
         }
         .pulse-dot {
             animation: pulse 2s infinite;
@@ -52,17 +53,18 @@
             100% { transform: scale(1); opacity: 1; }
         }
         .slide-in {
-            animation: slideIn 0.5s ease;
+            animation: slideIn 0.3s ease;
         }
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .badge-glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(102, 126, 234, 0.5); }
+            to { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
         }
     </style>
 </head>
@@ -77,12 +79,16 @@
                     </div>
                     <span class="text-xl font-bold text-gray-900">美发智能系统</span>
                 </div>
-                <nav class="hidden md:flex space-x-8">
+                <nav class="hidden md:flex items-center space-x-8">
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium">首页</a>
                     <a href="#" class="text-purple-600 font-medium">产品中心</a>
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium">解决方案</a>
+                    <a href="#" class="text-gray-700 hover:text-purple-600 font-medium">客户案例</a>
                     <a href="#" class="text-gray-700 hover:text-purple-600 font-medium">关于我们</a>
                 </nav>
+                <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                    免费咨询
+                </button>
             </div>
         </div>
     </header>
@@ -90,139 +96,149 @@
     <!-- 主内容区 -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- 页面标题 -->
-        <section class="text-center mb-16 slide-in">
+        <section class="text-center mb-16">
             <h1 class="text-4xl font-bold text-gray-900 mb-4">AI智能系统产品中心</h1>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                为美发行业量身定制的AI智能解决方案，助力门店数字化转型，提升运营效率
+                为美发行业量身定制的AI智能解决方案，助力门店数字化转型，提升运营效率和服务质量
             </p>
         </section>
 
         <!-- AI客服系统 -->
         <section class="mb-20">
-            <div class="product-card bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div class="gradient-bg p-8 text-white">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="flex items-center space-x-3 mb-4">
-                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-headset text-2xl"></i>
-                                </div>
-                                <h2 class="text-3xl font-bold">AI客服系统</h2>
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center space-x-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full mb-4">
+                    <i class="fas fa-headset"></i>
+                    <span class="font-medium">热门产品</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">AI客服系统</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    智能客服解决方案，24小时在线服务，提升客户满意度和转化率
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <!-- 系统概览 -->
+                <div class="lg:col-span-2">
+                    <div class="system-card bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-headset text-purple-600 text-2xl"></i>
                             </div>
-                            <p class="text-white/90 text-lg mb-6">智能客服机器人，24小时在线服务，提升客户满意度</p>
-                            <div class="flex items-center space-x-6">
-                                <div class="price-tag bg-white/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                                    <span class="text-white/80 text-sm">标准版</span>
-                                    <span class="text-2xl font-bold ml-2">¥2,680</span>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900">AI客服系统</h3>
+                                <p class="text-gray-600">智能客服，贴心服务</p>
+                            </div>
+                        </div>
+
+                        <!-- 功能特点 -->
+                        <div class="mb-8">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">核心功能特点</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-robot text-purple-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">智能对话</h5>
+                                        <p class="text-sm text-gray-600">自然语言处理，理解客户需求</p>
+                                    </div>
                                 </div>
-                                <div class="price-tag bg-yellow-500/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                                    <span class="text-yellow-100 text-sm">企业版</span>
-                                    <span class="text-2xl font-bold ml-2">¥4,980</span>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-clock text-blue-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">24小时服务</h5>
+                                        <p class="text-sm text-gray-600">全天候在线，随时响应客户</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-language text-green-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">多语言支持</h5>
+                                        <p class="text-sm text-gray-600">支持中英文等多种语言</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-chart-line text-yellow-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">数据分析</h5>
+                                        <p class="text-sm text-gray-600">客户行为分析，优化服务策略</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="hidden lg:block">
-                            <div class="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
-                                <i class="fas fa-robot text-6xl text-white/50"></i>
+
+                        <!-- 使用场景 -->
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">适用场景</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-store text-purple-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">门店咨询</h5>
+                                    <p class="text-sm text-gray-600">产品介绍、价格咨询</p>
+                                </div>
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-calendar-check text-blue-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">预约服务</h5>
+                                    <p class="text-sm text-gray-600">在线预约、时间安排</p>
+                                </div>
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-headset text-green-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">售后支持</h5>
+                                    <p class="text-sm text-gray-600">问题解答、投诉处理</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="p-8">
-                    <!-- 功能特点 -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                            <i class="fas fa-star text-yellow-500 mr-2"></i>
-                            核心功能特点
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-comments text-blue-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">智能对话</h4>
-                                        <p class="text-gray-600 text-sm">基于NLP技术，理解客户意图，提供精准回复</p>
-                                    </div>
-                                </div>
+
+                <!-- 价格信息 -->
+                <div class="lg:col-span-1">
+                    <div class="price-card bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl shadow-lg p-8 text-white sticky top-24">
+                        <div class="text-center mb-6">
+                            <h3 class="text-2xl font-bold mb-2">价格方案</h3>
+                            <div class="text-4xl font-bold mb-2">¥2,680</div>
+                            <p class="text-purple-100">一次性购买，永久使用</p>
+                        </div>
+                        
+                        <div class="space-y-3 mb-8">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">基础功能模块</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-history text-green-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">历史记录</h4>
-                                        <p class="text-gray-600 text-sm">完整保存聊天记录，支持搜索和管理</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">技术支持服务</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-bolt text-purple-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">快捷回复</h4>
-                                        <p class="text-gray-600 text-sm">预设常用回复模板，提高响应效率</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">免费系统升级</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-ticket-alt text-yellow-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">工单管理</h4>
-                                        <p class="text-gray-600 text-sm">自动创建工单，跟踪处理进度</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">在线培训指导</span>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 使用场景 -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                            <i class="fas fa-briefcase text-blue-500 mr-2"></i>
-                            适用场景
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="scenario-card bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-store text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">美发门店</h4>
-                                <p class="text-gray-600 text-sm">处理客户咨询、预约服务、产品推荐</p>
-                            </div>
-                            <div class="scenario-card bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-shopping-cart text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">电商平台</h4>
-                                <p class="text-gray-600 text-sm">商品咨询、订单查询、售后服务</p>
-                            </div>
-                            <div class="scenario-card bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-users text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">连锁品牌</h4>
-                                <p class="text-gray-600 text-sm">统一客服标准、多店协同服务</p>
-                            </div>
+                        <div class="space-y-3">
+                            <button class="w-full bg-white text-purple-600 hover:bg-gray-100 font-medium py-3 rounded-lg transition-colors">
+                                立即购买
+                            </button>
+                            <button class="w-full bg-purple-700 hover:bg-purple-800 text-white font-medium py-3 rounded-lg transition-colors">
+                                预约演示
+                            </button>
                         </div>
-                    </div>
-
-                    <!-- 购买按钮 -->
-                    <div class="flex items-center justify-center space-x-4">
-                        <button class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:shadow-lg transition-all">
-                            立即购买
-                        </button>
-                        <button class="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-all">
-                            申请试用
-                        </button>
                     </div>
                 </div>
             </div>
@@ -230,130 +246,140 @@
 
         <!-- AI客户预约系统 -->
         <section class="mb-20">
-            <div class="product-card bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div class="gradient-bg p-8 text-white">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="flex items-center space-x-3 mb-4">
-                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-calendar-check text-2xl"></i>
-                                </div>
-                                <h2 class="text-3xl font-bold">AI客户预约系统</h2>
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center space-x-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full mb-4">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="font-medium">推荐产品</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">AI客户预约系统</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    智能预约管理，优化时间安排，提升客户体验和运营效率
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <!-- 系统概览 -->
+                <div class="lg:col-span-2">
+                    <div class="system-card bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-calendar-alt text-blue-600 text-2xl"></i>
                             </div>
-                            <p class="text-white/90 text-lg mb-6">智能预约管理，优化时间安排，提升服务效率</p>
-                            <div class="flex items-center space-x-6">
-                                <div class="price-tag bg-white/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                                    <span class="text-white/80 text-sm">基础版</span>
-                                    <span class="text-2xl font-bold ml-2">¥2,680</span>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900">AI客户预约系统</h3>
+                                <p class="text-gray-600">智能预约，高效管理</p>
+                            </div>
+                        </div>
+
+                        <!-- 功能特点 -->
+                        <div class="mb-8">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">核心功能特点</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-calendar text-blue-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">智能排班</h5>
+                                        <p class="text-sm text-gray-600">自动优化时间安排，避免冲突</p>
+                                    </div>
                                 </div>
-                                <div class="price-tag bg-yellow-500/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                                    <span class="text-yellow-100 text-sm">专业版</span>
-                                    <span class="text-2xl font-bold ml-2">¥4,980</span>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-bell text-green-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">智能提醒</h5>
+                                        <p class="text-sm text-gray-600">自动发送预约提醒，减少爽约</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-users text-purple-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">客户管理</h5>
+                                        <p class="text-sm text-gray-600">客户信息管理，偏好记录</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-chart-bar text-yellow-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">数据分析</h5>
+                                        <p class="text-sm text-gray-600">预约数据统计，业务洞察</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="hidden lg:block">
-                            <div class="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
-                                <i class="fas fa-calendar-alt text-6xl text-white/50"></i>
+
+                        <!-- 使用场景 -->
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">适用场景</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-cut text-blue-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">美发沙龙</h5>
+                                    <p class="text-sm text-gray-600">发型设计、染发预约</p>
+                                </div>
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-spa text-green-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">美容院</h5>
+                                    <p class="text-sm text-gray-600">美容护理、SPA预约</p>
+                                </div>
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-user-tie text-purple-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">造型工作室</h5>
+                                    <p class="text-sm text-gray-600">个人造型、形象设计</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="p-8">
-                    <!-- 功能特点 -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                            <i class="fas fa-star text-yellow-500 mr-2"></i>
-                            核心功能特点
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-calendar text-blue-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">预约日历</h4>
-                                        <p class="text-gray-600 text-sm">可视化日历界面，直观查看预约安排</p>
-                                    </div>
-                                </div>
+
+                <!-- 价格信息 -->
+                <div class="lg:col-span-1">
+                    <div class="price-card bg-gradient-to-br from-blue-600 to-cyan-600 rounded-2xl shadow-lg p-8 text-white sticky top-24">
+                        <div class="text-center mb-6">
+                            <h3 class="text-2xl font-bold mb-2">价格方案</h3>
+                            <div class="text-4xl font-bold mb-2">¥2,680</div>
+                            <p class="text-blue-100">一次性购买，永久使用</p>
+                        </div>
+                        
+                        <div class="space-y-3 mb-8">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">预约管理功能</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-users text-green-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">客户管理</h4>
-                                        <p class="text-gray-600 text-sm">客户信息管理，历史记录查询</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">客户管理系统</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-concierge-bell text-purple-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">服务管理</h4>
-                                        <p class="text-gray-600 text-sm">服务项目设置，价格时长管理</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">消息通知功能</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-chart-line text-yellow-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">数据分析</h4>
-                                        <p class="text-gray-600 text-sm">预约统计，客户分析，收入报表</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">数据统计分析</span>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 使用场景 -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                            <i class="fas fa-briefcase text-blue-500 mr-2"></i>
-                            适用场景
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="scenario-card bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-cut text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">美发沙龙</h4>
-                                <p class="text-gray-600 text-sm">发型师预约，服务时间管理</p>
-                            </div>
-                            <div class="scenario-card bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-spa text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">美容院</h4>
-                                <p class="text-gray-600 text-sm">美容师排班，护理项目预约</p>
-                            </div>
-                            <div class="scenario-card bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-store text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">连锁门店</h4>
-                                <p class="text-gray-600 text-sm">多店统一管理，资源调配</p>
-                            </div>
+                        <div class="space-y-3">
+                            <button class="w-full bg-white text-blue-600 hover:bg-gray-100 font-medium py-3 rounded-lg transition-colors">
+                                立即购买
+                            </button>
+                            <button class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-3 rounded-lg transition-colors">
+                                预约演示
+                            </button>
                         </div>
-                    </div>
-
-                    <!-- 购买按钮 -->
-                    <div class="flex items-center justify-center space-x-4">
-                        <button class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:shadow-lg transition-all">
-                            立即购买
-                        </button>
-                        <button class="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-all">
-                            申请试用
-                        </button>
                     </div>
                 </div>
             </div>
@@ -361,130 +387,140 @@
 
         <!-- AI员工成长业务培训系统 -->
         <section class="mb-20">
-            <div class="product-card bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div class="gradient-bg p-8 text-white">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="flex items-center space-x-3 mb-4">
-                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-graduation-cap text-2xl"></i>
-                                </div>
-                                <h2 class="text-3xl font-bold">AI员工成长业务培训系统</h2>
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center space-x-2 bg-green-100 text-green-700 px-4 py-2 rounded-full mb-4">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span class="font-medium">新品上市</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">AI员工成长业务培训系统</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    智能培训平台，个性化学习路径，提升员工技能和业务水平
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <!-- 系统概览 -->
+                <div class="lg:col-span-2">
+                    <div class="system-card bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-graduation-cap text-green-600 text-2xl"></i>
                             </div>
-                            <p class="text-white/90 text-lg mb-6">智能培训平台，提升员工技能，促进业务成长</p>
-                            <div class="flex items-center space-x-6">
-                                <div class="price-tag bg-white/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                                    <span class="text-white/80 text-sm">标准版</span>
-                                    <span class="text-2xl font-bold ml-2">¥3,680</span>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900">AI员工成长业务培训系统</h3>
+                                <p class="text-gray-600">智能培训，助力成长</p>
+                            </div>
+                        </div>
+
+                        <!-- 功能特点 -->
+                        <div class="mb-8">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">核心功能特点</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-brain text-green-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">智能推荐</h5>
+                                        <p class="text-sm text-gray-600">AI推荐个性化学习内容</p>
+                                    </div>
                                 </div>
-                                <div class="price-tag bg-yellow-500/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                                    <span class="text-yellow-100 text-sm">企业版</span>
-                                    <span class="text-2xl font-bold ml-2">¥6,980</span>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-chart-line text-blue-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">进度跟踪</h5>
+                                        <p class="text-sm text-gray-600">实时监控学习进度和效果</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-certificate text-purple-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">证书管理</h5>
+                                        <p class="text-sm text-gray-600">自动颁发培训证书</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-clipboard-check text-yellow-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">考试测评</h5>
+                                        <p class="text-sm text-gray-600">在线考试，自动评分</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="hidden lg:block">
-                            <div class="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
-                                <i class="fas fa-book text-6xl text-white/50"></i>
+
+                        <!-- 使用场景 -->
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">适用场景</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-user-plus text-green-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">新员工培训</h5>
+                                    <p class="text-sm text-gray-600">入职培训，快速上手</p>
+                                </div>
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-tools text-blue-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">技能提升</h5>
+                                    <p class="text-sm text-gray-600">技术培训，专业提升</p>
+                                </div>
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-users-cog text-purple-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">管理培训</h5>
+                                    <p class="text-sm text-gray-600">管理技能，领导力培养</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="p-8">
-                    <!-- 功能特点 -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                            <i class="fas fa-star text-yellow-500 mr-2"></i>
-                            核心功能特点
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-book text-blue-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">课程管理</h4>
-                                        <p class="text-gray-600 text-sm">丰富的培训课程，分类管理，进度跟踪</p>
-                                    </div>
-                                </div>
+
+                <!-- 价格信息 -->
+                <div class="lg:col-span-1">
+                    <div class="price-card bg-gradient-to-br from-green-600 to-teal-600 rounded-2xl shadow-lg p-8 text-white sticky top-24">
+                        <div class="text-center mb-6">
+                            <h3 class="text-2xl font-bold mb-2">价格方案</h3>
+                            <div class="text-4xl font-bold mb-2">¥3,680</div>
+                            <p class="text-green-100">一次性购买，永久使用</p>
+                        </div>
+                        
+                        <div class="space-y-3 mb-8">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">课程管理功能</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-chart-line text-green-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">学习跟踪</h4>
-                                        <p class="text-gray-600 text-sm">学习进度监控，成绩统计分析</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">学习跟踪系统</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-folder-open text-purple-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">资料下载</h4>
-                                        <p class="text-gray-600 text-sm">培训资料管理，支持多种格式下载</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">考试测评模块</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-clipboard-check text-yellow-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">考试测评</h4>
-                                        <p class="text-gray-600 text-sm">在线考试，自动评分，证书颁发</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">证书管理系统</span>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 使用场景 -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                            <i class="fas fa-briefcase text-blue-500 mr-2"></i>
-                            适用场景
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="scenario-card bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-user-plus text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">新员工培训</h4>
-                                <p class="text-gray-600 text-sm">入职培训，企业文化，岗位技能</p>
-                            </div>
-                            <div class="scenario-card bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-award text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">技能提升</h4>
-                                <p class="text-gray-600 text-sm">技术培训，服务技能，管理能力</p>
-                            </div>
-                            <div class="scenario-card bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-certificate text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">认证考核</h4>
-                                <p class="text-gray-600 text-sm">技能认证，等级评定，证书管理</p>
-                            </div>
+                        <div class="space-y-3">
+                            <button class="w-full bg-white text-green-600 hover:bg-gray-100 font-medium py-3 rounded-lg transition-colors">
+                                立即购买
+                            </button>
+                            <button class="w-full bg-green-700 hover:bg-green-800 text-white font-medium py-3 rounded-lg transition-colors">
+                                预约演示
+                            </button>
                         </div>
-                    </div>
-
-                    <!-- 购买按钮 -->
-                    <div class="flex items-center justify-center space-x-4">
-                        <button class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:shadow-lg transition-all">
-                            立即购买
-                        </button>
-                        <button class="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-all">
-                            申请试用
-                        </button>
                     </div>
                 </div>
             </div>
@@ -492,144 +528,229 @@
 
         <!-- AI微店开店通商城系统 -->
         <section class="mb-20">
-            <div class="product-card bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div class="gradient-bg p-8 text-white">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="flex items-center space-x-3 mb-4">
-                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-store text-2xl"></i>
-                                </div>
-                                <h2 class="text-3xl font-bold">AI微店开店通商城系统</h2>
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center space-x-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full mb-4">
+                    <i class="fas fa-store"></i>
+                    <span class="font-medium">爆款产品</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">AI微店开店通商城系统</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    一站式电商解决方案，智能店铺管理，助力线上业务快速增长
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <!-- 系统概览 -->
+                <div class="lg:col-span-2">
+                    <div class="system-card bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-store text-orange-600 text-2xl"></i>
                             </div>
-                            <p class="text-white/90 text-lg mb-6">一站式电商解决方案，轻松开店，智能运营</p>
-                            <div class="flex items-center space-x-6">
-                                <div class="price-tag bg-white/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                                    <span class="text-white/80 text-sm">基础版</span>
-                                    <span class="text-2xl font-bold ml-2">¥4,980</span>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900">AI微店开店通商城系统</h3>
+                                <p class="text-gray-600">智能电商，轻松开店</p>
+                            </div>
+                        </div>
+
+                        <!-- 功能特点 -->
+                        <div class="mb-8">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">核心功能特点</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-box text-orange-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">商品管理</h5>
+                                        <p class="text-sm text-gray-600">智能商品管理，库存预警</p>
+                                    </div>
                                 </div>
-                                <div class="price-tag bg-yellow-500/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                                    <span class="text-yellow-100 text-sm">专业版</span>
-                                    <span class="text-2xl font-bold ml-2">¥8,980</span>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-shopping-cart text-blue-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">订单处理</h5>
+                                        <p class="text-sm text-gray-600">自动化订单处理，物流跟踪</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-bullhorn text-green-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">营销工具</h5>
+                                        <p class="text-sm text-gray-600">优惠券、促销活动管理</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item flex items-start space-x-3 p-3 rounded-lg">
+                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-chart-pie text-purple-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-gray-900">数据分析</h5>
+                                        <p class="text-sm text-gray-600">销售数据，用户行为分析</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="hidden lg:block">
-                            <div class="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
-                                <i class="fas fa-shopping-bag text-6xl text-white/50"></i>
+
+                        <!-- 使用场景 -->
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">适用场景</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-store text-orange-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">美发产品店</h5>
+                                    <p class="text-sm text-gray-600">美发用品、设备销售</p>
+                                </div>
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-mobile-alt text-blue-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">移动电商</h5>
+                                    <p class="text-sm text-gray-600">手机端商城，便捷购物</p>
+                                </div>
+                                <div class="scenario-card bg-gray-50 rounded-lg p-4 text-center">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-link text-green-600"></i>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-1">多店管理</h5>
+                                    <p class="text-sm text-gray-600">连锁店统一管理</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="p-8">
-                    <!-- 功能特点 -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                            <i class="fas fa-star text-yellow-500 mr-2"></i>
-                            核心功能特点
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-store text-blue-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">店铺管理</h4>
-                                        <p class="text-gray-600 text-sm">店铺信息设置，装修模板，支付配置</p>
-                                    </div>
-                                </div>
+
+                <!-- 价格信息 -->
+                <div class="lg:col-span-1">
+                    <div class="price-card bg-gradient-to-br from-orange-600 to-red-600 rounded-2xl shadow-lg p-8 text-white sticky top-24">
+                        <div class="text-center mb-6">
+                            <h3 class="text-2xl font-bold mb-2">价格方案</h3>
+                            <div class="text-4xl font-bold mb-2">¥4,980</div>
+                            <p class="text-orange-100">一次性购买，永久使用</p>
+                        </div>
+                        
+                        <div class="space-y-3 mb-8">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">店铺管理功能</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-box text-green-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">商品管理</h4>
-                                        <p class="text-gray-600 text-sm">商品上架，库存管理，价格设置</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">商品管理系统</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-shopping-cart text-purple-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">订单处理</h4>
-                                        <p class="text-gray-600 text-sm">订单管理，发货处理，物流跟踪</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">订单处理系统</span>
                             </div>
-                            <div class="feature-item bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-bullhorn text-yellow-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">营销活动</h4>
-                                        <p class="text-gray-600 text-sm">优惠券，促销活动，会员管理</p>
-                                    </div>
-                                </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-300"></i>
+                                <span class="text-sm">营销活动工具</span>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 使用场景 -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                            <i class="fas fa-briefcase text-blue-500 mr-2"></i>
-                            适用场景
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="scenario-card bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-user text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">个人创业者</h4>
-                                <p class="text-gray-600 text-sm">快速开店，低成本创业，简单易用</p>
-                            </div>
-                            <div class="scenario-card bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-store text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">实体门店</h4>
-                                <p class="text-gray-600 text-sm">线上线下融合，拓展销售渠道</p>
-                            </div>
-                            <div class="scenario-card bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4">
-                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fas fa-industry text-white"></i>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-2">品牌商家</h4>
-                                <p class="text-gray-600 text-sm">多店管理，品牌展示，数据分析</p>
-                            </div>
+                        <div class="space-y-3">
+                            <button class="w-full bg-white text-orange-600 hover:bg-gray-100 font-medium py-3 rounded-lg transition-colors">
+                                立即购买
+                            </button>
+                            <button class="w-full bg-orange-700 hover:bg-orange-800 text-white font-medium py-3 rounded-lg transition-colors">
+                                预约演示
+                            </button>
                         </div>
-                    </div>
-
-                    <!-- 购买按钮 -->
-                    <div class="flex items-center justify-center space-x-4">
-                        <button class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:shadow-lg transition-all">
-                            立即购买
-                        </button>
-                        <button class="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-all">
-                            申请试用
-                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 底部CTA -->
+        <!-- 对比表格 -->
+        <section class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">产品功能对比</h2>
+                <p class="text-lg text-gray-600">选择最适合您业务需求的AI系统</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">功能特性</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">AI客服系统</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">AI预约系统</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">AI培训系统</th>
+                                <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">AI商城系统</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">智能对话</td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">预约管理</td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">培训管理</td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">电商功能</td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">数据分析</td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">移动端支持</td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                                <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-gray-900">价格</td>
+                                <td class="px-6 py-4 text-center font-semibold text-purple-600">¥2,680</td>
+                                <td class="px-6 py-4 text-center font-semibold text-blue-600">¥2,680</td>
+                                <td class="px-6 py-4 text-center font-semibold text-green-600">¥3,680</td>
+                                <td class="px-6 py-4 text-center font-semibold text-orange-600">¥4,980</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA区域 -->
         <section class="text-center bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-12 text-white">
             <h2 class="text-3xl font-bold mb-4">选择适合您的AI解决方案</h2>
-            <p class="text-xl mb-8 text-white/90">专业团队支持，定制化服务，助力您的业务腾飞</p>
-            <div class="flex items-center justify-center space-x-4">
-                <button class="bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-all">
-                    联系咨询
+            <p class="text-xl mb-8 text-purple-100">专业团队为您量身定制，助力业务数字化转型</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-white text-purple-600 hover:bg-gray-100 font-medium px-8 py-3 rounded-lg transition-colors">
+                    免费咨询
                 </button>
-                <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white/10 transition-all">
+                <button class="bg-purple-700 hover:bg-purple-800 text-white font-medium px-8 py-3 rounded-lg transition-colors">
                     预约演示
                 </button>
             </div>
@@ -637,10 +758,47 @@
     </main>
 
     <!-- 页脚 -->
-    <footer class="bg-gray-900 text-white py-12 mt-20">
+    <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <p class="text-gray-400">© 2024 美发智能系统. All rights reserved.</p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">AI</span>
+                        </div>
+                        <span class="text-xl font-bold">���发智能系统</span>
+                    </div>
+                    <p class="text-gray-400">专业的美发行业AI解决方案提供商</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">产品中心</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">AI客服系统</a></li>
+                        <li><a href="#" class="hover:text-white">AI预约系统</a></li>
+                        <li><a href="#" class="hover:text-white">AI培训系统</a></li>
+                        <li><a href="#" class="hover:text-white">AI商城系统</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">支持服务</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">技术支持</a></li>
+                        <li><a href="#" class="hover:text-white">在线培训</a></li>
+                        <li><a href="#" class="hover:text-white">定制开发</a></li>
+                        <li><a href="#" class="hover:text-white">售后服务</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">联系我们</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-phone mr-2"></i>400-123-4567</li>
+                        <li><i class="fas fa-envelope mr-2"></i>info@example.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>北京市朝阳区</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 美发智能系统. All rights reserved.</p>
             </div>
         </div>
     </footer>

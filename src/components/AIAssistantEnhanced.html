@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI全能助手 - 设置中心</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .system-card {
+            transition: all 0.3s ease;
+        }
+        .system-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        .task-item {
+            transition: all 0.3s ease;
+        }
+        .task-item:hover {
+            transform: translateX(5px);
+            background: rgba(102, 126, 234, 0.1);
+        }
+        .setting-item {
+            transition: all 0.3s ease;
+        }
+        .setting-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .notification-badge {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            stroke-dasharray: 339.292;
+            stroke-dashoffset: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-bold text-gray-900">AI全能助手</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-bell text-xl"></i>
+                        </button>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center notification-badge">3</span>
+                    </div>
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-cog text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main>
+        <!-- AI助手概览 -->
+        <section class="gradient-bg text-white py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <div class="float-animation mb-6">
+                        <i class="fas fa-robot text-6xl"></i>
+                    </div>
+                    <h1 class="text-4xl font-bold mb-4">AI全能助手</h1>
+                    <p class="text-xl mb-8 text-purple-100">
+                        集成多个AI系统，提供全方位的智能服务，让工作更高效，生活更便捷
+                    </p>
+                    <div class="flex items-center justify-center space-x-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold">4</div>
+                            <div class="text-purple-200">集成系统</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold">12</div>
+                            <div class="text-purple-200">核心功能</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold">24/7</div>
+                            <div class="text-purple-200">全天候服务</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 标签切换 -->
+        <section class="py-8 bg-white border-b">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-center space-x-8">
+                    <button class="tab-button active px-6 py-3 rounded-lg font-medium transition-colors">
+                        系统概览
+                    </button>
+                    <button class="tab-button px-6 py-3 rounded-lg font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                        任务管理
+                    </button>
+                    <button class="tab-button px-6 py-3 rounded-lg font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                        个性化设置
+                    </button>
+                    <button class="tab-button px-6 py-3 rounded-lg font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                        智能推荐
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 系统概览 -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">集成系统</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        四大AI系统无缝集成，为您提供全方位的智能服务
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="system-card bg-white rounded-xl p-6 shadow-lg cursor-pointer">
+                        <div class="relative">
+                            <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-headset text-purple-600 text-2xl"></i>
+                            </div>
+                            <span class="absolute top-0 right-0 bg-green-500 text-white text-xs px-2 py-1 rounded-full">运行中</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">AI客服系统</h3>
+                        <p class="text-gray-600 text-sm mb-4">智能客服，24小时在线服务</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">今日处理</span>
+                            <span class="text-purple-600 font-semibold">128次</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-card bg-white rounded-xl p-6 shadow-lg cursor-pointer">
+                        <div class="relative">
+                            <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-calendar-check text-blue-600 text-2xl"></i>
+                            </div>
+                            <span class="absolute top-0 right-0 bg-green-500 text-white text-xs px-2 py-1 rounded-full">运行中</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">AI预约系统</h3>
+                        <p class="text-gray-600 text-sm mb-4">智能预约，高效时间管理</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">今日预约</span>
+                            <span class="text-blue-600 font-semibold">45个</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-card bg-white rounded-xl p-6 shadow-lg cursor-pointer">
+                        <div class="relative">
+                            <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-graduation-cap text-green-600 text-2xl"></i>
+                            </div>
+                            <span class="absolute top-0 right-0 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">更新中</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">AI培训系统</h3>
+                        <p class="text-gray-600 text-sm mb-4">智能培训，个性化学习</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">活跃学员</span>
+                            <span class="text-green-600 font-semibold">234人</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-card bg-white rounded-xl p-6 shadow-lg cursor-pointer">
+                        <div class="relative">
+                            <div class="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fas fa-store text-orange-600 text-2xl"></i>
+                            </div>
+                            <span class="absolute top-0 right-0 bg-green-500 text-white text-xs px-2 py-1 rounded-full">运行中</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">AI微店系统</h3>
+                        <p class="text-gray-600 text-sm mb-4">智能电商，一站式开店</p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">今日订单</span>
+                            <span class="text-orange-600 font-semibold">89单</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 任务管理 -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">任务管理中心</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        统一管理各系统任务，智能提醒，高效处理
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-xl p-6 shadow-lg">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-xl font-semibold text-gray-900">待办任务</h3>
+                                <button class="text-purple-600 hover:text-purple-700">
+                                    <i class="fas fa-plus mr-2"></i>新建任务
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="task-item bg-purple-50 rounded-lg p-4 border-l-4 border-purple-500">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-medium text-gray-900">客服系统升级</h4>
+                                        <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">紧急</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-2">更新AI客服系统至最新版本，添加新功能</p>
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span class="text-gray-500">截止时间：今天 18:00</span>
+                                        <button class="text-purple-600 hover:text-purple-700">开始处理</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="task-item bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-medium text-gray-900">预约数据备份</h4>
+                                        <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">重要</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-2">备份本周预约数据，确保数据安全</p>
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span class="text-gray-500">截止时间：明天 12:00</span>
+                                        <button class="text-blue-600 hover:text-blue-700">开始处理</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="task-item bg-green-50 rounded-lg p-4 border-l-4 border-green-500">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-medium text-gray-900">培训课程审核</h4>
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">普通</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-2">审核新上传的培训课程内容</p>
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span class="text-gray-500">截止时间：本周五</span>
+                                        <button class="text-green-600 hover:text-green-700">开始处理</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="task-item bg-orange-50 rounded-lg p-4 border-l-4 border-orange-500">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-medium text-gray-900">微店商品更新</h4>
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">普通</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-2">更新微店商品信息和价格</p>
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span class="text-gray-500">截止时间：下周一</span>
+                                        <button class="text-orange-600 hover:text-orange-700">开始处理</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-white rounded-xl p-6 shadow-lg mb-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-6">任务统计</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600">待处理</span>
+                                    <span class="text-red-600 font-semibold">4</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600">进行中</span>
+                                    <span class="text-yellow-600 font-semibold">2</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600">已完成</span>
+                                    <span class="text-green-600 font-semibold">18</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl p-6 shadow-lg">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-6">完成进度</h3>
+                            <div class="relative w-32 h-32 mx-auto mb-4">
+                                <svg class="progress-ring w-32 h-32">
+                                    <circle cx="64" cy="64" r="54" stroke="#e5e7eb" stroke-width="8" fill="none"></circle>
+                                    <circle class="progress-ring-circle" cx="64" cy="64" r="54" stroke="#8b5cf6" stroke-width="8" fill="none" style="stroke-dashoffset: 84.823;"></circle>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-2xl font-bold text-gray-900">75%</span>
+                                </div>
+                            </div>
+                            <p class="text-center text-gray-600">今日任务完成率</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 个性化设置 -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">个性化设置</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        定制您的AI助手，打造专属的智能体验
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="setting-item bg-white rounded-xl p-6 shadow-lg">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-palette text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">主题设置</h3>
+                        <p class="text-gray-600 text-sm mb-4">自定义界面主题和颜色</p>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="theme" class="mr-2" checked>
+                                <span class="text-sm">默认主题</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="theme" class="mr-2">
+                                <span class="text-sm">深色主题</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="theme" class="mr-2">
+                                <span class="text-sm">自定义主题</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item bg-white rounded-xl p-6 shadow-lg">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-bell text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">通知设置</h3>
+                        <p class="text-gray-600 text-sm mb-4">管理通知偏好和提醒方式</p>
+                        <div class="space-y-2">
+                            <label class="flex items-center justify-between">
+                                <span class="text-sm">任务提醒</span>
+                                <input type="checkbox" class="toggle" checked>
+                            </label>
+                            <label class="flex items-center justify-between">
+                                <span class="text-sm">系统通知</span>
+                                <input type="checkbox" class="toggle" checked>
+                            </label>
+                            <label class="flex items-center justify-between">
+                                <span class="text-sm">营销推送</span>
+                                <input type="checkbox" class="toggle">
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item bg-white rounded-xl p-6 shadow-lg">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-language text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">语言设置</h3>
+                        <p class="text-gray-600 text-sm mb-4">选择界面语言和地区</p>
+                        <select class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                            <option>简体中文</option>
+                            <option>繁体中文</option>
+                            <option>English</option>
+                            <option>日本語</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item bg-white rounded-xl p-6 shadow-lg">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-clock text-orange-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">工作时间</h3>
+                        <p class="text-gray-600 text-sm mb-4">设置工作时间和休息时间</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between text-sm">
+                                <span>工作时间</span>
+                                <span>09:00 - 18:00</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span>休息时间</span>
+                                <span>12:00 - 13:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item bg-white rounded-xl p-6 shadow-lg">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-shield-alt text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">隐私设置</h3>
+                        <p class="text-gray-600 text-sm mb-4">管理数据隐私和安全设置</p>
+                        <div class="space-y-2">
+                            <label class="flex items-center justify-between">
+                                <span class="text-sm">数据加密</span>
+                                <input type="checkbox" class="toggle" checked>
+                            </label>
+                            <label class="flex items-center justify-between">
+                                <span class="text-sm">双重验证</span>
+                                <input type="checkbox" class="toggle">
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item bg-white rounded-xl p-6 shadow-lg">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-robot text-yellow-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">AI设置</h3>
+                        <p class="text-gray-600 text-sm mb-4">配置AI助手行为和响应</p>
+                        <div class="space-y-2">
+                            <label class="flex items-center justify-between">
+                                <span class="text-sm">智能推荐</span>
+                                <input type="checkbox" class="toggle" checked>
+                            </label>
+                            <label class="flex items-center justify-between">
+                                <span class="text-sm">自动学习</span>
+                                <input type="checkbox" class="toggle" checked>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 智能推荐 -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">智能推荐</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        基于您的使用习惯，AI为您推荐最适合的功能和优化建议
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-lightbulb text-purple-600"></i>
+                            </div>
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">功能推荐</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">启用智能客服</h3>
+                        <p class="text-gray-600 text-sm mb-4">根据您的业务需求，建议启用AI客服系统以提升客户满意度</p>
+                        <button class="text-purple-600 hover:text-purple-700 text-sm font-medium">了解详情 →</button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-chart-line text-blue-600"></i>
+                            </div>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">效率提升</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">优化预约流程</h3>
+                        <p class="text-gray-600 text-sm mb-4">分析显示您的预约效率可提升30%，建议优化时间安排</p>
+                        <button class="text-blue-600 hover:text-blue-700 text-sm font-medium">查看建议 →</button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-users text-green-600"></i>
+                            </div>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">培训建议</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">员工技能提升</h3>
+                        <p class="text-gray-600 text-sm mb-4">推荐为员工安排专业技能培训，提升团队整体能力</p>
+                        <button class="text-green-600 hover:text-green-700 text-sm font-medium">制定计划 →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 快速操作 -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">快速操作</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        常用功能快速入口，一键直达
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:-translate-y-2">
+                        <i class="fas fa-comments text-purple-600 text-2xl mb-3"></i>
+                        <p class="text-gray-900 font-medium">开启对话</p>
+                    </button>
+                    <button class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:-translate-y-2">
+                        <i class="fas fa-calendar-plus text-blue-600 text-2xl mb-3"></i>
+                        <p class="text-gray-900 font-medium">新建预约</p>
+                    </button>
+                    <button class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:-translate-y-2">
+                        <i class="fas fa-plus-circle text-green-600 text-2xl mb-3"></i>
+                        <p class="text-gray-900 font-medium">添加课程</p>
+                    </button>
+                    <button class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:-translate-y-2">
+                        <i class="fas fa-box text-orange-600 text-2xl mb-3"></i>
+                        <p class="text-gray-900 font-medium">上架商品</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 标签切换功能
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.add('text-gray-600');
+                });
+                // 添加active类到当前按钮
+                this.classList.add('active');
+                this.classList.remove('text-gray-600');
+            });
+        });
+
+        // 添加滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.slide-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
