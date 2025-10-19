@@ -15,6 +15,10 @@ import STORE_MANAGEMENT from '../pages/store-management.jsx';
 import QR_SCANNER from '../pages/qr-scanner.jsx';
 import PERSONALIZED_RECOMMENDATION from '../pages/personalized-recommendation.jsx';
 import PRODUCT_DETAIL from '../pages/product-detail.jsx';
+import SHOPPING_CART from '../pages/shopping-cart.jsx';
+import CHECKOUT from '../pages/checkout.jsx';
+import ORDER_SUCCESS from '../pages/order-success.jsx';
+import ORDERS from '../pages/orders.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -66,4 +70,16 @@ export const routers = [{
 }, {
   id: "product-detail",
   component: PRODUCT_DETAIL
+}, {
+  id: "shopping-cart",
+  component: SHOPPING_CART
+}, {
+  id: "checkout",
+  component: CHECKOUT
+}, {
+  id: "order-success",
+  component: ORDER_SUCCESS
+}, {
+  id: "orders",
+  component: ORDERS
 }]
