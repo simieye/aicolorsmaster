@@ -17,14 +17,14 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .chat-container {
-            height: calc(100vh - 200px);
-            max-height: 600px;
+            height: 500px;
+            overflow-y: auto;
         }
-        .message-bubble {
-            animation: fadeIn 0.3s ease;
+        .chat-message {
+            animation: slideIn 0.3s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .typing-indicator {
@@ -42,11 +42,19 @@
             margin: 0 2px;
             animation: typing 1.4s infinite;
         }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
         @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
         }
         .ticket-card {
             transition: all 0.3s ease;
@@ -66,23 +74,21 @@
             transition: all 0.3s ease;
         }
         .knowledge-item:hover {
-            transform: translateX(5px);
             background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
         }
-        .quick-reply {
-            transition: all 0.2s ease;
+        .stat-card {
+            transition: all 0.3s ease;
         }
-        .quick-reply:hover {
-            transform: scale(1.05);
-            background: rgba(102, 126, 234, 0.2);
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
-        .status-badge {
-            animation: pulse 2s infinite;
+        .fade-in {
+            animation: fadeIn 0.5s ease;
         }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -113,10 +119,49 @@
 
     <!-- 主内容区 -->
     <main class="container mx-auto px-4 py-8">
+        <!-- 客服统计概览 -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-comments text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">1,234</div>
+                <div class="text-white/60">今日对话</div>
+                <div class="text-green-400 text-sm mt-2">+15.3%</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check-circle text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">98%</div>
+                <div class="text-white/60">解决率</div>
+                <div class="text-green-400 text-sm mt-2">+2.1%</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clock text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">2.5min</div>
+                <div class="text-white/60">平均响应时间</div>
+                <div class="text-green-400 text-sm mt-2">-30s</div>
+            </div>
+            
+            <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-smile text-white text-2xl"></i>
+                </div>
+                <div class="text-3xl font-bold text-white mb-2">4.8</div>
+                <div class="text-white/60">满意度评分</div>
+                <div class="text-green-400 text-sm mt-2">+0.2</div>
+            </div>
+        </section>
+
         <!-- 标签切换 -->
         <div class="flex items-center space-x-1 mb-8 bg-white/10 rounded-lg p-1">
             <button class="tab-button active flex-1 px-4 py-2 rounded-md text-white font-medium">
-                <i class="fas fa-comments mr-2"></i>
+                <i class="fas fa-robot mr-2"></i>
                 智能客服
             </button>
             <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
@@ -127,129 +172,164 @@
                 <i class="fas fa-book mr-2"></i>
                 知识库
             </button>
+            <button class="tab-button flex-1 px-4 py-2 rounded-md text-white/70 hover:text-white font-medium">
+                <i class="fas fa-chart-line mr-2"></i>
+                数据分析
+            </button>
         </div>
 
         <!-- 智能客服内容 -->
-        <section id="chat-content" class="space-y-8">
+        <section id="chat-content" class="space-y-8 fade-in">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- 聊天窗口 -->
+                <!-- 聊天界面 -->
                 <div class="lg:col-span-2">
-                    <div class="glass-effect rounded-2xl overflow-hidden">
-                        <div class="bg-white/10 p-4 border-b border-white/20">
+                    <div class="glass-effect rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
                                     <i class="fas fa-robot text-white"></i>
                                 </div>
                                 <div>
                                     <h3 class="text-white font-semibold">AI智能客服</h3>
-                                    <p class="text-white/60 text-sm">随时为您服务</p>
+                                    <p class="text-white/60 text-sm">在线 · 平均响应时间 30秒</p>
                                 </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-white/60 hover:text-white">
+                                    <i class="fas fa-phone"></i>
+                                </button>
+                                <button class="text-white/60 hover:text-white">
+                                    <i class="fas fa-video"></i>
+                                </button>
                             </div>
                         </div>
                         
-                        <div class="chat-container overflow-y-auto p-4 space-y-4">
+                        <div class="chat-container bg-white/5 rounded-lg p-4 mb-4">
                             <!-- 欢迎消息 -->
-                            <div class="flex items-start space-x-3">
-                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-robot text-white text-sm"></i>
-                                </div>
-                                <div class="message-bubble bg-white/10 rounded-2xl rounded-tl-none p-3 max-w-xs">
-                                    <p class="text-white text-sm">您好！我是AI智能客服，很高兴为您服务。请问有什么可以帮助您的吗？</p>
+                            <div class="chat-message mb-4">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-robot text-white text-sm"></i>
+                                    </div>
+                                    <div class="bg-white/10 rounded-lg p-3 max-w-xs">
+                                        <p class="text-white text-sm">您好！我是AI智能客服，很高兴为您服务。请问有什么可以帮助您的吗？</p>
+                                    </div>
                                 </div>
                             </div>
                             
                             <!-- 用户消息 -->
-                            <div class="flex items-start space-x-3 justify-end">
-                                <div class="message-bubble bg-blue-500 rounded-2xl rounded-tr-none p-3 max-w-xs">
-                                    <p class="text-white text-sm">我想了解一下AI智能调色宝机的功能</p>
+                            <div class="chat-message mb-4">
+                                <div class="flex items-start space-x-3 justify-end">
+                                    <div class="bg-blue-500 rounded-lg p-3 max-w-xs">
+                                        <p class="text-white text-sm">我想了解一下AI智能调色宝机的功能</p>
+                                    </div>
+                                    <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user text-white text-sm"></i>
+                                    </div>
                                 </div>
                             </div>
                             
                             <!-- AI回复 -->
-                            <div class="flex items-start space-x-3">
-                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-robot text-white text-sm"></i>
-                                </div>
-                                <div class="message-bubble bg-white/10 rounded-2xl rounded-tl-none p-3 max-w-xs">
-                                    <p class="text-white text-sm mb-2">AI智能调色宝机是我们的核心产品，主要功能包括：</p>
-                                    <ul class="text-white/80 text-sm space-y-1">
-                                        <li>• 智能色彩识别和匹配</li>
-                                        <li>• 自动配方生成</li>
-                                        <li>• 用量精确计算</li>
-                                        <li>• 历史配方管理</li>
-                                    </ul>
-                                    <p class="text-white text-sm mt-2">您想了解哪个具体功能呢？</p>
+                            <div class="chat-message mb-4">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-robot text-white text-sm"></i>
+                                    </div>
+                                    <div class="bg-white/10 rounded-lg p-3 max-w-xs">
+                                        <p class="text-white text-sm mb-2">AI智能调色宝机是我们的核心产品，主要功能包括：</p>
+                                        <ul class="text-white/80 text-sm space-y-1">
+                                            <li>• AI发质识别技术</li>
+                                            <li>• 精准自动调色</li>
+                                            <li>• 智能温控系统</li>
+                                            <li>• 一键操作界面</li>
+                                        </ul>
+                                        <p class="text-white text-sm mt-2">您想了解哪个方面的详细信息呢？</p>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <!-- 输入指示器 -->
-                            <div class="flex items-start space-x-3" id="typing-indicator" style="display: none;">
-                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-robot text-white text-sm"></i>
-                                </div>
-                                <div class="typing-indicator">
-                                    <div class="typing-dot"></div>
-                                    <div class="typing-dot"></div>
-                                    <div class="typing-dot"></div>
-                                </div>
+                            <!-- 快捷回复按钮 -->
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <button class="bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+                                    产品价格
+                                </button>
+                                <button class="bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+                                    技术支持
+                                </button>
+                                <button class="bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+                                    售后服务
+                                </button>
+                                <button class="bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+                                    预约演示
+                                </button>
                             </div>
                         </div>
                         
-                        <div class="bg-white/10 p-4 border-t border-white/20">
-                            <div class="flex items-center space-x-2">
-                                <button class="text-white/60 hover:text-white">
-                                    <i class="fas fa-paperclip"></i>
-                                </button>
-                                <input type="text" placeholder="输入您的问题..." class="flex-1 bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
-                                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
+                        <!-- 输入框 -->
+                        <div class="flex items-center space-x-2">
+                            <button class="text-white/60 hover:text-white">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="text" placeholder="输入您的问题..." class="flex-1 bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- 侧边栏 -->
                 <div class="space-y-6">
-                    <!-- 快速回复 -->
+                    <!-- 常见问题 -->
                     <div class="glass-effect rounded-2xl p-6">
-                        <h3 class="text-white font-semibold mb-4">快速回复</h3>
-                        <div class="space-y-2">
-                            <button class="quick-reply w-full text-left bg-white/10 hover:bg-white/20 rounded-lg p-3 text-white text-sm">
-                                产品功能介绍
-                            </button>
-                            <button class="quick-reply w-full text-left bg-white/10 hover:bg-white/20 rounded-lg p-3 text-white text-sm">
-                                价格和套餐
-                            </button>
-                            <button class="quick-reply w-full text-left bg-white/10 hover:bg-white/20 rounded-lg p-3 text-white text-sm">
-                                技术支持
-                            </button>
-                            <button class="quick-reply w-full text-left bg-white/10 hover:bg-white/20 rounded-lg p-3 text-white text-sm">
-                                售后服务
-                            </button>
-                            <button class="quick-reply w-full text-left bg-white/10 hover:bg-white/20 rounded-lg p-3 text-white text-sm">
-                                联系人工客服
-                            </button>
+                        <h3 class="text-white font-semibold mb-4">常见问题</h3>
+                        <div class="space-y-3">
+                            <div class="knowledge-item bg-white/5 rounded-lg p-3 cursor-pointer">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white text-sm">如何购买产品？</span>
+                                    <i class="fas fa-chevron-right text-white/40 text-xs"></i>
+                                </div>
+                            </div>
+                            <div class="knowledge-item bg-white/5 rounded-lg p-3 cursor-pointer">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white text-sm">产品保修政策</span>
+                                    <i class="fas fa-chevron-right text-white/40 text-xs"></i>
+                                </div>
+                            </div>
+                            <div class="knowledge-item bg-white/5 rounded-lg p-3 cursor-pointer">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white text-sm">技术支持联系方式</span>
+                                    <i class="fas fa-chevron-right text-white/40 text-xs"></i>
+                                </div>
+                            </div>
+                            <div class="knowledge-item bg-white/5 rounded-lg p-3 cursor-pointer">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white text-sm">退换货流程</span>
+                                    <i class="fas fa-chevron-right text-white/40 text-xs"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- 对话历史 -->
+                    <!-- 客服状态 -->
                     <div class="glass-effect rounded-2xl p-6">
-                        <h3 class="text-white font-semibold mb-4">对话历史</h3>
+                        <h3 class="text-white font-semibold mb-4">客服状态</h3>
                         <div class="space-y-3">
-                            <div class="bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20">
-                                <div class="flex items-center justify-between mb-1">
-                                    <span class="text-white text-sm font-medium">产品咨询</span>
-                                    <span class="text-white/40 text-xs">2小时前</span>
-                                </div>
-                                <p class="text-white/60 text-xs">关于AI调色宝机的使用方法...</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">在线客服</span>
+                                <span class="text-green-400 text-sm">12人</span>
                             </div>
-                            <div class="bg-white/10 rounded-lg p-3 cursor-pointer hover:bg-white/20">
-                                <div class="flex items-center justify-between mb-1">
-                                    <span class="text-white text-sm font-medium">技术问题</span>
-                                    <span class="text-white/40 text-xs">昨天</span>
-                                </div>
-                                <p class="text-white/60 text-xs">系统登录遇到问题...</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">等待队列</span>
+                                <span class="text-yellow-400 text-sm">3人</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">今日服务</span>
+                                <span class="text-blue-400 text-sm">156人</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white/60 text-sm">平均等待时间</span>
+                                <span class="text-white text-sm">1.5分钟</span>
                             </div>
                         </div>
                     </div>
@@ -260,37 +340,25 @@
         <!-- 工单管理内容 -->
         <section id="tickets-content" class="space-y-8 hidden">
             <!-- 工单统计 -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="glass-effect rounded-xl p-6 text-center">
-                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-ticket-alt text-white text-2xl"></i>
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">工单统计</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white/10 rounded-xl p-6 text-center">
+                        <div class="text-3xl font-bold text-white mb-2">45</div>
+                        <div class="text-white/60">待处理</div>
                     </div>
-                    <div class="text-3xl font-bold text-white mb-2">28</div>
-                    <div class="text-white/60">待处理工单</div>
-                </div>
-                
-                <div class="glass-effect rounded-xl p-6 text-center">
-                    <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-clock text-white text-2xl"></i>
+                    <div class="bg-white/10 rounded-xl p-6 text-center">
+                        <div class="text-3xl font-bold text-white mb-2">23</div>
+                        <div class="text-white/60">处理中</div>
                     </div>
-                    <div class="text-3xl font-bold text-white mb-2">15</div>
-                    <div class="text-white/60">处理中工单</div>
-                </div>
-                
-                <div class="glass-effect rounded-xl p-6 text-center">
-                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-check-circle text-white text-2xl"></i>
+                    <div class="bg-white/10 rounded-xl p-6 text-center">
+                        <div class="text-3xl font-bold text-white mb-2">156</div>
+                        <div class="text-white/60">已解决</div>
                     </div>
-                    <div class="text-3xl font-bold text-white mb-2">156</div>
-                    <div class="text-white/60">已完成工单</div>
-                </div>
-                
-                <div class="glass-effect rounded-xl p-6 text-center">
-                    <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                    <div class="bg-white/10 rounded-xl p-6 text-center">
+                        <div class="text-3xl font-bold text-white mb-2">8</div>
+                        <div class="text-white/60">已关闭</div>
                     </div>
-                    <div class="text-3xl font-bold text-white mb-2">4.2h</div>
-                    <div class="text-white/60">平均处理时间</div>
                 </div>
             </div>
 
@@ -300,7 +368,7 @@
                     <h2 class="text-2xl font-bold text-white">工单列表</h2>
                     <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
                         <i class="fas fa-plus mr-2"></i>
-                        创建工单
+                        新建工单
                     </button>
                 </div>
                 
@@ -308,24 +376,22 @@
                     <div class="ticket-card bg-white/10 rounded-xl p-6">
                         <div class="flex items-start justify-between">
                             <div class="flex items-start space-x-4">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-ticket-alt text-white"></i>
+                                <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-exclamation-triangle text-white"></i>
                                 </div>
                                 <div>
-                                    <div class="flex items-center space-x-2 mb-2">
-                                        <span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-xs">待处理</span>
-                                        <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full text-xs">技术问题</span>
-                                    </div>
-                                    <h3 class="text-white font-semibold mb-2">系统登录异常</h3>
-                                    <p class="text-white/60 text-sm mb-2">无法正常登录系统，提示密码错误但密码正确</p>
-                                    <div class="flex items-center space-x-4 text-white/40 text-xs">
-                                        <span><i class="fas fa-user mr-1"></i>张三</span>
-                                        <span><i class="fas fa-calendar mr-1"></i>2024-01-15</span>
-                                        <span><i class="fas fa-clock mr-1"></i>2小时前</span>
+                                    <h3 class="text-white font-semibold mb-2">#T001 - 产品故障</h3>
+                                    <p class="text-white/60 text-sm mb-2">AI智能调色宝机无法正常启动</p>
+                                    <div class="flex items-center space-x-4 text-white/40 text-sm">
+                                        <span><i class="fas fa-user mr-1"></i>张店长</span>
+                                        <span><i class="fas fa-calendar mr-1"></i>2024-03-15</span>
+                                        <span><i class="fas fa-clock mr-1"></i>高优先级</span>
                                     </div>
                                 </div>
                             </div>
-                            <button class="text-blue-400 text-sm hover:text-blue-300">处理</button>
+                            <div class="text-right">
+                                <span class="bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-sm">待处理</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -333,23 +399,21 @@
                         <div class="flex items-start justify-between">
                             <div class="flex items-start space-x-4">
                                 <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-ticket-alt text-white"></i>
+                                    <i class="fas fa-question-circle text-white"></i>
                                 </div>
                                 <div>
-                                    <div class="flex items-center space-x-2 mb-2">
-                                        <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-xs">处理中</span>
-                                        <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-xs">产品咨询</span>
-                                    </div>
-                                    <h3 class="text-white font-semibold mb-2">产品功能咨询</h3>
-                                    <p class="text-white/60 text-sm mb-2">想了解AI调色宝机的具体功能和价格</p>
-                                    <div class="flex items-center space-x-4 text-white/40 text-xs">
-                                        <span><i class="fas fa-user mr-1"></i>李四</span>
-                                        <span><i class="fas fa-calendar mr-1"></i>2024-01-14</span>
-                                        <span><i class="fas fa-clock mr-1"></i>1天前</span>
+                                    <h3 class="text-white font-semibold mb-2">#T002 - 使用咨询</h3>
+                                    <p class="text-white/60 text-sm mb-2">如何设置染发参数</p>
+                                    <div class="flex items-center space-x-4 text-white/40 text-sm">
+                                        <span><i class="fas fa-user mr-1"></i>李经理</span>
+                                        <span><i class="fas fa-calendar mr-1"></i>2024-03-15</span>
+                                        <span><i class="fas fa-clock mr-1"></i>中优先级</span>
                                     </div>
                                 </div>
                             </div>
-                            <button class="text-blue-400 text-sm hover:text-blue-300">查看</button>
+                            <div class="text-right">
+                                <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-sm">处理中</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -359,100 +423,78 @@
         <!-- 知识库内容 -->
         <section id="knowledge-content" class="space-y-8 hidden">
             <!-- 知识库搜索 -->
-            <div class="glass-effect rounded-2xl p-6">
-                <div class="flex items-center space-x-4">
-                    <div class="flex-1 relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60"></i>
-                        <input type="text" placeholder="搜索知识库..." class="w-full bg-white/10 border border-white/30 rounded-lg pl-10 pr-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
-                    </div>
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg">
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">知识库</h2>
+                <div class="flex items-center space-x-4 mb-6">
+                    <input type="text" placeholder="搜索知识库..." class="flex-1 bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/50">
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-search mr-2"></i>
                         搜索
                     </button>
                 </div>
-            </div>
-
-            <!-- 知识分类 -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass-effect rounded-xl p-6">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                            <i class="fas fa-cube text-white"></i>
-                        </div>
-                        <h3 class="text-white font-semibold">产品使用</h3>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="knowledge-item bg-white/10 rounded-lg p-3 cursor-pointer">
-                            <span class="text-white text-sm">AI调色宝机使用指南</span>
-                        </div>
-                        <div class="knowledge-item bg-white/10 rounded-lg p-3 cursor-pointer">
-                            <span class="text-white text-sm">染发膏管理系统操作</span>
-                        </div>
-                        <div class="knowledge-item bg-white/10 rounded-lg p-3 cursor-pointer">
-                            <span class="text-white text-sm">客户管理系统使用</span>
-                        </div>
-                    </div>
-                </div>
                 
-                <div class="glass-effect rounded-xl p-6">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                            <i class="fas fa-tools text-white"></i>
-                        </div>
-                        <h3 class="text-white font-semibold">技术支持</h3>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="knowledge-item bg-white/10 rounded-lg p-3 cursor-pointer">
-                            <span class="text-white text-sm">常见问题解答</span>
-                        </div>
-                        <div class="knowledge-item bg-white/10 rounded-lg p-3 cursor-pointer">
-                            <span class="text-white text-sm">系统故障排除</span>
-                        </div>
-                        <div class="knowledge-item bg-white/10 rounded-lg p-3 cursor-pointer">
-                            <span class="text-white text-sm">性能优化建议</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="glass-effect rounded-xl p-6">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mb-4">
                             <i class="fas fa-book text-white"></i>
                         </div>
-                        <h3 class="text-white font-semibold">帮助文档</h3>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="knowledge-item bg-white/10 rounded-lg p-3 cursor-pointer">
-                            <span class="text-white text-sm">用户手册</span>
-                        </div>
-                        <div class="knowledge-item bg-white/10 rounded-lg p-3 cursor-pointer">
-                            <span class="text-white text-sm">视频教程</span>
-                        </div>
-                        <div class="knowledge-item bg-white/10 rounded-lg p-3 cursor-pointer">
-                            <span class="text-white text-sm">API文档</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 热门文章 -->
-            <div class="glass-effect rounded-2xl p-8">
-                <h2 class="text-2xl font-bold text-white mb-6">热门文章</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white/10 rounded-xl p-6">
-                        <h3 class="text-white font-semibold mb-2">如何快速上手AI调色宝机</h3>
-                        <p class="text-white/60 text-sm mb-4">详细介绍AI调色宝机的安装、配置和基本使用方法</p>
+                        <h3 class="text-white font-semibold mb-2">产品使用指南</h3>
+                        <p class="text-white/60 text-sm mb-4">详细的产品使用说明和操作步骤</p>
                         <div class="flex items-center justify-between">
-                            <span class="text-white/40 text-xs">阅读量：1,234</span>
-                            <button class="text-blue-400 text-sm hover:text-blue-300">阅读更多</button>
+                            <span class="text-white/40 text-sm">23篇文章</span>
+                            <button class="text-blue-400 text-sm hover:text-blue-300">查看详情</button>
                         </div>
                     </div>
                     
                     <div class="bg-white/10 rounded-xl p-6">
-                        <h3 class="text-white font-semibold mb-2">染发膏管理系统最佳实践</h3>
-                        <p class="text-white/60 text-sm mb-4">分享染发膏管理系统的使用技巧和优化建议</p>
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-tools text-white"></i>
+                        </div>
+                        <h3 class="text-white font-semibold mb-2">故障排除</h3>
+                        <p class="text-white/60 text-sm mb-4">常见问题的解决方案和故障排除</p>
                         <div class="flex items-center justify-between">
-                            <span class="text-white/40 text-xs">阅读量：987</span>
-                            <button class="text-blue-400 text-sm hover:text-blue-300">阅读更多</button>
+                            <span class="text-white/40 text-sm">18篇文章</span>
+                            <button class="text-blue-400 text-sm hover:text-blue-300">查看详情</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-graduation-cap text-white"></i>
+                        </div>
+                        <h3 class="text-white font-semibold mb-2">培训资料</h3>
+                        <p class="text-white/60 text-sm mb-4">产品培训视频和学习资料</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white/40 text-sm">15篇文章</span>
+                            <button class="text-blue-400 text-sm hover:text-blue-300">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据分析内容 -->
+        <section id="analytics-content" class="space-y-8 hidden">
+            <!-- 客服数据分析 -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">客服数据分析</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">对话趋势</h3>
+                        <div class="h-64 flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-chart-line text-6xl text-blue-400 mb-4"></i>
+                                <p class="text-white/60">对话趋势图表</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="text-white font-semibold mb-4">问题分类</h3>
+                        <div class="h-64 flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-chart-pie text-6xl text-green-400 mb-4"></i>
+                                <p class="text-white/60">问题分类图表</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -480,31 +522,23 @@
                 
                 // 显示对应的section
                 const sectionId = this.textContent.includes('智能客服') ? 'chat-content' : 
-                                 this.textContent.includes('工单管理') ? 'tickets-content' : 'knowledge-content';
+                                 this.textContent.includes('工单管理') ? 'tickets-content' : 
+                                 this.textContent.includes('知识库') ? 'knowledge-content' : 'analytics-content';
                 document.getElementById(sectionId).classList.remove('hidden');
             });
         });
 
-        // 模拟AI回复
-        function simulateAIResponse() {
-            const typingIndicator = document.getElementById('typing-indicator');
-            typingIndicator.style.display = 'flex';
-            
-            setTimeout(() => {
-                typingIndicator.style.display = 'none';
-                // 这里可以添加实际的AI回复逻辑
-            }, 2000);
-        }
-
-        // 快速回复点击
-        document.querySelectorAll('.quick-reply').forEach(button => {
-            button.addEventListener('click', function() {
-                const message = this.textContent.trim();
-                // 这里可以添加发送消息的逻辑
-                console.log('快速回复:', message);
-            });
+        // 模拟输入发送消息
+        document.querySelector('input[type="text"]').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const message = this.value.trim();
+                if (message) {
+                    // 这里可以添加发送消息的逻辑
+                    console.log('发送消息:', message);
+                    this.value = '';
+                }
+            }
         });
     </script>
 </body>
 </html>
-    

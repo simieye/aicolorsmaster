@@ -28,3 +28,4 @@ export * from './UserReviewFeedback.jsx';
 export * from './CorporateCulture.jsx';
 export * from './AICustomerService.jsx';
 export * from './AIBookingSystem.jsx';
+export * from './UserReviewFeedbackSystem.jsx';
