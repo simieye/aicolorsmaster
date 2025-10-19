@@ -6,3 +6,5 @@ export * from './ScanSettings.jsx';
 export * from './AuthProvider.jsx';
 export * from './ProtectedRoute.jsx';
 export * from './DataManager.jsx';
+export * from './ShoppingCart.jsx';
+export * from './CartSidebar.jsx';

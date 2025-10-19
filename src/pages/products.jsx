@@ -7,6 +7,8 @@ import { Search, Filter, ShoppingCart, Eye, Heart, Star, Package, TrendingUp, Gr
 
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
+// @ts-ignore;
+import { useCart } from '@/components/ShoppingCart';
 export default function ProductsPage(props) {
   const {
     $w,
@@ -25,6 +27,7 @@ export default function ProductsPage(props) {
     name: 'AI智能染发自动调色宝机',
     category: '智能设备',
     price: 4980,
+    originalPrice: 5980,
     description: '新一代AI智能染发设备，自动识别发质、精准调色，一键完成专业染发过程，大幅提升门店效率',
     image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=300&h=200&fit=crop',
     stock: 50,
@@ -38,6 +41,7 @@ export default function ProductsPage(props) {
     name: 'AI品牌染发膏管理系统',
     category: '管理软件',
     price: 1680,
+    originalPrice: 1980,
     description: '专业染发膏库存管理系统，智能预警、批次追踪、成本控制，让染发产品管理更高效',
     image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=300&h=200&fit=crop',
     stock: 999,
@@ -51,6 +55,7 @@ export default function ProductsPage(props) {
     name: 'AI客户配方管理系统',
     category: '管理软件',
     price: 2680,
+    originalPrice: 3180,
     description: '智能客户染发配方管理，记录客户偏好、历史配方、过敏信息，提供个性化服务体验',
     image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop',
     stock: 999,
@@ -64,6 +69,7 @@ export default function ProductsPage(props) {
     name: 'AI美发连锁门店管理系统',
     category: '管理软件',
     price: 3680,
+    originalPrice: 4180,
     description: '专为美发连锁店设计的一体化管理解决方案，涵盖预约、员工、财务、营销等全方位管理',
     image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop',
     stock: 999,
@@ -77,6 +83,7 @@ export default function ProductsPage(props) {
     name: 'AI美发客户管理系统CRM',
     category: '管理软件',
     price: 6800,
+    originalPrice: 7800,
     description: '专业美发行业CRM系统，客户关系维护、营销自动化、数据分析，助力门店业绩增长',
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop',
     stock: 999,
@@ -90,6 +97,7 @@ export default function ProductsPage(props) {
     name: 'AI染发色彩大师AI原生开源SaaS系统',
     category: 'SaaS平台',
     price: 8800,
+    originalPrice: 9800,
     description: '基于AI原生技术开发的染发色彩管理SaaS平台，开源架构、云端部署、支持定制化开发',
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop',
     stock: 999,
@@ -108,6 +116,13 @@ export default function ProductsPage(props) {
   const [sortBy, setSortBy] = useState('name');
   const [viewMode, setViewMode] = useState('grid');
   const [filteredProducts, setFilteredProducts] = useState([]);
+
+  // 购物车功能
+  const {
+    addToCart,
+    buyNow,
+    isLoading: cartLoading
+  } = useCart();
 
   // 权限检查函数
   const hasPermission = permission => {
@@ -151,12 +166,23 @@ export default function ProductsPage(props) {
 
   // 处理产品操作
   const handleProductClick = product => {
-    toast({
-      title: "产品详情",
-      description: `查看 ${product.name} 的详细信息`
-    });
+    if ($w.utils && $w.utils.navigateTo) {
+      $w.utils.navigateTo({
+        pageId: 'product-detail',
+        params: {
+          productId: product.id
+        }
+      });
+    } else {
+      toast({
+        title: "产品详情",
+        description: `查看 ${product.name} 的详细信息`
+      });
+    }
   };
-  const handleAddToCart = product => {
+  const handleAddToCart = (product, event) => {
+    // 阻止事件冒泡，避免跳转到详情页
+    event.stopPropagation();
     if (!isAuthenticated) {
       toast({
         title: "请先登录",
@@ -165,12 +191,24 @@ export default function ProductsPage(props) {
       });
       return;
     }
-    toast({
-      title: "添加成功",
-      description: `${product.name} 已添加到购物车`
-    });
+    addToCart(product, 1);
   };
-  const handleToggleFavorite = product => {
+  const handleBuyNow = (product, event) => {
+    // 阻止事件冒泡，避免跳转到详情页
+    event.stopPropagation();
+    if (!isAuthenticated) {
+      toast({
+        title: "请先登录",
+        description: "登录后才能购买",
+        variant: "destructive"
+      });
+      return;
+    }
+    buyNow(product, 1);
+  };
+  const handleToggleFavorite = (product, event) => {
+    // 阻止事件冒泡，避免跳转到详情页
+    event.stopPropagation();
     if (!isAuthenticated) {
       toast({
         title: "请先登录",
@@ -184,7 +222,9 @@ export default function ProductsPage(props) {
       description: `${product.name} 已添加到收藏`
     });
   };
-  const handleEditProduct = product => {
+  const handleEditProduct = (product, event) => {
+    // 阻止事件冒泡
+    event.stopPropagation();
     if (!hasPermission('product:write')) {
       toast({
         title: "权限不足",
@@ -198,7 +238,9 @@ export default function ProductsPage(props) {
       description: `正在编辑 ${product.name}`
     });
   };
-  const handleDeleteProduct = product => {
+  const handleDeleteProduct = (product, event) => {
+    // 阻止事件冒泡
+    event.stopPropagation();
     if (!hasPermission('product:write')) {
       toast({
         title: "权限不足",
@@ -297,10 +339,10 @@ export default function ProductsPage(props) {
 
         {/* 产品列表 */}
         {viewMode === 'grid' ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map(product => <Card key={product.id} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-colors">
+              {filteredProducts.map(product => <Card key={product.id} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-colors cursor-pointer" onClick={() => handleProductClick(product)}>
                   <CardHeader className="p-4">
                     <div className="aspect-video bg-white/10 rounded-lg overflow-hidden mb-4">
-                      <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform cursor-pointer" onClick={() => handleProductClick(product)} />
+                      <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform" />
                     </div>
                     <CardTitle className="text-white text-lg">{product.name}</CardTitle>
                   </CardHeader>
@@ -308,7 +350,10 @@ export default function ProductsPage(props) {
                     <p className="text-white/60 text-sm mb-4 line-clamp-2">{product.description}</p>
                     
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-white font-bold text-xl">¥{product.price.toLocaleString()}</span>
+                      <div>
+                        <span className="text-white font-bold text-xl">¥{product.price.toLocaleString()}</span>
+                        {product.originalPrice && <span className="text-white/60 line-through text-sm ml-2">¥{product.originalPrice.toLocaleString()}</span>}
+                      </div>
                       <div className="flex items-center text-yellow-400">
                         <Star className="w-4 h-4 fill-current" />
                         <span className="text-sm ml-1">{product.rating}</span>
@@ -329,24 +374,29 @@ export default function ProductsPage(props) {
                     </div>
 
                     <div className="flex gap-2">
-                      <Button onClick={() => handleAddToCart(product)} className="flex-1 bg-white/20 hover:bg-white/30 text-white border border-white/30">
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        购买
+                      <Button onClick={e => handleAddToCart(product, e)} disabled={cartLoading} className="flex-1 bg-white/20 hover:bg-white/30 text-white border border-white/30">
+                        {cartLoading ? <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            添加中...
+                          </> : <>
+                            <ShoppingCart className="w-4 h-4 mr-2" />
+                            购买
+                          </>}
                       </Button>
                       
-                      <Button variant="ghost" size="sm" onClick={() => handleToggleFavorite(product)} className="text-white/80 hover:text-white">
+                      <Button variant="ghost" size="sm" onClick={e => handleToggleFavorite(product, e)} className="text-white/80 hover:text-white">
                         <Heart className="w-4 h-4" />
                       </Button>
                       
-                      <Button variant="ghost" size="sm" onClick={() => handleProductClick(product)} className="text-white/80 hover:text-white">
+                      <Button variant="ghost" size="sm" onClick={e => handleBuyNow(product, e)} className="text-white/80 hover:text-white">
                         <Eye className="w-4 h-4" />
                       </Button>
                       
                       {hasPermission('product:write') && <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => handleEditProduct(product)} className="text-white/80 hover:text-white">
+                          <Button variant="ghost" size="sm" onClick={e => handleEditProduct(product, e)} className="text-white/80 hover:text-white">
                             <Edit className="w-4 h-4" />
                           </Button>
-                          <Button variant="ghost" size="sm" onClick={() => handleDeleteProduct(product)} className="text-red-400 hover:text-red-300">
+                          <Button variant="ghost" size="sm" onClick={e => handleDeleteProduct(product, e)} className="text-red-400 hover:text-red-300">
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>}
@@ -354,7 +404,7 @@ export default function ProductsPage(props) {
                   </CardContent>
                 </Card>)}
             </div> : <div className="space-y-4">
-              {filteredProducts.map(product => <Card key={product.id} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-colors">
+              {filteredProducts.map(product => <Card key={product.id} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-colors cursor-pointer" onClick={() => handleProductClick(product)}>
                   <CardContent className="p-4">
                     <div className="flex gap-4">
                       <div className="w-24 h-24 bg-white/10 rounded-lg overflow-hidden flex-shrink-0">
@@ -375,7 +425,10 @@ export default function ProductsPage(props) {
                             </div>
                             
                             <div className="flex items-center gap-4 text-sm">
-                              <span className="text-white font-bold">¥{product.price.toLocaleString()}</span>
+                              <div>
+                                <span className="text-white font-bold">¥{product.price.toLocaleString()}</span>
+                                {product.originalPrice && <span className="text-white/60 line-through text-sm ml-2">¥{product.originalPrice.toLocaleString()}</span>}
+                              </div>
                               <div className="flex items-center text-yellow-400">
                                 <Star className="w-4 h-4 fill-current" />
                                 <span className="ml-1">{product.rating}</span>
@@ -386,23 +439,25 @@ export default function ProductsPage(props) {
                           </div>
                           
                           <div className="flex gap-2">
-                            <Button onClick={() => handleAddToCart(product)} className="bg-white/20 hover:bg-white/30 text-white border border-white/30">
-                              <ShoppingCart className="w-4 h-4" />
+                            <Button onClick={e => handleAddToCart(product, e)} disabled={cartLoading} className="bg-white/20 hover:bg-white/30 text-white border border-white/30">
+                              {cartLoading ? <>
+                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                </> : <ShoppingCart className="w-4 h-4" />}
                             </Button>
                             
-                            <Button variant="ghost" size="sm" onClick={() => handleToggleFavorite(product)} className="text-white/80 hover:text-white">
+                            <Button variant="ghost" size="sm" onClick={e => handleToggleFavorite(product, e)} className="text-white/80 hover:text-white">
                               <Heart className="w-4 h-4" />
                             </Button>
                             
-                            <Button variant="ghost" size="sm" onClick={() => handleProductClick(product)} className="text-white/80 hover:text-white">
+                            <Button variant="ghost" size="sm" onClick={e => handleBuyNow(product, e)} className="text-white/80 hover:text-white">
                               <Eye className="w-4 h-4" />
                             </Button>
                             
                             {hasPermission('product:write') && <div className="flex gap-1">
-                                <Button variant="ghost" size="sm" onClick={() => handleEditProduct(product)} className="text-white/80 hover:text-white">
+                                <Button variant="ghost" size="sm" onClick={e => handleEditProduct(product, e)} className="text-white/80 hover:text-white">
                                   <Edit className="w-4 h-4" />
                                 </Button>
-                                <Button variant="ghost" size="sm" onClick={() => handleDeleteProduct(product)} className="text-red-400 hover:text-red-300">
+                                <Button variant="ghost" size="sm" onClick={e => handleDeleteProduct(product, e)} className="text-red-400 hover:text-red-300">
                                   <Trash2 className="w-4 h-4" />
                                 </Button>
                               </div>}

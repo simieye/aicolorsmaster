@@ -14,6 +14,7 @@ import AI_CHAT from '../pages/ai-chat.jsx';
 import STORE_MANAGEMENT from '../pages/store-management.jsx';
 import QR_SCANNER from '../pages/qr-scanner.jsx';
 import PERSONALIZED_RECOMMENDATION from '../pages/personalized-recommendation.jsx';
+import PRODUCT_DETAIL from '../pages/product-detail.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -62,4 +63,7 @@ export const routers = [{
 }, {
   id: "personalized-recommendation",
   component: PERSONALIZED_RECOMMENDATION
+}, {
+  id: "product-detail",
+  component: PRODUCT_DETAIL
 }]
