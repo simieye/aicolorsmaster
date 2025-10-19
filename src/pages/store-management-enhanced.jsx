@@ -1,9 +1,7 @@
 // @ts-ignore;
 import React, { useState, useEffect } from 'react';
 // @ts-ignore;
-import { Button, useToast } from '@/components/ui';
-// @ts-ignore;
-import { ArrowLeft, Settings, Users, ShoppingCart, TrendingUp, Calendar, MessageSquare, CreditCard, UserCheck, Heart, Crown, BarChart3, Package, DollarSign, Target, Zap, Shield, Database, HeadphonesIcon, Clock } from 'lucide-react';
+import { useToast, Button } from '@/components/ui';
 
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
@@ -32,25 +30,17 @@ export default function StoreManagementEnhancedPage(props) {
     }
   };
 
-  // 处理设置
-  const handleSettings = () => {
-    toast({
-      title: "门店设置",
-      description: "打开门店管理设置"
-    });
-  };
-
-  // 处理AI管理系统导航
-  const handleAIManagementNavigation = (systemId, systemName, pageId) => {
+  // 处理导航到各个AI系统
+  const handleNavigateToSystem = systemId => {
     if ($w.utils && $w.utils.navigateTo) {
       $w.utils.navigateTo({
-        pageId: pageId,
+        pageId: systemId,
         params: {}
       });
     } else {
       toast({
-        title: "AI管理系统",
-        description: `正在前往${systemName}`
+        title: "系统导航",
+        description: `正在打开${systemId}系统`
       });
     }
   };
@@ -60,7 +50,7 @@ export default function StoreManagementEnhancedPage(props) {
       
       {/* 主内容区 */}
       <main className="container mx-auto px-4 py-8 pb-24">
-        <StoreManagementEnhanced onBack={handleBack} onSettings={handleSettings} onAIManagementNavigation={handleAIManagementNavigation} />
+        <StoreManagementEnhanced onBack={handleBack} onNavigateToSystem={handleNavigateToSystem} />
       </main>
 
       {/* 底部导航 */}
