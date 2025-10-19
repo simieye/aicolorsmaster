@@ -1,0 +1,413 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI美发客户管理系统CRM - 产品详情</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .tech-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .price-tag {
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+        }
+        .scene-card {
+            transition: all 0.3s ease;
+        }
+        .scene-card:hover {
+            transform: scale(1.05);
+        }
+        .crm-chart {
+            height: 200px;
+            background: linear-gradient(180deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0) 100%);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                        <i class="fas fa-cut text-purple-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-bold text-lg">AI美发智能系统</h1>
+                        <p class="text-white/60 text-xs">专业美发数字化解决方案</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="text-white/80 hover:text-white transition-colors">首页</a>
+                    <a href="#" class="text-white/80 hover:text-white transition-colors">产品中心</a>
+                    <a href="#" class="text-white/80 hover:text-white transition-colors">技术支持</a>
+                    <a href="#" class="text-white/80 hover:text-white transition-colors">联系我们</a>
+                </nav>
+                <button class="bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 rounded-lg text-white hover:from-red-600 hover:to-pink-600">
+                    <i class="fas fa-shopping-cart mr-2"></i>
+                    立即购买
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 产品头部展示 -->
+    <section class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <div class="inline-flex items-center bg-red-500/20 text-red-300 px-4 py-2 rounded-full text-sm">
+                    <i class="fas fa-star mr-2"></i>
+                    热销软件 · 月销300+
+                </div>
+                <h1 class="text-5xl font-bold text-white mb-4">
+                    AI美发客户<br/>管理系统CRM
+                </h1>
+                <p class="text-xl text-white/80 mb-6">
+                    专业客户关系管理系统，智能客户画像、营销自动化、客户生命周期管理，全面提升客户满意度和忠诚度
+                </p>
+                <div class="flex items-center space-x-6 mb-8">
+                    <div class="flex items-center space-x-2">
+                        <div class="price-tag text-white px-6 py-3 rounded-lg">
+                            <span class="text-3xl font-bold">¥6,800</span>
+                        </div>
+                        <span class="text-white/60 line-through text-lg">¥8,800</span>
+                    </div>
+                    <div class="bg-red-500/20 text-red-300 px-4 py-2 rounded-full">
+                        <i class="fas fa-tag mr-2"></i>
+                        限时优惠 ¥2,000
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-4">
+                    <button class="bg-gradient-to-r from-red-500 to-pink-500 px-8 py-3 rounded-lg text-white hover:from-red-600 hover:to-pink-600 transition-all">
+                        <i class="fas fa-shopping-cart mr-2"></i>
+                        立即购买
+                    </button>
+                    <button class="glass-effect px-8 py-3 rounded-lg text-white hover:bg-white/20 transition-all">
+                        <i class="fas fa-play-circle mr-2"></i>
+                        观看演示
+                    </button>
+                    <button class="glass-effect px-8 py-3 rounded-lg text-white hover:bg-white/20 transition-all">
+                        <i class="fas fa-calendar mr-2"></i>
+                        免费试用
+                    </button>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="aspect-square bg-white/10 rounded-2xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1556656793-08538906a9f8?w=600&h=600&fit=crop" 
+                         alt="AI美发客户管理系统CRM" 
+                         class="w-full h-full object-cover">
+                </div>
+                <div class="absolute -bottom-6 -right-6 bg-red-500 text-white p-4 rounded-xl">
+                    <i class="fas fa-users text-2xl mb-2"></i>
+                    <p class="font-semibold">智能客户管理</p>
+                    <p class="text-sm">满意度提升60%</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心功能展示 -->
+    <section class="container mx-auto px-4 py-16">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-white mb-4">核心功能</h2>
+            <p class="text-xl text-white/80">四大核心功能，优化客户关系</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="feature-card glass-effect rounded-xl p-6 text-center">
+                <div class="tech-icon w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-circle text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-3">智能客户画像</h3>
+                <p class="text-white/70">基于AI算法构建精准客户画像，深度分析客户行为和偏好</p>
+            </div>
+            <div class="feature-card glass-effect rounded-xl p-6 text-center">
+                <div class="tech-icon w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-bullhorn text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-3">营销自动化</h3>
+                <p class="text-white/70">智能营销推送、个性化推荐、精准营销活动管理</p>
+            </div>
+            <div class="feature-card glass-effect rounded-xl p-6 text-center">
+                <div class="tech-icon w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-chart-line text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-3">客户生命周期</h3>
+                <p class="text-white/70">全生命周期管理，从获客到留存，提升客户价值</p>
+            </div>
+            <div class="feature-card glass-effect rounded-xl p-6 text-center">
+                <div class="tech-icon w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-comments text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-3">客户服务管理</h3>
+                <p class="text-white/70">智能客服、投诉处理、满意度调查，提升服务质量</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术特点 -->
+    <section class="container mx-auto px-4 py-16">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-white mb-4">技术特点</h2>
+            <p class="text-xl text-white/80">先进技术支撑，提升管理效率</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="glass-effect rounded-xl p-8">
+                <h3 class="text-2xl font-semibold text-white mb-6">
+                    <i class="fas fa-database text-red-400 mr-3"></i>
+                    数据管理
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-3 border-b border-white/20">
+                        <span class="text-white/80">数据库类型</span>
+                        <span class="text-white font-medium">云端数据库</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-white/20">
+                        <span class="text-white/80">数据同步</span>
+                        <span class="text-white font-medium">实时同步</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-white/20">
+                        <span class="text-white/80">备份策略</span>
+                        <span class="text-white font-medium">多重备份</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-white/20">
+                        <span class="text-white/80">数据安全</span>
+                        <span class="text-white font-medium">企业级加密</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3">
+                        <span class="text-white/80">API接口</span>
+                        <span class="text-white font-medium">RESTful API</span>
+                    </div>
+                </div>
+            </div>
+            <div class="glass-effect rounded-xl p-8">
+                <h3 class="text-2xl font-semibold text-white mb-6">
+                    <i class="fas fa-brain text-blue-400 mr-3"></i>
+                    智能算法
+                </h3>
+                <div class="space-y-4">
+                    <div class="bg-white/5 rounded-lg p-4">
+                        <h4 class="text-white font-medium mb-2">客户分群算法</h4>
+                        <p class="text-white/70 text-sm">基于行为数据智能分群，精准定位目标客户</p>
+                    </div>
+                    <div class="bg-white/5 rounded-lg p-4">
+                        <h4 class="text-white font-medium mb-2">流失预测算法</h4>
+                        <p class="text-white/70 text-sm">提前预测客户流失风险，及时挽留</p>
+                    </div>
+                    <div class="bg-white/5 rounded-lg p-4">
+                        <h4 class="text-white font-medium mb-2">价值评估算法</h4>
+                        <p class="text-white/70 text-sm">智能评估客户终身价值，优化资源配置</p>
+                    </div>
+                    <div class="bg-white/5 rounded-lg p-4">
+                        <h4 class="text-white font-medium mb-2">推荐算法</h4>
+                        <p class="text-white/70 text-sm">个性化推荐系统，提升转化率</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用场景 -->
+    <section class="container mx-auto px-4 py-16">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-white mb-4">使用场景</h2>
+            <p class="text-xl text-white/80">适用于各种规模的美发店</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="scene-card glass-effect rounded-xl overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
+                    <i class="fas fa-store text-white text-4xl"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-white mb-3">高端美发沙龙</h3>
+                    <p class="text-white/70 mb-4">为高端客户提供个性化服务体验</p>
+                    <ul class="text-white/60 text-sm space-y-2">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>VIP客户管理</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>个性化营销</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>客户忠诚度计划</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="scene-card glass-effect rounded-xl overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                    <i class="fas fa-building text-white text-4xl"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-white mb-3">连锁美发店</h3>
+                    <p class="text-white/70 mb-4">统一客户管理，跨店服务体验</p>
+                    <ul class="text-white/60 text-sm space-y-2">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>跨店数据共享</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>统一营销策略</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>客户行为分析</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="scene-card glass-effect rounded-xl overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center">
+                    <i class="fas fa-graduation-cap text-white text-4xl"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-white mb-3">美发培训机构</h3>
+                    <p class="text-white/70 mb-4">学员客户管理，就业推荐服务</p>
+                    <ul class="text-white/60 text-sm space-y-2">
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>学员档案管理</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>就业跟踪服务</li>
+                        <li><i class="fas fa-check text-green-400 mr-2"></i>校友网络管理</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品规格 -->
+    <section class="container mx-auto px-4 py-16">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-white mb-4">产品规格</h2>
+            <p class="text-xl text-white/80">详细功能参数，了解产品能力</p>
+        </div>
+        <div class="glass-effect rounded-xl p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-white mb-4">基本功能</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-white/70">客户管理</span>
+                            <span class="text-white">无限</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">营销自动化</span>
+                            <span class="text-white">智能</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">数据分析</span>
+                            <span class="text-white">实时</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">报表系统</span>
+                            <span class="text-white">自定义</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-white mb-4">技术指标</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-white/70">响应时间</span>
+                            <span class="text-white">&lt;0.3秒</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">数据准确率</span>
+                            <span class="text-white">99.95%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">并发用户</span>
+                            <span class="text-white">1000+</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">可用性</span>
+                            <span class="text-white">99.95%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-white mb-4">服务支持</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-white/70">部署方式</span>
+                            <span class="text-white">SaaS</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">技术支持</span>
+                            <span class="text-white">7×24小时</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">更新频率</span>
+                            <span class="text-white">周度</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">培训服务</span>
+                            <span class="text-white">包含</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 购买咨询 -->
+    <section class="container mx-auto px-4 py-16">
+        <div class="glass-effect rounded-xl p-8 text-center">
+            <h2 class="text-3xl font-bold text-white mb-4">立即升级您的客户管理</h2>
+            <p class="text-xl text-white/80 mb-8">专业团队为您提供全方位服务支持</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-phone text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">电话咨询</h3>
+                    <p class="text-white/70">400-888-8888</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-comments text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">在线客服</h3>
+                    <p class="text-white/70">7×24小时服务</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-map-marker-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">免费试用</h3>
+                    <p class="text-white/70">30天免费体验</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button class="bg-gradient-to-r from-red-500 to-pink-500 px-8 py-3 rounded-lg text-white hover:from-red-600 hover:to-pink-600 transition-all">
+                    <i class="fas fa-shopping-cart mr-2"></i>
+                    立即购买 ¥6,800
+                </button>
+                <button class="glass-effect px-8 py-3 rounded-lg text-white hover:bg-white/20 transition-all">
+                    <i class="fas fa-download mr-2"></i>
+                    下载产品手册
+                </button>
+                <button class="glass-effect px-8 py-3 rounded-lg text-white hover:bg-white/20 transition-all">
+                    <i class="fas fa-calendar mr-2"></i>
+                    预约演示
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="glass-effect border-t border-white/20 mt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="text-center text-white/60">
+                <p>&copy; 2024 AI美发智能系统. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
