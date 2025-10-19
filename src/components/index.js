@@ -21,3 +21,4 @@ export * from './OnlineConsultation.jsx';
 export * from './ProductComparison.jsx';
 export * from './UserFeedback.jsx';
 export * from './StoreManagementEnhanced.jsx';
+export * from './FinanceManagement.jsx';

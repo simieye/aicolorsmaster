@@ -27,6 +27,7 @@ import ONLINE_CONSULTATION from '../pages/online-consultation.jsx';
 import PRODUCT_COMPARISON from '../pages/product-comparison.jsx';
 import USER_FEEDBACK from '../pages/user-feedback.jsx';
 import STORE_MANAGEMENT-ENHANCED from '../pages/store-management-enhanced.jsx';
+import FINANCE_MANAGEMENT from '../pages/finance-management.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -114,4 +115,7 @@ export const routers = [{
 }, {
   id: "store-management-enhanced",
   component: STORE_MANAGEMENT-ENHANCED
+}, {
+  id: "finance-management",
+  component: FINANCE_MANAGEMENT
 }]
