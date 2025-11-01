@@ -168,4 +168,31 @@ export const SlideInOnHover = ({
       {children}
     </div>;
 };
-export default HoverEffects;
+
+// 添加样式到全局
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes ripple {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// 默认导出
+export default {
+  HoverCard,
+  HoverButton,
+  HoverImage,
+  HoverTooltip,
+  RippleEffect,
+  SlideInOnHover
+};
