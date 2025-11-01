@@ -12,9 +12,9 @@ import { TabBar } from '@/components/TabBar';
 // @ts-ignore;
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 // @ts-ignore;
-import { LoadingSpinner } from './LoadingSpinner';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 // @ts-ignore;
-import { HoverCard } from './HoverEffects';
+import { HoverCard } from '@/components/HoverEffects';
 // @ts-ignore;
 
 export default function AIAppointmentSystemDetail(props) {
