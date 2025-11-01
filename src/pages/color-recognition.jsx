@@ -3,229 +3,282 @@ import React, { useState, useRef } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Camera, Upload, Palette, Droplets, CheckCircle, AlertCircle } from 'lucide-react';
+import { Camera, Upload, Palette, Eye, Droplets, Sparkles, Loader2, RefreshCw, Download, Share2, AlertTriangle } from 'lucide-react';
 
-export default function ColorRecognition(props) {
+// @ts-ignore;
+import { deepseekService } from '@/lib/deepseek';
+
+// @ts-ignore;
+import { TopNavigation } from '@/components/TopNavigation';
+// @ts-ignore;
+import { TabBar } from '@/components/TabBar';
+// @ts-ignore;
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+// @ts-ignore;
+
+export default function ColorRecognitionPage(props) {
   const {
-    $w,
-    style
+    $w
   } = props;
   const {
     toast
   } = useToast();
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const fileInputRef = useRef(null);
   const handleImageUpload = event => {
     const file = event.target.files[0];
     if (file) {
-      analyzeImage(file);
+      if (file.size > 10 * 1024 * 1024) {
+        toast({
+          title: "文件过大",
+          description: "请选择小于10MB的图片文件",
+          variant: "destructive"
+        });
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(file);
+        setImagePreview(reader.result);
+        setAnalysisResult(null);
+      };
+      reader.readAsDataURL(file);
     }
   };
-  const analyzeImage = async file => {
-    setIsAnalyzing(true);
-
-    // 模拟AI分析过程
-    setTimeout(() => {
-      const mockResult = {
-        rgb: [120, 80, 60],
-        hex: '#78503C',
-        baseColor: '自然深棕',
-        condition: '轻微受损',
-        porosity: '中等',
-        recommendations: ['建议先进行发质修复', '适合选择暖色调染发', '需要使用护色洗发水'],
-        suitableColors: [{
-          name: '奶茶棕',
-          hex: '#D2B48C',
-          match: '95%'
-        }, {
-          name: '焦糖色',
-          hex: '#CD853F',
-          match: '92%'
-        }, {
-          name: '巧克力色',
-          hex: '#3B2F2F',
-          match: '88%'
-        }]
-      };
-      setAnalysisResult(mockResult);
-      setIsAnalyzing(false);
-      toast({
-        title: "分析完成",
-        description: "BaseColor Agent 已完成头发底色分析"
-      });
-    }, 3000);
-  };
   const handleCameraCapture = () => {
+    // 这里可以集成相机功能
     fileInputRef.current?.click();
   };
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* 页面标题 */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">AI智能色彩识别</h1>
-          <p className="text-gray-600">BaseColor Agent 精准分析您的头发底色</p>
-        </div>
+  const analyzeImage = async () => {
+    if (!selectedImage) {
+      toast({
+        title: "请先选择图片",
+        description: "需要上传图片才能进行颜色分析",
+        variant: "destructive"
+      });
+      return;
+    }
+    setIsAnalyzing(true);
+    try {
+      // 创建图片描述（实际应用中可能需要使用图像识别API）
+      const imageDescription = `用户上传了一张染发相关的图片，需要分析颜色和提供染发建议。图片文件名：${selectedImage.name}`;
+      const userRequirements = {
+        goal: 'color_analysis',
+        preferences: {
+          style: 'natural',
+          maintenance: 'easy'
+        }
+      };
+      const analysis = await deepseekService.analyzeColor(imageDescription, userRequirements);
+      setAnalysisResult({
+        id: Date.now(),
+        imageInfo: {
+          name: selectedImage.name,
+          size: selectedImage.size,
+          type: selectedImage.type
+        },
+        analysis: analysis,
+        analyzedAt: new Date()
+      });
+      toast({
+        title: "分析完成",
+        description: "AI已为您完成颜色分析"
+      });
+    } catch (error) {
+      console.error('颜色分析失败:', error);
+      toast({
+        title: "分析失败",
+        description: "请检查网络连接后重试",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+  const handleReset = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    setAnalysisResult(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+  const handleShareResult = async () => {
+    if (!analysisResult) return;
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: '颜色分析结果',
+          text: analysisResult.analysis
+        });
+      } else {
+        await navigator.clipboard.writeText(analysisResult.analysis);
+        toast({
+          title: "已复制到剪贴板",
+          description: "分析结果已复制"
+        });
+      }
+    } catch (error) {
+      console.log('分享失败:', error);
+    }
+  };
+  const handleDownloadResult = () => {
+    if (!analysisResult) return;
+    const content = `颜色分析结果\n\n${analysisResult.analysis}\n\n分析时间：${analysisResult.analyzedAt.toLocaleString()}`;
+    const blob = new Blob([content], {
+      type: 'text/plain'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `颜色分析_${new Date().toLocaleDateString()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+  return <ErrorBoundary $w={$w}>
+      <div className="min-h-screen bg-background">
+        <TopNavigation title="AI颜色识别" showBack={true} />
+        
+        <div className="pb-20">
+          {/* 头部介绍 */}
+          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center space-x-3 mb-4">
+                <Palette className="w-8 h-8" />
+                <h1 className="text-2xl font-bold">AI颜色识别</h1>
+              </div>
+              <p className="text-indigo-100">
+                上传染发图片，AI为您分析颜色特征并提供专业的染发建议
+              </p>
+            </div>
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* 左侧：图片上传区域 */}
-          <div>
+          <div className="max-w-4xl mx-auto p-4 space-y-6">
+            {/* 图片上传区域 */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Camera className="mr-2" />
-                  拍照识别
+                <CardTitle className="flex items-center space-x-2">
+                  <Camera className="w-5 h-5" />
+                  <span>图片上传</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="border-2 border-dashed border-purple-300 rounded-lg p-8 text-center">
-                  {isAnalyzing ? <div className="space-y-4">
-                      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto"></div>
-                      <p className="text-gray-600">AI正在分析中...</p>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-purple-600 h-2 rounded-full animate-pulse" style={{
-                      width: '70%'
-                    }}></div>
-                      </div>
-                    </div> : <div className="space-y-4">
-                      <div className="w-24 h-24 bg-purple-100 rounded-full mx-auto flex items-center justify-center">
-                        <Camera className="w-12 h-12 text-purple-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold mb-2">上传头发照片</h3>
-                        <p className="text-gray-600 text-sm mb-4">请确保光线充足，头发清晰可见</p>
-                      </div>
-                      <div className="flex gap-4 justify-center">
-                        <Button onClick={handleCameraCapture} className="bg-purple-600 hover:bg-purple-700">
-                          <Camera className="mr-2 w-4 h-4" />
-                          拍照
-                        </Button>
-                        <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-                          <Upload className="mr-2 w-4 h-4" />
-                          上传
-                        </Button>
-                      </div>
-                      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                    </div>}
+                {!imagePreview ? <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
+                    <Camera className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+                    <p className="text-muted-foreground mb-4">
+                      上传染发图片进行颜色分析
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <Button onClick={() => fileInputRef.current?.click()}>
+                        <Upload className="w-4 h-4 mr-2" />
+                        选择图片
+                      </Button>
+                      <Button variant="outline" onClick={handleCameraCapture}>
+                        <Camera className="w-4 h-4 mr-2" />
+                        拍照上传
+                      </Button>
+                    </div>
+                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                    <p className="text-xs text-muted-foreground mt-4">
+                      支持 JPG、PNG 格式，文件大小不超过 10MB
+                    </p>
+                  </div> : <div className="space-y-4">
+                    <div className="relative">
+                      <img src={imagePreview} alt="预览" className="w-full max-h-96 object-contain rounded-lg bg-muted" />
+                      <Button variant="destructive" size="sm" onClick={handleReset} className="absolute top-2 right-2">
+                        重新选择
+                      </Button>
+                    </div>
+                    <div className="flex space-x-4">
+                      <Button onClick={analyzeImage} disabled={isAnalyzing} className="flex-1">
+                        {isAnalyzing ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />正在分析...</> : <><Eye className="w-4 h-4 mr-2" />开始分析</>}
+                      </Button>
+                      <Button variant="outline" onClick={handleReset}>
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        重置
+                      </Button>
+                    </div>
+                  </div>}
+              </CardContent>
+            </Card>
+
+            {/* 分析结果 */}
+            {analysisResult && <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex items-center space-x-2">
+                    <Sparkles className="w-5 h-5" />
+                    <span>分析结果</span>
+                  </CardTitle>
+                  <div className="flex space-x-2">
+                    <Button variant="outline" size="sm" onClick={handleShareResult}>
+                      <Share2 className="w-4 h-4" />
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleDownloadResult}>
+                      <Download className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-muted p-4 rounded-lg">
+                    <pre className="whitespace-pre-wrap text-sm">{analysisResult.analysis}</pre>
+                  </div>
+                  <div className="mt-4 space-y-2 text-sm text-muted-foreground">
+                    <div className="flex items-center space-x-2">
+                      <Eye className="w-4 h-4" />
+                      <span>图片：{analysisResult.imageInfo.name}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Droplets className="w-4 h-4" />
+                      <span>大小：{(analysisResult.imageInfo.size / 1024 / 1024).toFixed(2)} MB</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Palette className="w-4 h-4" />
+                      <span>分析时间：{analysisResult.analyzedAt.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>}
+
+            {/* 使用提示 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2 text-blue-600">
+                  <AlertTriangle className="w-5 h-5" />
+                  <span>使用提示</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-4 text-sm">
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-foreground">拍照建议</h4>
+                    <ul className="space-y-1 text-muted-foreground">
+                      <li>• 在自然光下拍摄</li>
+                      <li>• 确保光线充足均匀</li>
+                      <li>• 避免阴影和反光</li>
+                      <li>• 距离适中，清晰对焦</li>
+                    </ul>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-foreground">图片要求</h4>
+                    <ul className="space-y-1 text-muted-foreground">
+                      <li>• 支持 JPG、PNG 格式</li>
+                      <li>• 文件大小不超过 10MB</li>
+                      <li>• 建议分辨率 800x600 以上</li>
+                      <li>• 避免过度处理的照片</li>
+                    </ul>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
-
-          {/* 右侧：分析结果 */}
-          <div>
-            {analysisResult ? <div className="space-y-6">
-                {/* RGB分析结果 */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Palette className="mr-2" />
-                      色彩分析结果
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-600">RGB值：</span>
-                        <span className="font-mono font-semibold">
-                          {analysisResult.rgb.join(', ')}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-600">HEX值：</span>
-                        <span className="font-mono font-semibold">
-                          {analysisResult.hex}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-600">底色判断：</span>
-                        <span className="font-semibold">{analysisResult.baseColor}</span>
-                      </div>
-                      <div className="h-16 rounded-lg shadow-inner" style={{
-                    backgroundColor: analysisResult.hex
-                  }}></div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* 发质分析 */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Droplets className="mr-2" />
-                      发质分析
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-600">发质状况：</span>
-                        <span className={`px-3 py-1 rounded-full text-sm ${analysisResult.condition === '健康' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                          {analysisResult.condition}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-600">孔隙度：</span>
-                        <span className="font-semibold">{analysisResult.porosity}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* 推荐色彩 */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <CheckCircle className="mr-2" />
-                      推荐色彩
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {analysisResult.suitableColors.map((color, index) => <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div className="flex items-center">
-                            <div className="w-8 h-8 rounded-full mr-3" style={{
-                        backgroundColor: color.hex
-                      }}></div>
-                            <div>
-                              <p className="font-semibold">{color.name}</p>
-                              <p className="text-sm text-gray-600">匹配度 {color.match}</p>
-                            </div>
-                          </div>
-                          <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-                            选择
-                          </Button>
-                        </div>)}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* 注意事项 */}
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="flex items-start">
-                      <AlertCircle className="w-5 h-5 text-yellow-600 mr-2 mt-0.5" />
-                      <div>
-                        <h4 className="font-semibold mb-2">染发建议</h4>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          {analysisResult.recommendations.map((rec, index) => <li key={index}>• {rec}</li>)}
-                        </ul>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div> : <Card>
-                <CardContent className="pt-6">
-                  <div className="text-center text-gray-500">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                      <Palette className="w-8 h-8" />
-                    </div>
-                    <p>请上传照片进行AI分析</p>
-                  </div>
-                </CardContent>
-              </Card>}
-          </div>
         </div>
+
+        <TabBar />
       </div>
-    </div>;
+    </ErrorBoundary>;
 }
