@@ -1,0 +1,204 @@
+
+[
+  {
+    "_id": "pref_001",
+    "user_id": "user_001",
+    "enabled": true,
+    "algorithm": "balanced",
+    "sensitivity": "medium",
+    "categories": ["hair-dye", "tools", "professional"],
+    "price_range": {
+      "min": 100,
+      "max": 800
+    },
+    "brands": ["AI智能", "专业", "天然"],
+    "colors": ["棕色", "黑色", "红色"],
+    "frequency": "daily",
+    "notifications": true,
+    "learning": true,
+    "privacy": "standard",
+    "hair_type": "normal",
+    "skin_tone": "medium",
+    "preferred_colors": ["深棕色", "巧克力色", "酒红色"],
+    "previous_products": ["product_001", "product_003", "product_005"],
+    "allergies": ["PPD", "氨水"],
+    "last_updated": "2025-10-16T08:30:00.000Z",
+    "recommendation_score": 4.2,
+    "interaction_count": 156,
+    "feedback_history": [
+      {
+        "product_id": "product_001",
+        "rating": 5,
+        "feedback": "非常满意，推荐准确",
+        "timestamp": "2025-10-15T10:00:00.000Z"
+      },
+      {
+        "product_id": "product_003",
+        "rating": 4,
+        "feedback": "产品不错，但价格稍高",
+        "timestamp": "2025-10-14T15:30:00.000Z"
+      }
+    ],
+    "createdAt": 1726368000000,
+    "updatedAt": 1729046400000,
+    "owner": "user_001",
+    "createBy": "user_001",
+    "updateBy": "user_001"
+  },
+  {
+    "_id": "pref_002",
+    "user_id": "user_002",
+    "enabled": true,
+    "algorithm": "price-focused",
+    "sensitivity": "low",
+    "categories": ["hair-dye", "accessories"],
+    "price_range": {
+      "min": 50,
+      "max": 300
+    },
+    "brands": ["经济", "温和"],
+    "colors": ["黑色", "棕色"],
+    "frequency": "weekly",
+    "notifications": true,
+    "learning": false,
+    "privacy": "basic",
+    "hair_type": "dry",
+    "skin_tone": "fair",
+    "preferred_colors": ["自然黑", "浅棕色"],
+    "previous_products": ["product_002"],
+    "allergies": [],
+    "last_updated": "2025-10-16T09:15:00.000Z",
+    "recommendation_score": 3.8,
+    "interaction_count": 45,
+    "feedback_history": [
+      {
+        "product_id": "product_002",
+        "rating": 4,
+        "feedback": "性价比很高",
+        "timestamp": "2025-10-13T12:00:00.000Z"
+      }
+    ],
+    "createdAt": 1728960000000,
+    "updatedAt": 1729046400000,
+    "owner": "user_002",
+    "createBy": "user_002",
+    "updateBy": "user_002"
+  },
+  {
+    "_id": "pref_003",
+    "user_id": "user_003",
+    "enabled": true,
+    "algorithm": "quality-focused",
+    "sensitivity": "high",
+    "categories": ["professional", "tools", "kits"],
+    "price_range": {
+      "min": 500,
+      "max": 2000
+    },
+    "brands": ["专业", "高端", "AI智能"],
+    "colors": ["红色", "紫色", "蓝色", "自定义"],
+    "frequency": "realtime",
+    "notifications": true,
+    "learning": true,
+    "privacy": "advanced",
+    "hair_type": "damaged",
+    "skin_tone": "olive",
+    "preferred_colors": ["玫瑰红", "薰衣草紫", "宝蓝色"],
+    "previous_products": ["product_004", "product_005", "product_006"],
+    "allergies": ["过硫酸盐"],
+    "last_updated": "2025-10-16T07:45:00.000Z",
+    "recommendation_score": 4.7,
+    "interaction_count": 289,
+    "feedback_history": [
+      {
+        "product_id": "product_006",
+        "rating": 5,
+        "feedback": "专业级产品，效果卓越",
+        "timestamp": "2025-10-16T06:00:00.000Z"
+      },
+      {
+        "product_id": "product_005",
+        "rating": 5,
+        "feedback": "CRM系统很实用",
+        "timestamp": "2025-10-15T14:20:00.000Z"
+      }
+    ],
+    "createdAt": 1726281600000,
+    "updatedAt": 1729046400000,
+    "owner": "user_003",
+    "createBy": "user_003",
+    "updateBy": "user_003"
+  },
+  {
+    "_id": "pref_004",
+    "user_id": "user_004",
+    "enabled": true,
+    "algorithm": "personalized",
+    "sensitivity": "medium",
+    "categories": ["hair-dye", "natural"],
+    "price_range": {
+      "min": 0,
+      "max": 200
+    },
+    "brands": ["天然", "温和"],
+    "colors": ["棕色", "黑色"],
+    "frequency": "daily",
+    "notifications": true,
+    "learning": true,
+    "privacy": "standard",
+    "hair_type": "oily",
+    "skin_tone": "dark",
+    "preferred_colors": ["深棕色", "自然黑"],
+    "previous_products": [],
+    "allergies": [],
+    "last_updated": "2025-10-16T10:00:00.000Z",
+    "recommendation_score": 0.0,
+    "interaction_count": 8,
+    "feedback_history": [],
+    "createdAt": 1729132800000,
+    "updatedAt": 1729132800000,
+    "owner": "user_004",
+    "createBy": "user_004",
+    "updateBy": "user_004"
+  },
+  {
+    "_id": "pref_005",
+    "user_id": "user_005",
+    "enabled": false,
+    "algorithm": "trending",
+    "sensitivity": "low",
+    "categories": ["hair-dye", "tools", "accessories"],
+    "price_range": {
+      "min": 100,
+      "max": 1000
+    },
+    "brands": ["AI智能", "持久", "快速"],
+    "colors": ["金色", "红色", "灰色", "粉色"],
+    "frequency": "weekly",
+    "notifications": false,
+    "learning": false,
+    "privacy": "basic",
+    "hair_type": "normal",
+    "skin_tone": "medium",
+    "preferred_colors": ["金色", "银灰色"],
+    "previous_products": ["product_001", "product_003"],
+    "allergies": [],
+    "last_updated": "2025-10-15T16:30:00.000Z",
+    "recommendation_score": 4.1,
+    "interaction_count": 67,
+    "feedback_history": [
+      {
+        "product_id": "product_001",
+        "rating": 4,
+        "feedback": "产品功能强大",
+        "timestamp": "2025-10-12T09:15:00.000Z"
+      }
+    ],
+    "createdAt": 1726022400000,
+    "updatedAt": 1729046400000,
+    "owner": "user_005",
+    "createBy": "user_005",
+    "updateBy": "user_005"
+  }
+]
+  

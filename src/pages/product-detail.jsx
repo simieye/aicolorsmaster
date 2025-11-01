@@ -1,685 +1,708 @@
 // @ts-ignore;
 import React, { useState, useEffect } from 'react';
 // @ts-ignore;
-import { Card, CardContent, CardHeader, CardTitle, Button, useToast, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
 // @ts-ignore;
-import { ArrowLeft, Share2, Heart, Star, ShoppingCart, Truck, Shield, Check, Brain, Palette, HandPointer, ThermometerHalf, Package, MessageCircle, ThumbsUp, Plus, Minus } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Heart, Star, Share2, MessageCircle, Brain, Sparkles, TrendingUp, Package, Shield, Zap, ThumbsUp, ThumbsDown, RefreshCw, Info, CheckCircle, AlertCircle } from 'lucide-react';
 
+// @ts-ignore;
+import { deepseekService } from '@/lib/deepseek';
+
+// @ts-ignore;
+import { TopNavigation } from '@/components/TopNavigation';
 // @ts-ignore;
 import { TabBar } from '@/components/TabBar';
 // @ts-ignore;
-import { useCart } from '@/components/ShoppingCart';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 // @ts-ignore;
-import { CartSidebar } from '@/components/CartSidebar';
+import { ShoppingCart as ShoppingCartComponent } from '@/components/ShoppingCart';
+// @ts-ignore;
+
 export default function ProductDetailPage(props) {
   const {
-    $w,
-    style
-  } = props;
-  const {
-    page
+    $w
   } = props;
   const {
     toast
   } = useToast();
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState('description');
-  const [isFavorited, setIsFavorited] = useState(false);
-  const [selectedSpecs, setSelectedSpecs] = useState({});
-
-  // 购物车功能
-  const {
-    addToCart,
-    buyNow,
-    isLoading: cartLoading
-  } = useCart();
-
-  // 从URL参数获取产品ID
-  const productId = page?.dataset?.params?.productId;
-
-  // 模拟产品数据
-  const mockProducts = {
-    1: {
-      id: 1,
-      name: 'AI智能染发自动调色宝机',
-      category: '智能设备',
-      price: 4980,
-      originalPrice: 5980,
-      description: '新一代AI智能染发设备，自动识别发质、精准调色，一键完成专业染发过程，大幅提升门店效率',
-      image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop',
-      images: ['https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop'],
-      stock: 50,
-      rating: 4.9,
-      reviews: 256,
-      monthlySales: 500,
-      features: ['AI发质识别', '精准自动调色', '一键操作', '智能温控'],
-      status: '现货',
-      specifications: {
-        model: 'AI-HC-2024',
-        dimensions: '350×280×450mm',
-        weight: '8.5kg',
-        power: '150W',
-        workingTemp: '15-35°C',
-        warranty: '1年'
-      },
-      usage: [{
-        step: 1,
-        title: '发质检测',
-        description: '将发质传感器放置在顾客头发上，进行发质分析'
-      }, {
-        step: 2,
-        title: '选择色彩',
-        description: '根据顾客需求选择目标色彩或使用AI推荐'
-      }, {
-        step: 3,
-        title: '自动调色',
-        description: '设备自动计算配方比例，进行精准调色'
-      }, {
-        step: 4,
-        title: '完成染发',
-        description: '按照标准流程进行染发操作'
-      }],
-      reviews: [{
-        id: 1,
-        userName: '张店长',
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
-        rating: 5,
-        date: '2024-01-15',
-        content: '这个设备真的太棒了！大大提高了我们店的染发效率，顾客满意度也提升了很多。'
-      }, {
-        id: 2,
-        userName: '李发型师',
-        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
-        rating: 5,
-        date: '2024-01-12',
-        content: 'AI发质识别功能很准确，调色效果一致性好，节省了很多时间。'
-      }],
-      relatedProducts: [{
-        id: 2,
-        name: 'AI品牌染发膏管理系统',
-        price: 1680,
-        image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=150&h=100&fit=crop'
-      }, {
-        id: 3,
-        name: 'AI客户配方管理系统',
-        price: 2680,
-        image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=150&h=100&fit=crop'
-      }]
-    },
-    2: {
-      id: 2,
-      name: 'AI品牌染发膏管理系统',
-      category: '管理软件',
-      price: 1680,
-      originalPrice: 1980,
-      description: '专业染发膏库存管理系统，智能预警、批次追踪、成本控制，让染发产品管理更高效',
-      image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=300&fit=crop',
-      images: ['https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop'],
-      stock: 999,
-      rating: 4.7,
-      reviews: 128,
-      monthlySales: 300,
-      features: ['智能库存管理', '批次追踪', '成本分析', '预警提醒'],
-      status: '现货',
-      isDigital: true,
-      specifications: {
-        model: 'AI-IM-2024',
-        version: 'v2.0',
-        license: '永久授权',
-        support: '7×24小时',
-        update: '免费升级',
-        warranty: '终身维护'
-      }
-    },
-    3: {
-      id: 3,
-      name: 'AI客户配方管理系统',
-      category: '管理软件',
-      price: 2680,
-      originalPrice: 3180,
-      description: '智能客户染发配方管理，记录客户偏好、历史配方、过敏信息，提供个性化服务体验',
-      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop',
-      images: ['https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop'],
-      stock: 999,
-      rating: 4.8,
-      reviews: 189,
-      monthlySales: 250,
-      features: ['客户档案管理', '配方历史记录', '过敏信息提醒', '个性化推荐'],
-      status: '现货',
-      isDigital: true,
-      specifications: {
-        model: 'AI-CM-2024',
-        version: 'v3.0',
-        license: '永久授权',
-        database: '云端存储',
-        backup: '自动备份',
-        warranty: '终身维护'
-      }
-    },
-    4: {
-      id: 4,
-      name: 'AI美发连锁门店管理系统',
-      category: '管理软件',
-      price: 3680,
-      originalPrice: 4180,
-      description: '专为美发连锁店设计的一体化管理解决方案，涵盖预约、员工、财务、营销等全方位管理',
-      image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop',
-      images: ['https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop'],
-      stock: 999,
-      rating: 4.6,
-      reviews: 167,
-      monthlySales: 180,
-      features: ['多店统一管理', '智能预约系统', '员工绩效管理', '财务报表分析'],
-      status: '现货',
-      isDigital: true,
-      specifications: {
-        model: 'AI-SM-2024',
-        version: 'v4.0',
-        license: '永久授权',
-        stores: '支持多门店',
-        support: '7×24小时',
-        warranty: '终身维护'
-      }
-    },
-    5: {
-      id: 5,
-      name: 'AI美发客户管理系统CRM',
-      category: '管理软件',
-      price: 6800,
-      originalPrice: 7800,
-      description: '专业美发行业CRM系统，客户关系维护、营销自动化、数据分析，助力门店业绩增长',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop',
-      images: ['https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop'],
-      stock: 999,
-      rating: 4.8,
-      reviews: 234,
-      monthlySales: 120,
-      features: ['客户关系管理', '营销自动化', '数据分析洞察', '会员积分系统'],
-      status: '现货',
-      isDigital: true,
-      specifications: {
-        model: 'AI-CRM-2024',
-        version: 'v5.0',
-        license: '永久授权',
-        users: '不限用户数',
-        support: '7×24小时',
-        warranty: '终身维护'
-      }
-    },
-    6: {
-      id: 6,
-      name: 'AI染发色彩大师AI原生开源SaaS系统',
-      category: 'SaaS平台',
-      price: 8800,
-      originalPrice: 9800,
-      description: '基于AI原生技术开发的染发色彩管理SaaS平台，开源架构、云端部署、支持定制化开发',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop',
-      images: ['https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=400&h=300&fit=crop'],
-      stock: 999,
-      rating: 4.9,
-      reviews: 312,
-      monthlySales: 80,
-      features: ['AI原生架构', '开源可定制', '云端SaaS部署', 'API接口丰富'],
-      status: '现货',
-      isDigital: true,
-      specifications: {
-        model: 'AI-SaaS-2024',
-        version: 'v6.0',
-        license: '开源授权',
-        deployment: '云端部署',
-        support: '7×24小时',
-        warranty: '终身维护'
-      }
+  const [recommendations, setRecommendations] = useState({
+    similar: [],
+    complementary: [],
+    upgrade: []
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [userFeedback, setUserFeedback] = useState({});
+  const [recommendationStats, setRecommendationStats] = useState({
+    totalViews: 0,
+    clickRate: 0,
+    satisfactionRate: 0
+  });
+  const productId = props.$w?.page?.dataset?.params?.productId || 'PROD001';
+  useEffect(() => {
+    loadProductDetail();
+    loadRecommendations();
+    updateRecommendationStats();
+  }, [productId]);
+  const loadProductDetail = async () => {
+    try {
+      // 模拟产品数据，实际应该从API获取
+      const mockProduct = {
+        id: productId,
+        name: 'AI智能染发剂',
+        description: '采用先进AI技术，根据您的发质和肤色智能调配最适合的染发剂',
+        price: 199,
+        originalPrice: 299,
+        rating: 4.8,
+        reviews: 256,
+        images: ['https://picsum.photos/seed/product1/400/400.jpg', 'https://picsum.photos/seed/product2/400/400.jpg'],
+        category: 'hair-dye',
+        brand: 'AI智能',
+        color: '棕色',
+        features: ['AI智能调配', '天然成分', '持久显色', '温和不刺激'],
+        specifications: {
+          weight: '100ml',
+          usage: '2-3次',
+          shelfLife: '3年'
+        },
+        stock: 50,
+        sales: 1234
+      };
+      setProduct(mockProduct);
+    } catch (error) {
+      console.error('加载产品详情失败:', error);
     }
   };
+  const loadRecommendations = async () => {
+    setIsLoading(true);
+    try {
+      const currentUser = $w?.auth?.currentUser;
+      const userProfile = {
+        userId: currentUser?.userId,
+        userName: currentUser?.nickName || currentUser?.name,
+        preferences: await loadUserPreferences()
+      };
 
-  // 加载产品数据
-  useEffect(() => {
-    const loadProduct = async () => {
-      try {
-        setLoading(true);
-        // 模拟API调用延迟
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const productData = mockProducts[productId] || mockProducts[1];
-        setProduct(productData);
-
-        // 重置数量为1
-        setQuantity(1);
-      } catch (error) {
-        console.error('加载产品失败:', error);
-        toast({
-          title: "加载失败",
-          description: "产品信息加载失败，请稍后重试",
-          variant: "destructive"
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (productId) {
-      loadProduct();
+      // 生成多种类型的推荐
+      const [similarRecs, complementaryRecs, upgradeRecs] = await Promise.allSettled([generateSimilarRecommendations(product, userProfile), generateComplementaryRecommendations(product, userProfile), generateUpgradeRecommendations(product, userProfile)]);
+      setRecommendations({
+        similar: similarRecs.status === 'fulfilled' ? similarRecs.value : [],
+        complementary: complementaryRecs.status === 'fulfilled' ? complementaryRecs.value : [],
+        upgrade: upgradeRecs.status === 'fulfilled' ? upgradeRecs.value : []
+      });
+    } catch (error) {
+      console.error('加载推荐失败:', error);
+      setDefaultRecommendations();
+    } finally {
+      setIsLoading(false);
     }
-  }, [productId, toast]);
+  };
+  const loadUserPreferences = async () => {
+    try {
+      // 从推荐偏好数据模型加载用户偏好
+      const response = await $w.cloud.callDataSource({
+        dataSourceName: 'hair_dye_recommendation_preferences',
+        methodName: 'wedaGetItemV2',
+        params: {
+          filter: {
+            where: {
+              user_id: {
+                $eq: $w?.auth?.currentUser?.userId
+              }
+            }
+          },
+          select: {
+            $master: true
+          }
+        }
+      });
+      return response || {};
+    } catch (error) {
+      console.error('加载用户偏好失败:', error);
+      return {};
+    }
+  };
+  const generateSimilarRecommendations = async (currentProduct, userProfile) => {
+    try {
+      const prompt = `基于当前产品推荐相似产品：
+当前产品信息：${JSON.stringify(currentProduct)}
+用户偏好：${JSON.stringify(userProfile.preferences)}
 
-  // 处理返回
-  const handleBack = () => {
-    if ($w.utils && $w.utils.navigateBack) {
-      $w.utils.navigateBack();
-    } else if ($w.utils && $w.utils.navigateTo) {
+请推荐3-4个相似产品，基于以下标准：
+1. 相同类别和功能
+2. 相似的价格区间
+3. 相似的品牌定位
+4. 相同的颜色偏好
+
+以JSON格式返回，包含产品名称、价格、推荐理由、匹配度评分等信息。`;
+      const response = await deepseekService.chatCompletion([{
+        role: 'system',
+        content: '你是一个专业的产品推荐专家，能够基于产品特征和用户偏好推荐最合适的相似产品。'
+      }, {
+        role: 'user',
+        content: prompt
+      }], {
+        temperature: 0.3,
+        max_tokens: 1000
+      });
+      try {
+        return JSON.parse(response);
+      } catch (e) {
+        return getDefaultSimilarRecommendations();
+      }
+    } catch (error) {
+      return getDefaultSimilarRecommendations();
+    }
+  };
+  const generateComplementaryRecommendations = async (currentProduct, userProfile) => {
+    try {
+      const prompt = `基于当前产品推荐互补产品：
+当前产品信息：${JSON.stringify(currentProduct)}
+用户偏好：${JSON.stringify(userProfile.preferences)}
+
+请推荐2-3个互补产品，这些产品可以与当前产品配合使用，提升整体效果：
+1. 染发工具（梳子、手套等）
+2. 护理产品（洗发水、护发素等）
+3. 配套用品（围布、耳罩等）
+
+以JSON格式返回，包含产品名称、价格、推荐理由、互补性说明等信息。`;
+      const response = await deepseekService.chatCompletion([{
+        role: 'system',
+        content: '你是一个专业的产品搭配专家，能够推荐与当前产品完美搭配的互补产品。'
+      }, {
+        role: 'user',
+        content: prompt
+      }], {
+        temperature: 0.4,
+        max_tokens: 800
+      });
+      try {
+        return JSON.parse(response);
+      } catch (e) {
+        return getDefaultComplementaryRecommendations();
+      }
+    } catch (error) {
+      return getDefaultComplementaryRecommendations();
+    }
+  };
+  const generateUpgradeRecommendations = async (currentProduct, userProfile) => {
+    try {
+      const prompt = `基于当前产品推荐升级产品：
+当前产品信息：${JSON.stringify(currentProduct)}
+用户偏好：${JSON.stringify(userProfile.preferences)}
+
+请推荐2-3个升级产品，这些产品是当前产品的升级版本或高端替代品：
+1. 更高品质的成分
+2. 更先进的技术
+3. 更好的使用体验
+4. 更持久的效果
+
+以JSON格式返回，包含产品名称、价格、推荐理由、升级优势等信息。`;
+      const response = await deepseekService.chatCompletion([{
+        role: 'system',
+        content: '你是一个专业的产品升级顾问，能够推荐当前产品的高端升级版本。'
+      }, {
+        role: 'user',
+        content: prompt
+      }], {
+        temperature: 0.3,
+        max_tokens: 800
+      });
+      try {
+        return JSON.parse(response);
+      } catch (e) {
+        return getDefaultUpgradeRecommendations();
+      }
+    } catch (error) {
+      return getDefaultUpgradeRecommendations();
+    }
+  };
+  const getDefaultSimilarRecommendations = () => {
+    return [{
+      name: 'AI智能染发剂-黑色',
+      price: 199,
+      originalPrice: 299,
+      rating: 4.7,
+      image: 'https://picsum.photos/seed/similar1/200/200.jpg',
+      productId: 'PROD002',
+      reason: '同系列产品，不同颜色选择',
+      matchScore: 95,
+      tags: ['相似产品', '同系列']
+    }, {
+      name: 'AI智能染发剂-金色',
+      price: 219,
+      originalPrice: 329,
+      rating: 4.6,
+      image: 'https://picsum.photos/seed/similar2/200/200.jpg',
+      productId: 'PROD003',
+      reason: '同品牌同类型，颜色不同',
+      matchScore: 88,
+      tags: ['相似产品', '热门']
+    }];
+  };
+  const getDefaultComplementaryRecommendations = () => {
+    return [{
+      name: '专业染发工具套装',
+      price: 89,
+      originalPrice: 129,
+      rating: 4.8,
+      image: 'https://picsum.photos/seed/complementary1/200/200.jpg',
+      productId: 'TOOL001',
+      reason: '专业染发必备工具，提升染发效果',
+      complementarity: '工具配套',
+      tags: ['配套工具', '专业']
+    }, {
+      name: '染后护理套装',
+      price: 159,
+      originalPrice: 239,
+      rating: 4.9,
+      image: 'https://picsum.photos/seed/complementary2/200/200.jpg',
+      productId: 'CARE001',
+      reason: '染后专用护理，延长颜色持久度',
+      complementarity: '护理配套',
+      tags: ['护理产品', '必备']
+    }];
+  };
+  const getDefaultUpgradeRecommendations = () => {
+    return [{
+      name: 'AI智能染发剂Pro版',
+      price: 399,
+      originalPrice: 599,
+      rating: 4.9,
+      image: 'https://picsum.photos/seed/upgrade1/200/200.jpg',
+      productId: 'PROD101',
+      reason: '升级版AI算法，更精准的颜色匹配',
+      upgradeAdvantage: 'AI算法升级',
+      tags: ['升级版', '高端']
+    }];
+  };
+  const setDefaultRecommendations = () => {
+    setRecommendations({
+      similar: getDefaultSimilarRecommendations(),
+      complementary: getDefaultComplementaryRecommendations(),
+      upgrade: getDefaultUpgradeRecommendations()
+    });
+  };
+  const updateRecommendationStats = () => {
+    setRecommendationStats(prev => ({
+      ...prev,
+      totalViews: prev.totalViews + 1
+    }));
+  };
+  const handleRecommendationClick = (type, item) => {
+    // 记录推荐点击
+    const feedbackKey = `${type}_${item.productId}`;
+    setUserFeedback(prev => ({
+      ...prev,
+      [feedbackKey]: {
+        ...prev[feedbackKey],
+        clicked: true,
+        clickTime: new Date()
+      }
+    }));
+
+    // 更新点击率统计
+    setRecommendationStats(prev => ({
+      ...prev,
+      clickRate: (prev.clickRate * prev.totalViews + 1) / (prev.totalViews + 1) * 100
+    }));
+
+    // 跳转到产品详情页
+    if ($w && $w.utils) {
       $w.utils.navigateTo({
-        pageId: 'products',
-        params: {}
+        pageId: 'product-detail',
+        params: {
+          productId: item.productId
+        }
       });
     }
   };
+  const handleFeedback = (type, item, feedback) => {
+    const feedbackKey = `${type}_${item.productId}`;
+    setUserFeedback(prev => ({
+      ...prev,
+      [feedbackKey]: {
+        ...prev[feedbackKey],
+        feedback: feedback,
+        feedbackTime: new Date()
+      }
+    }));
 
-  // 处理分享
+    // 更新满意度统计
+    if (feedback === 'like') {
+      setRecommendationStats(prev => ({
+        ...prev,
+        satisfactionRate: Math.min(100, prev.satisfactionRate + 2)
+      }));
+    } else if (feedback === 'dislike') {
+      setRecommendationStats(prev => ({
+        ...prev,
+        satisfactionRate: Math.max(0, prev.satisfactionRate - 1)
+      }));
+    }
+    toast({
+      title: "感谢反馈",
+      description: "您的反馈将帮助我们改进推荐算法"
+    });
+  };
+  const handleRefreshRecommendations = () => {
+    loadRecommendations();
+  };
+  const handleAddToCart = item => {
+    // 添加到购物车逻辑
+    toast({
+      title: "已添加到购物车",
+      description: `${item.name} 已加入购物车`
+    });
+  };
   const handleShare = () => {
+    // 分享产品逻辑
     if (navigator.share) {
       navigator.share({
         title: product?.name,
         text: product?.description,
         url: window.location.href
       });
-    } else {
-      // 复制链接到剪贴板
-      navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "链接已复制",
-        description: "产品链接已复制到剪贴板"
-      });
     }
   };
-
-  // 处理收藏
-  const handleToggleFavorite = () => {
-    setIsFavorited(!isFavorited);
+  const handleFavorite = () => {
+    // 收藏产品逻辑
     toast({
-      title: isFavorited ? "已取消收藏" : "已添加收藏",
-      description: isFavorited ? "产品已从收藏中移除" : "产品已添加到收藏"
+      title: "已收藏",
+      description: `${product?.name} 已添加到收藏`
     });
   };
-
-  // 处理加入购物车
-  const handleAddToCart = () => {
-    if (!product) return;
-
-    // 检查库存
-    if (quantity > product.stock) {
-      toast({
-        title: "库存不足",
-        description: `商品库存仅剩 ${product.stock} 件`,
-        variant: "destructive"
-      });
-      return;
-    }
-    addToCart(product, quantity);
-  };
-
-  // 处理立即购买
-  const handleBuyNow = () => {
-    if (!product) return;
-
-    // 检查库存
-    if (quantity > product.stock) {
-      toast({
-        title: "库存不足",
-        description: `商品库存仅剩 ${product.stock} 件`,
-        variant: "destructive"
-      });
-      return;
-    }
-    buyNow(product, quantity);
-  };
-
-  // 处理数量变化
-  const handleQuantityChange = delta => {
-    const newQuantity = quantity + delta;
-    if (newQuantity >= 1 && newQuantity <= (product?.stock || 999)) {
-      setQuantity(newQuantity);
-    } else if (newQuantity > (product?.stock || 999)) {
-      toast({
-        title: "库存不足",
-        description: `商品库存仅剩 ${product?.stock || 999} 件`,
-        variant: "destructive"
-      });
-    }
-  };
-
-  // 图片轮播
-  const nextImage = () => {
-    if (product?.images) {
-      setCurrentImageIndex(prev => (prev + 1) % product.images.length);
-    }
-  };
-  const prevImage = () => {
-    if (product?.images) {
-      setCurrentImageIndex(prev => (prev - 1 + product.images.length) % product.images.length);
-    }
-  };
-
-  // 计算总价
-  const calculateTotalPrice = () => {
-    if (!product) return 0;
-    const price = selectedSpecs.price || product.price;
-    return price * quantity;
-  };
-
-  // 计算节省金额
-  const calculateSavings = () => {
-    if (!product) return 0;
-    const originalPrice = selectedSpecs.originalPrice || product.originalPrice || product.price;
-    const currentPrice = selectedSpecs.price || product.price;
-    return (originalPrice - currentPrice) * quantity;
-  };
-  if (loading) {
-    return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p>加载产品详情中...</p>
-        </div>
-      </div>;
-  }
   if (!product) {
-    return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 flex items-center justify-center">
-        <div className="text-white text-center">
-          <Package className="w-16 h-16 text-white/60 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold mb-2">产品不存在</h2>
-          <p className="text-white/60 mb-4">请检查产品ID是否正确</p>
-          <Button onClick={handleBack} className="bg-white/20 hover:bg-white/30 text-white border border-white/30">
-            返回产品列表
-          </Button>
+    return <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>加载中...</p>
         </div>
       </div>;
   }
-  return <div style={style} className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
-      {/* 头部导航 */}
-      <header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Button variant="ghost" size="sm" onClick={handleBack} className="text-white/80 hover:text-white">
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <h1 className="text-lg font-semibold text-white truncate max-w-[200px]">{product.name}</h1>
-            <div className="flex space-x-2">
-              <Button variant="ghost" size="sm" onClick={handleShare} className="text-white/80 hover:text-white">
-                <Share2 className="w-5 h-5" />
-              </Button>
-              <Button variant="ghost" size="sm" onClick={handleToggleFavorite} className={`${isFavorited ? 'text-red-400' : 'text-white/80'} hover:text-red-400`}>
-                <Heart className={`w-5 h-5 ${isFavorited ? 'fill-current' : ''}`} />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* 主内容区 */}
-      <main className="container mx-auto px-4 py-6 pb-32">
-        {/* 产品图片轮播 */}
-        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6">
-          <CardContent className="p-4">
-            <div className="relative">
-              <div className="aspect-video bg-white/10 rounded-xl overflow-hidden">
-                <img src={product.images?.[currentImageIndex] || product.image} alt={product.name} className="w-full h-full object-cover" />
+  return <ErrorBoundary $w={$w}>
+      <div className="min-h-screen bg-background">
+        <TopNavigation title="产品详情" showBack={true} />
+        
+        <div className="pb-20">
+          {/* 产品基本信息 */}
+          <div className="bg-card p-4">
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* 产品图片 */}
+              <div className="space-y-4">
+                <div className="aspect-square bg-muted rounded-lg overflow-hidden">
+                  <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="grid grid-cols-4 gap-2">
+                  {product.images.map((image, index) => <div key={index} className="aspect-square bg-muted rounded-lg overflow-hidden">
+                      <img src={image} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                    </div>)}
+                </div>
               </div>
-              
-              {/* 轮播控制 */}
-              {product.images && product.images.length > 1 && <>
-                  <Button variant="ghost" size="sm" onClick={prevImage} className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white">
-                    <ArrowLeft className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={nextImage} className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white">
-                    <ArrowLeft className="w-4 h-4 rotate-180" />
-                  </Button>
-                </>}
 
-              {/* 图片指示器 */}
-              {product.images && product.images.length > 1 && <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                  {product.images.map((_, index) => <div key={index} className={`w-2 h-2 rounded-full transition-colors ${index === currentImageIndex ? 'bg-white' : 'bg-white/50'}`}></div>)}
-                </div>}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 产品基本信息 */}
-        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h2 className="text-2xl font-bold text-white mb-2">{product.name}</h2>
-                <div className="flex items-center space-x-4 text-sm">
-                  <div className="flex items-center text-yellow-400">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="ml-1">{product.rating}</span>
-                    <span className="text-white/60 ml-1">({product.reviews}评价)</span>
+              {/* 产品信息 */}
+              <div className="space-y-4">
+                <div>
+                  <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
+                  <p className="text-muted-foreground mb-4">{product.description}</p>
+                  
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="flex items-center space-x-1">
+                      <Star className="w-5 h-5 text-yellow-500 fill-current" />
+                      <span className="font-medium">{product.rating}</span>
+                      <span className="text-muted-foreground">({product.reviews})</span>
+                    </div>
+                    <div className="text-muted-foreground">销量 {product.sales}</div>
                   </div>
-                  <span className="text-white/60">月销 {product.monthlySales}+</span>
-                  <span className="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-xs">{product.status}</span>
+
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className="text-3xl font-bold text-red-500">¥{product.price}</div>
+                    <div className="text-xl text-muted-foreground line-through">¥{product.originalPrice}</div>
+                    <div className="bg-red-100 text-red-600 px-2 py-1 rounded text-sm">
+                      省¥{product.originalPrice - product.price}
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Button className="w-full" size="lg" onClick={() => handleAddToCart(product)}>
+                      <ShoppingCart className="w-5 h-5 mr-2" />
+                      加入购物车
+                    </Button>
+                    <div className="grid grid-cols-3 gap-2">
+                      <Button variant="outline" onClick={handleFavorite}>
+                        <Heart className="w-4 h-4 mr-1" />
+                        收藏
+                      </Button>
+                      <Button variant="outline" onClick={handleShare}>
+                        <Share2 className="w-4 h-4 mr-1" />
+                        分享
+                      </Button>
+                      <Button variant="outline" onClick={() => $w?.utils?.navigateTo({
+                      pageId: 'ai-chat'
+                    })}>
+                        <MessageCircle className="w-4 h-4 mr-1" />
+                        咨询
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="flex items-baseline space-x-2 mb-4">
-              <span className="text-3xl font-bold text-red-400">¥{product.price.toLocaleString()}</span>
-              {product.originalPrice && <span className="text-white/60 line-through">¥{product.originalPrice.toLocaleString()}</span>}
-              {product.originalPrice && <span className="bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-xs">
-                  限时优惠 ¥{(product.originalPrice - product.price).toLocaleString()}
-                </span>}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="bg-white/10 rounded-lg p-3 text-center">
-                <Truck className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-                <p className="text-sm text-white">免费配送</p>
-              </div>
-              <div className="bg-white/10 rounded-lg p-3 text-center">
-                <Shield className="w-6 h-6 text-green-400 mx-auto mb-2" />
-                <p className="text-sm text-white">{product.specifications?.warranty || '一年质保'}</p>
-              </div>
-            </div>
-
-            {/* 库存信息 */}
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-white/60">库存</span>
-              <span className={`${product.stock > 10 ? 'text-green-400' : 'text-orange-400'}`}>
-                {product.stock > 10 ? '充足' : `仅剩 ${product.stock} 件`}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 产品特色 */}
-        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6">
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
-              <Star className="w-5 h-5 text-yellow-400 mr-2" />
-              产品特色
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              {product.features?.map((feature, index) => {
-              const icons = [Brain, Palette, HandPointer, ThermometerHalf];
-              const colors = ['text-purple-400', 'text-blue-400', 'text-green-400', 'text-orange-400'];
-              const Icon = icons[index % icons.length];
-              return <div key={index} className="bg-white/10 rounded-lg p-3 hover:bg-white/15 transition-colors">
-                  <Icon className={`w-6 h-6 ${colors[index % colors.length]} mb-2`} />
-                  <p className="text-sm font-medium text-white">{feature}</p>
-                </div>;
-            })}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 详细信息标签页 */}
-        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6">
-          <CardContent className="p-6">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 bg-white/10 border border-white/20">
-                <TabsTrigger value="description" className="text-white data-[state=active]:bg-white/20">产品介绍</TabsTrigger>
-                <TabsTrigger value="specs" className="text-white data-[state=active]:bg-white/20">规格参数</TabsTrigger>
-                <TabsTrigger value="usage" className="text-white data-[state=active]:bg-white/20">使用说明</TabsTrigger>
-                <TabsTrigger value="reviews" className="text-white data-[state=active]:bg-white/20">用户评价</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="description" className="mt-6">
-                <h4 className="font-semibold text-white mb-3">产品介绍</h4>
-                <p className="text-white/80 leading-relaxed mb-4">{product.description}</p>
-                <h4 className="font-semibold text-white mb-3">核心优势</h4>
-                <ul className="space-y-2 text-white/80">
-                  <li className="flex items-start">
-                    <Check className="w-4 h-4 text-green-400 mt-1 mr-2 flex-shrink-0" />
-                    <span>智能发质分析，精准识别发质类型和受损程度</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="w-4 h-4 text-green-400 mt-1 mr-2 flex-shrink-0" />
-                    <span>自动调色系统，确保每次调色的一致性</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="w-4 h-4 text-green-400 mt-1 mr-2 flex-shrink-0" />
-                    <span>云端配方库，实时更新流行色彩趋势</span>
-                  </li>
-                </ul>
-              </TabsContent>
-
-              <TabsContent value="specs" className="mt-6">
-                <h4 className="font-semibold text-white mb-3">技术规格</h4>
+                {/* 产品特性 */}
                 <div className="space-y-3">
-                  {Object.entries(product.specifications || {}).map(([key, value]) => <div key={key} className="flex justify-between py-2 border-b border-white/10">
-                      <span className="text-white/60 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                      <span className="text-white">{value}</span>
-                    </div>)}
+                  <h3 className="font-semibold">产品特性</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {product.features.map((feature, index) => <div key={index} className="flex items-center space-x-2 bg-muted p-2 rounded">
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <span className="text-sm">{feature}</span>
+                      </div>)}
+                  </div>
                 </div>
-              </TabsContent>
 
-              <TabsContent value="usage" className="mt-6">
-                <h4 className="font-semibold text-white mb-3">使用步骤</h4>
-                <div className="space-y-4">
-                  {product.usage?.map(step => <div key={step.step} className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm font-medium text-white flex-shrink-0">
-                        {step.step}
-                      </div>
-                      <div>
-                        <p className="font-medium text-white">{step.title}</p>
-                        <p className="text-white/60 text-sm">{step.description}</p>
-                      </div>
-                    </div>)}
+                {/* 产品规格 */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold">产品规格</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">重量：</span>
+                      <span>{product.specifications.weight}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">使用次数：</span>
+                      <span>{product.specifications.usage}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">保质期：</span>
+                      <span>{product.specifications.shelfLife}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">库存：</span>
+                      <span className={product.stock > 20 ? 'text-green-600' : 'text-orange-600'}>
+                        {product.stock > 20 ? '充足' : `仅剩${product.stock}件`}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </TabsContent>
+              </div>
+            </div>
+          </div>
 
-              <TabsContent value="reviews" className="mt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-white">用户评价</h4>
-                  <Button variant="ghost" size="sm" className="text-blue-400">
-                    写评价
+          {/* AI智能推荐 */}
+          <div className="p-4 space-y-6">
+            {/* 推荐头部 */}
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <Brain className="w-6 h-6" />
+                  <h2 className="text-xl font-bold">AI智能推荐</h2>
+                  <div className="bg-white/20 px-2 py-1 rounded-full text-xs">
+                    基于深度学习
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm" onClick={handleRefreshRecommendations} disabled={isLoading} className="text-white hover:bg-white/10">
+                  {isLoading ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> : <RefreshCw className="w-4 h-4" />}
+                </Button>
+              </div>
+              <p className="text-blue-100 text-sm">
+                基于当前产品特征和您的偏好，AI为您精选最合适的相关产品
+              </p>
+              <div className="flex items-center space-x-4 mt-3 text-xs">
+                <div className="flex items-center space-x-1">
+                  <TrendingUp className="w-3 h-3" />
+                  <span>点击率: {recommendationStats.clickRate.toFixed(1)}%</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Star className="w-3 h-3" />
+                  <span>满意度: {recommendationStats.satisfactionRate.toFixed(0)}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 相似产品推荐 */}
+            {recommendations.similar.length > 0 && <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold flex items-center space-x-2">
+                    <Package className="w-5 h-5 text-blue-600" />
+                    <span>相似产品</span>
+                    <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs">
+                      AI匹配
+                    </div>
+                  </h3>
+                  <Button variant="outline" size="sm">
+                    查看更多
                   </Button>
                 </div>
-                <div className="space-y-4">
-                  {product.reviews?.map(review => <div key={review.id} className="bg-white/5 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 bg-purple-500 rounded-full overflow-hidden">
-                            <img src={review.avatar} alt={review.userName} className="w-full h-full object-cover" />
-                          </div>
-                          <span className="font-medium text-white">{review.userName}</span>
-                          <div className="flex text-yellow-400 text-sm">
-                            {[...Array(review.rating)].map((_, i) => <Star key={i} className="w-3 h-3 fill-current" />)}
-                          </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {recommendations.similar.map((item, index) => <div key={index} className="bg-card border rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleRecommendationClick('similar', item)}>
+                      <div className="relative mb-2">
+                        <img src={item.image} alt={item.name} className="w-full h-24 object-cover rounded" />
+                        <div className="absolute top-1 right-1 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                          {item.matchScore}%
                         </div>
-                        <span className="text-white/60 text-sm">{review.date}</span>
                       </div>
-                      <p className="text-white/80">{review.content}</p>
-                      <div className="flex items-center space-x-4 mt-3">
-                        <Button variant="ghost" size="sm" className="text-white/60 hover:text-white">
-                          <ThumbsUp className="w-4 h-4 mr-1" />
-                          有用
+                      <h4 className="font-medium text-sm mb-1 line-clamp-2">{item.name}</h4>
+                      <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{item.reason}</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <span className="text-sm font-bold text-red-500">¥{item.price}</span>
+                          {item.originalPrice && <span className="text-xs text-muted-foreground line-through ml-1">¥{item.originalPrice}</span>}
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                          <span className="text-xs">{item.rating}</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {item.tags?.map((tag, tagIndex) => <span key={tagIndex} className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">
+                            {tag}
+                          </span>)}
+                      </div>
+                      <div className="flex space-x-1">
+                        <Button size="sm" variant="ghost" className="flex-1 text-xs" onClick={e => {
+                    e.stopPropagation();
+                    handleAddToCart(item);
+                  }}>
+                          购买
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-white/60 hover:text-white">
-                          <MessageCircle className="w-4 h-4 mr-1" />
-                          回复
+                        <Button size="sm" variant="ghost" className="flex-1 text-xs" onClick={e => {
+                    e.stopPropagation();
+                    handleFeedback('similar', item, 'like');
+                  }}>
+                          👍
                         </Button>
                       </div>
                     </div>)}
                 </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+              </div>}
 
-        {/* 推荐产品 */}
-        {product.relatedProducts && <Card className="bg-white/10 backdrop-blur-md border-white/20">
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold text-white mb-4">相关推荐</h3>
-              <div className="grid grid-cols-2 gap-4">
-                {product.relatedProducts.map(relatedProduct => <div key={relatedProduct.id} className="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors cursor-pointer" onClick={() => {
-              if ($w.utils && $w.utils.navigateTo) {
-                $w.utils.navigateTo({
-                  pageId: 'product-detail',
-                  params: {
-                    productId: relatedProduct.id
-                  }
-                });
-              }
-            }}>
-                    <img src={relatedProduct.image} alt={relatedProduct.name} className="w-full h-20 object-cover rounded mb-2" />
-                    <p className="text-sm font-medium text-white truncate">{relatedProduct.name}</p>
-                    <p className="text-red-400 font-bold">¥{relatedProduct.price.toLocaleString()}</p>
-                  </div>)}
+            {/* 互补产品推荐 */}
+            {recommendations.complementary.length > 0 && <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold flex items-center space-x-2">
+                    <Zap className="w-5 h-5 text-green-600" />
+                    <span>互补产品</span>
+                    <div className="bg-green-100 text-green-600 px-2 py-1 rounded text-xs">
+                      完美搭配
+                    </div>
+                  </h3>
+                  <Button variant="outline" size="sm">
+                    查看更多
+                  </Button>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {recommendations.complementary.map((item, index) => <div key={index} className="bg-card border rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleRecommendationClick('complementary', item)}>
+                      <div className="relative mb-2">
+                        <img src={item.image} alt={item.name} className="w-full h-24 object-cover rounded" />
+                        <div className="absolute top-1 right-1 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                          {item.complementarity}
+                        </div>
+                      </div>
+                      <h4 className="font-medium text-sm mb-1 line-clamp-2">{item.name}</h4>
+                      <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{item.reason}</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <span className="text-sm font-bold text-red-500">¥{item.price}</span>
+                          {item.originalPrice && <span className="text-xs text-muted-foreground line-through ml-1">¥{item.originalPrice}</span>}
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                          <span className="text-xs">{item.rating}</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {item.tags?.map((tag, tagIndex) => <span key={tagIndex} className="bg-green-100 text-green-600 text-xs px-2 py-1 rounded">
+                            {tag}
+                          </span>)}
+                      </div>
+                      <div className="flex space-x-1">
+                        <Button size="sm" variant="ghost" className="flex-1 text-xs" onClick={e => {
+                    e.stopPropagation();
+                    handleAddToCart(item);
+                  }}>
+                          购买
+                        </Button>
+                        <Button size="sm" variant="ghost" className="flex-1 text-xs" onClick={e => {
+                    e.stopPropagation();
+                    handleFeedback('complementary', item, 'like');
+                  }}>
+                          👍
+                        </Button>
+                      </div>
+                    </div>)}
+                </div>
+              </div>}
+
+            {/* 升级产品推荐 */}
+            {recommendations.upgrade.length > 0 && <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold flex items-center space-x-2">
+                    <TrendingUp className="w-5 h-5 text-purple-600" />
+                    <span>升级产品</span>
+                    <div className="bg-purple-100 text-purple-600 px-2 py-1 rounded text-xs">
+                      高端选择
+                    </div>
+                  </h3>
+                  <Button variant="outline" size="sm">
+                    查看更多
+                  </Button>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {recommendations.upgrade.map((item, index) => <div key={index} className="bg-card border rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleRecommendationClick('upgrade', item)}>
+                      <div className="relative mb-2">
+                        <img src={item.image} alt={item.name} className="w-full h-24 object-cover rounded" />
+                        <div className="absolute top-1 right-1 bg-purple-600 text-white text-xs px-2 py-1 rounded-full">
+                          {item.upgradeAdvantage}
+                        </div>
+                      </div>
+                      <h4 className="font-medium text-sm mb-1 line-clamp-2">{item.name}</h4>
+                      <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{item.reason}</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <span className="text-sm font-bold text-red-500">¥{item.price}</span>
+                          {item.originalPrice && <span className="text-xs text-muted-foreground line-through ml-1">¥{item.originalPrice}</span>}
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                          <span className="text-xs">{item.rating}</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {item.tags?.map((tag, tagIndex) => <span key={tagIndex} className="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded">
+                            {tag}
+                          </span>)}
+                      </div>
+                      <div className="flex space-x-1">
+                        <Button size="sm" variant="ghost" className="flex-1 text-xs" onClick={e => {
+                    e.stopPropagation();
+                    handleAddToCart(item);
+                  }}>
+                          购买
+                        </Button>
+                        <Button size="sm" variant="ghost" className="flex-1 text-xs" onClick={e => {
+                    e.stopPropagation();
+                    handleFeedback('upgrade', item, 'like');
+                  }}>
+                          👍
+                        </Button>
+                      </div>
+                    </div>)}
+                </div>
+              </div>}
+
+            {/* 推荐说明 */}
+            <div className="bg-muted p-4 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <Info className="w-4 h-4 text-blue-600" />
+                <h4 className="font-medium text-sm">AI推荐说明</h4>
               </div>
-            </CardContent>
-          </Card>}
-      </main>
-
-      {/* 底部购买栏 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/10 backdrop-blur-md border-t border-white/20 p-4 z-40">
-        <div className="container mx-auto">
-          <div className="flex items-center space-x-4">
-            {/* 数量选择 */}
-            <div className="flex items-center bg-white/10 rounded-lg border border-white/20">
-              <Button variant="ghost" size="sm" onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1} className="text-white/80 hover:text-white px-3">
-                <Minus className="w-4 h-4" />
-              </Button>
-              <span className="text-white px-3 min-w-[40px] text-center font-medium">{quantity}</span>
-              <Button variant="ghost" size="sm" onClick={() => handleQuantityChange(1)} disabled={quantity >= product.stock} className="text-white/80 hover:text-white px-3">
-                <Plus className="w-4 h-4" />
-              </Button>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                我们的AI推荐系统基于深度学习算法，分析产品特征、用户偏好和市场趋势，为您提供最合适的产品推荐。
+                推荐结果会根据您的反馈不断优化，点击👍或👎可以帮助我们改进推荐准确性。
+              </p>
             </div>
-
-            {/* 价格显示 */}
-            <div className="flex-1 text-right">
-              <div className="text-xs text-white/60 line-through">
-                {product.originalPrice && `¥${(product.originalPrice * quantity).toLocaleString()}`}
-              </div>
-              <div className="text-lg font-bold text-red-400">
-                ¥{calculateTotalPrice().toLocaleString()}
-              </div>
-              {calculateSavings() > 0 && <div className="text-xs text-green-400">
-                  已省 ¥{calculateSavings().toLocaleString()}
-                </div>}
-            </div>
-
-            {/* 操作按钮 */}
-            <Button onClick={handleAddToCart} disabled={cartLoading} className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-6">
-              {cartLoading ? <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  添加中...
-                </> : <>
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  加入购物车
-                </>}
-            </Button>
-            <Button onClick={handleBuyNow} disabled={cartLoading} className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-8">
-              {cartLoading ? <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  处理中...
-                </> : '立即购买'}
-            </Button>
           </div>
         </div>
-      </div>
 
-      {/* 购物车侧边栏 */}
-      <CartSidebar />
-    </div>;
+        <TabBar />
+      </div>
+    </ErrorBoundary>;
 }

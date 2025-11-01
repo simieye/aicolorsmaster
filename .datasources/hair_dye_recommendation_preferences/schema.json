@@ -1,0 +1,134 @@
+
+{
+  "name": "hair_dye_recommendation_preferences",
+  "title": "推荐偏好设置",
+  "schemas": [
+    {
+      "name": "user_id",
+      "title": "用户ID",
+      "type": "String"
+    },
+    {
+      "name": "enabled",
+      "title": "启用个性化推荐",
+      "type": "Boolean"
+    },
+    {
+      "name": "algorithm",
+      "title": "推荐算法",
+      "type": "String"
+    },
+    {
+      "name": "sensitivity",
+      "title": "推荐敏感度",
+      "type": "String"
+    },
+    {
+      "name": "categories",
+      "title": "产品类别偏好",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "price_range",
+      "title": "价格区间偏好",
+      "type": "Object"
+    },
+    {
+      "name": "brands",
+      "title": "品牌偏好",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "colors",
+      "title": "颜色偏好",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "frequency",
+      "title": "推荐频率",
+      "type": "String"
+    },
+    {
+      "name": "notifications",
+      "title": "推送通知",
+      "type": "Boolean"
+    },
+    {
+      "name": "learning",
+      "title": "智能学习",
+      "type": "Boolean"
+    },
+    {
+      "name": "privacy",
+      "title": "隐私级别",
+      "type": "String"
+    },
+    {
+      "name": "hair_type",
+      "title": "发质类型",
+      "type": "String"
+    },
+    {
+      "name": "skin_tone",
+      "title": "肤色",
+      "type": "String"
+    },
+    {
+      "name": "preferred_colors",
+      "title": "偏好颜色",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "previous_products",
+      "title": "历史产品",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "allergies",
+      "title": "过敏信息",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "last_updated",
+      "title": "最后更新时间",
+      "type": "DateTime"
+    },
+    {
+      "name": "recommendation_score",
+      "title": "推荐准确度评分",
+      "type": "Number"
+    },
+    {
+      "name": "interaction_count",
+      "title": "交互次数",
+      "type": "Number"
+    },
+    {
+      "name": "feedback_history",
+      "title": "反馈历史",
+      "type": "Array",
+      "items": {
+        "type": "Object"
+      }
+    }
+  ]
+}
+  

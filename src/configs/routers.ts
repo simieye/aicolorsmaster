@@ -43,6 +43,7 @@ import PROFILE_EDIT from '../pages/profile-edit.jsx';
 import ORDERS_HISTORY from '../pages/orders-history.jsx';
 import FAVORITES from '../pages/favorites.jsx';
 import NOTIFICATIONS from '../pages/notifications.jsx';
+import RECOMMENDATION_ANALYTICS from '../pages/recommendation-analytics.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -178,4 +179,7 @@ export const routers = [{
 }, {
   id: "notifications",
   component: NOTIFICATIONS
+}, {
+  id: "recommendation-analytics",
+  component: RECOMMENDATION_ANALYTICS
 }]
