@@ -33,7 +33,7 @@ export class ErrorBoundary extends React.Component {
     // 这里可以添加错误上报逻辑
     this.logErrorToService(error, errorInfo);
   }
-  logErrorToService = (error, errorInfo) => {
+  logErrorToService(error, errorInfo) {
     // 实际项目中可以发送到错误监控服务
     try {
       // 示例：发送错误信息到监控服务
@@ -51,8 +51,8 @@ export class ErrorBoundary extends React.Component {
     } catch (e) {
       console.error('Failed to log error:', e);
     }
-  };
-  handleRetry = () => {
+  }
+  handleRetry() {
     this.setState({
       isRetrying: true,
       hasError: false,
@@ -67,8 +67,8 @@ export class ErrorBoundary extends React.Component {
         retryCount: this.state.retryCount + 1
       });
     }, 500);
-  };
-  handleGoHome = () => {
+  }
+  handleGoHome() {
     if (this.props.$w && this.props.$w.utils) {
       this.props.$w.utils.navigateTo({
         pageId: 'home',
@@ -77,14 +77,14 @@ export class ErrorBoundary extends React.Component {
     } else {
       window.location.href = '/';
     }
-  };
-  handleGoBack = () => {
+  }
+  handleGoBack() {
     if (this.props.$w && this.props.$w.utils) {
       this.props.$w.utils.navigateBack();
     } else {
       window.history.back();
     }
-  };
+  }
   render() {
     if (this.state.isRetrying) {
       return <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -168,17 +168,17 @@ export class ErrorBoundary extends React.Component {
 
             {/* 操作按钮 */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              {canRetry && <Button onClick={this.handleRetry} className="flex items-center space-x-2" disabled={this.state.isRetrying}>
+              {canRetry && <Button onClick={() => this.handleRetry()} className="flex items-center space-x-2" disabled={this.state.isRetrying}>
                   <RefreshCw className={`w-4 h-4 ${this.state.isRetrying ? 'animate-spin' : ''}`} />
                   <span>重试</span>
                 </Button>}
               
-              <Button variant="outline" onClick={this.handleGoBack} className="flex items-center space-x-2">
+              <Button variant="outline" onClick={() => this.handleGoBack()} className="flex items-center space-x-2">
                 <ArrowLeft className="w-4 h-4" />
                 <span>返回上页</span>
               </Button>
               
-              <Button variant="outline" onClick={this.handleGoHome} className="flex items-center space-x-2">
+              <Button variant="outline" onClick={() => this.handleGoHome()} className="flex items-center space-x-2">
                 <Home className="w-4 h-4" />
                 <span>返回首页</span>
               </Button>
