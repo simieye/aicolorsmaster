@@ -55,12 +55,32 @@ export default function OnlineConsultationPage(props) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [isLoading, setIsLoading] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('connected'); // connected, connecting, disconnected
+  const [currentServiceType, setCurrentServiceType] = useState('ai'); // ai, human
   const currentUser = $w?.auth?.currentUser;
+
+  // 初始化聊天
   useEffect(() => {
+    initializeChat();
     loadConsultationHistory();
     loadServiceStats();
-    initializeChat();
   }, []);
+
+  // 监听客服类型切换
+  useEffect(() => {
+    if (isAIEnabled) {
+      setCurrentServiceType('ai');
+      setConnectionStatus('connected');
+    } else {
+      setCurrentServiceType('human');
+      // 模拟连接人工客服的过程
+      setConnectionStatus('connecting');
+      setTimeout(() => {
+        setConnectionStatus('connected');
+        addSystemMessage('已为您连接人工客服，请稍候...');
+      }, 2000);
+    }
+  }, [isAIEnabled]);
   const initializeChat = () => {
     const welcomeMessage = {
       id: 'welcome',
@@ -71,9 +91,18 @@ export default function OnlineConsultationPage(props) {
     };
     setMessages([welcomeMessage]);
   };
+  const addSystemMessage = content => {
+    const systemMessage = {
+      id: `system_${Date.now()}`,
+      type: 'system',
+      content: content,
+      timestamp: new Date().toISOString(),
+      sender: 'system'
+    };
+    setMessages(prev => [...prev, systemMessage]);
+  };
   const loadConsultationHistory = async () => {
     try {
-      // 模拟从数据源获取咨询历史
       const mockHistory = generateMockConsultationHistory();
       setConsultationHistory(mockHistory);
     } catch (error) {
@@ -197,18 +226,33 @@ export default function OnlineConsultationPage(props) {
     setInputMessage('');
     setIsTyping(true);
     try {
-      // 模拟AI响应
-      setTimeout(() => {
-        const aiResponse = {
-          id: `ai_${Date.now()}`,
-          type: 'ai',
-          content: generateAIResponse(inputMessage),
-          timestamp: new Date().toISOString(),
-          sender: 'ai'
-        };
-        setMessages(prev => [...prev, aiResponse]);
-        setIsTyping(false);
-      }, 1500);
+      if (currentServiceType === 'ai') {
+        // AI响应
+        setTimeout(() => {
+          const aiResponse = {
+            id: `ai_${Date.now()}`,
+            type: 'ai',
+            content: generateAIResponse(inputMessage),
+            timestamp: new Date().toISOString(),
+            sender: 'ai'
+          };
+          setMessages(prev => [...prev, aiResponse]);
+          setIsTyping(false);
+        }, 1500);
+      } else {
+        // 人工客服响应
+        setTimeout(() => {
+          const humanResponse = {
+            id: `human_${Date.now()}`,
+            type: 'human',
+            content: generateHumanResponse(inputMessage),
+            timestamp: new Date().toISOString(),
+            sender: 'human'
+          };
+          setMessages(prev => [...prev, humanResponse]);
+          setIsTyping(false);
+        }, 2000);
+      }
     } catch (error) {
       console.error('发送消息失败:', error);
       setIsTyping(false);
@@ -234,12 +278,26 @@ export default function OnlineConsultationPage(props) {
     }
     return '感谢您的咨询！我会尽力为您解答。如果您需要更详细的帮助，我可以为您转接人工客服。';
   };
+  const generateHumanResponse = userMessage => {
+    const responses = ['您好，我是人工客服小王。关于您的问题，我来为您详细解答...', '感谢您的耐心等待。根据您的描述，我建议您...', '我理解您的需求。让我为您查询一下相关信息...', '很高兴为您服务。关于这个问题，我们的专业建议是...'];
+    return responses[Math.floor(Math.random() * responses.length)];
+  };
   const handleToggleAI = () => {
-    setIsAIEnabled(!isAIEnabled);
-    toast({
-      title: isAIEnabled ? "已切换到人工客服" : "已切换到AI客服",
-      description: isAIEnabled ? "正在为您连接人工客服..." : "AI客服已就绪"
-    });
+    const newAIEnabled = !isAIEnabled;
+    setIsAIEnabled(newAIEnabled);
+    if (newAIEnabled) {
+      toast({
+        title: "已切换到AI客服",
+        description: "AI客服已就绪，可以立即为您服务"
+      });
+      addSystemMessage('已切换到AI客服模式');
+    } else {
+      toast({
+        title: "正在连接人工客服",
+        description: "请稍候，正在为您安排专业客服..."
+      });
+      addSystemMessage('正在为您连接人工客服，请稍候...');
+    }
   };
   const handleEndConsultation = () => {
     setMessages([]);
@@ -294,12 +352,12 @@ export default function OnlineConsultationPage(props) {
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
-                  <div className={`w-3 h-3 rounded-full ${isAIEnabled ? 'bg-green-400' : 'bg-yellow-400'} animate-pulse`}></div>
+                  <div className={`w-3 h-3 rounded-full ${connectionStatus === 'connected' ? 'bg-green-400' : connectionStatus === 'connecting' ? 'bg-yellow-400 animate-pulse' : 'bg-red-400'} animate-pulse`}></div>
                   <span className="font-medium">
-                    {isAIEnabled ? 'AI客服在线' : '人工客服'}
+                    {currentServiceType === 'ai' ? 'AI客服在线' : connectionStatus === 'connecting' ? '连接中...' : '人工客服在线'}
                   </span>
                 </div>
-                <Button variant="ghost" size="sm" onClick={handleToggleAI} className="text-white hover:bg-white/10">
+                <Button variant="ghost" size="sm" onClick={handleToggleAI} disabled={connectionStatus === 'connecting'} className="text-white hover:bg-white/10 disabled:opacity-50">
                   <RefreshCw className="w-4 h-4 mr-2" />
                   切换客服
                 </Button>
@@ -328,12 +386,14 @@ export default function OnlineConsultationPage(props) {
                     <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-2' : 'order-1'}`}>
                       <div className={`flex items-center space-x-2 mb-1 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                         {message.sender === 'ai' && <Bot className="w-4 h-4 text-blue-500" />}
+                        {message.sender === 'human' && <User className="w-4 h-4 text-green-500" />}
                         {message.sender === 'user' && <User className="w-4 h-4 text-green-500" />}
+                        {message.sender === 'system' && <Info className="w-4 h-4 text-orange-500" />}
                         <span className="text-xs text-muted-foreground">
-                          {new Date(message.timestamp).toLocaleTimeString()}
+                          {message.sender === 'ai' ? 'AI客服' : message.sender === 'human' ? '人工客服' : message.sender === 'system' ? '系统' : '用户'} - {new Date(message.timestamp).toLocaleTimeString()}
                         </span>
                       </div>
-                      <div className={`p-3 rounded-lg ${message.sender === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                      <div className={`p-3 rounded-lg ${message.sender === 'user' ? 'bg-primary text-primary-foreground' : message.sender === 'system' ? 'bg-orange-100 text-orange-800 border border-orange-200' : 'bg-muted'}`}>
                         <p className="text-sm">{message.content}</p>
                       </div>
                     </div>
@@ -356,8 +416,8 @@ export default function OnlineConsultationPage(props) {
               {/* 输入区域 */}
               <div className="border-t p-4 bg-card">
                 <div className="flex items-center space-x-2">
-                  <input type="text" value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSendMessage()} placeholder="请输入您的问题..." className="flex-1 px-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
-                  <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping}>
+                  <input type="text" value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSendMessage()} placeholder="请输入您的问题..." disabled={connectionStatus === 'connecting'} className="flex-1 px-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50" />
+                  <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping || connectionStatus === 'connecting'}>
                     <Send className="w-4 h-4" />
                   </Button>
                 </div>
