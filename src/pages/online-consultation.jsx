@@ -30,7 +30,26 @@ export default function OnlineConsultationPage(props) {
   const [isTyping, setIsTyping] = useState(false);
   const [isAIEnabled, setIsAIEnabled] = useState(true);
   const [consultationHistory, setConsultationHistory] = useState([]);
-  const [serviceStats, setServiceStats] = useState({});
+  const [serviceStats, setServiceStats] = useState({
+    totalConsultations: 0,
+    todayConsultations: 0,
+    averageDuration: 0,
+    satisfactionRate: 0,
+    aiResponseRate: 0,
+    humanResponseRate: 0,
+    averageRating: 0,
+    responseTime: 0,
+    activeConsultations: 0,
+    queueLength: 0,
+    dailyTrend: [],
+    topicDistribution: [],
+    performanceMetrics: {
+      accuracy: 0,
+      responseSpeed: 0,
+      problemSolving: 0,
+      userSatisfaction: 0
+    }
+  });
   const [showDetails, setShowDetails] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -97,64 +116,73 @@ export default function OnlineConsultationPage(props) {
     return history;
   };
   const loadServiceStats = async () => {
-    const mockStats = {
-      totalConsultations: 1250,
-      todayConsultations: 45,
-      averageDuration: 12.5,
-      satisfactionRate: 92.3,
-      aiResponseRate: 78.5,
-      humanResponseRate: 21.5,
-      averageRating: 4.6,
-      responseTime: 2.3,
-      activeConsultations: 8,
-      queueLength: 3,
-      dailyTrend: [],
-      topicDistribution: [{
-        topic: '产品咨询',
-        count: 450,
-        percentage: 36
-      }, {
-        topic: '使用指导',
-        count: 320,
-        percentage: 25.6
-      }, {
-        topic: '售后问题',
-        count: 280,
-        percentage: 22.4
-      }, {
-        topic: '技术支持',
-        count: 150,
-        percentage: 12
-      }, {
-        topic: '投诉建议',
-        count: 50,
-        percentage: 4
-      }],
-      performanceMetrics: {
-        accuracy: 94.2,
-        responseSpeed: 96.8,
-        problemSolving: 89.5,
-        userSatisfaction: 92.3
-      }
-    };
+    try {
+      const mockStats = {
+        totalConsultations: 1250,
+        todayConsultations: 45,
+        averageDuration: 12.5,
+        satisfactionRate: 92.3,
+        aiResponseRate: 78.5,
+        humanResponseRate: 21.5,
+        averageRating: 4.6,
+        responseTime: 2.3,
+        activeConsultations: 8,
+        queueLength: 3,
+        dailyTrend: [],
+        topicDistribution: [{
+          topic: '产品咨询',
+          count: 450,
+          percentage: 36
+        }, {
+          topic: '使用指导',
+          count: 320,
+          percentage: 25.6
+        }, {
+          topic: '售后问题',
+          count: 280,
+          percentage: 22.4
+        }, {
+          topic: '技术支持',
+          count: 150,
+          percentage: 12
+        }, {
+          topic: '投诉建议',
+          count: 50,
+          percentage: 4
+        }],
+        performanceMetrics: {
+          accuracy: 94.2,
+          responseSpeed: 96.8,
+          problemSolving: 89.5,
+          userSatisfaction: 92.3
+        }
+      };
 
-    // 生成每日趋势数据
-    const trendData = [];
-    for (let i = 0; i < 7; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() - (6 - i));
-      trendData.push({
-        date: date.toLocaleDateString('zh-CN', {
-          month: 'short',
-          day: 'numeric'
-        }),
-        consultations: Math.floor(Math.random() * 100) + 50,
-        satisfaction: Math.random() * 10 + 85,
-        responseTime: Math.random() * 2 + 1
+      // 生成每日趋势数据
+      const trendData = [];
+      for (let i = 0; i < 7; i++) {
+        const date = new Date();
+        date.setDate(date.getDate() - (6 - i));
+        trendData.push({
+          date: date.toLocaleDateString('zh-CN', {
+            month: 'short',
+            day: 'numeric'
+          }),
+          consultations: Math.floor(Math.random() * 100) + 50,
+          satisfaction: Math.random() * 10 + 85,
+          responseTime: Math.random() * 2 + 1
+        });
+      }
+      mockStats.dailyTrend = trendData;
+      setServiceStats(mockStats);
+    } catch (error) {
+      console.error('加载服务统计失败:', error);
+      toast({
+        title: "加载失败",
+        description: "无法获取服务统计数据",
+        variant: "destructive"
       });
     }
-    mockStats.dailyTrend = trendData;
-    setServiceStats(mockStats);
   };
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
