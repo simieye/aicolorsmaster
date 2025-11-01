@@ -38,6 +38,7 @@ import AI_CUSTOMER-SERVICE-DETAIL from '../pages/ai-customer-service-detail.jsx'
 import AI_APPOINTMENT-SYSTEM-DETAIL from '../pages/ai-appointment-system-detail.jsx';
 import AI_EMPLOYEE-TRAINING-DETAIL from '../pages/ai-employee-training-detail.jsx';
 import AI_MICRO-STORE-DETAIL from '../pages/ai-micro-store-detail.jsx';
+import USER from '../pages/user.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -158,4 +159,7 @@ export const routers = [{
 }, {
   id: "ai-micro-store-detail",
   component: AI_MICRO-STORE-DETAIL
+}, {
+  id: "user",
+  component: USER
 }]
