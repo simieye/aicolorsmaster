@@ -39,6 +39,10 @@ import AI_APPOINTMENT-SYSTEM-DETAIL from '../pages/ai-appointment-system-detail.
 import AI_EMPLOYEE-TRAINING-DETAIL from '../pages/ai-employee-training-detail.jsx';
 import AI_MICRO-STORE-DETAIL from '../pages/ai-micro-store-detail.jsx';
 import USER from '../pages/user.jsx';
+import PROFILE_EDIT from '../pages/profile-edit.jsx';
+import ORDERS_HISTORY from '../pages/orders-history.jsx';
+import FAVORITES from '../pages/favorites.jsx';
+import NOTIFICATIONS from '../pages/notifications.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -162,4 +166,16 @@ export const routers = [{
 }, {
   id: "user",
   component: USER
+}, {
+  id: "profile-edit",
+  component: PROFILE_EDIT
+}, {
+  id: "orders-history",
+  component: ORDERS_HISTORY
+}, {
+  id: "favorites",
+  component: FAVORITES
+}, {
+  id: "notifications",
+  component: NOTIFICATIONS
 }]

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 // @ts-ignore;
-import { User, Settings, ShoppingBag, Heart, FileText, HelpCircle, LogOut, ChevronRight, Bell, Shield, CreditCard, MapPin, Star, Package, Headphones, MessageSquare, Award, TrendingUp, Clock, CheckCircle } from 'lucide-react';
+import { User, Edit, ShoppingBag, Heart, FileText, HelpCircle, LogOut, ChevronRight, Bell, Shield, CreditCard, MapPin, Star, Package, Headphones, MessageSquare, Award, Lock, Smartphone } from 'lucide-react';
 
 // @ts-ignore;
 import { TopNavigation } from '@/components/TopNavigation';
@@ -12,9 +12,13 @@ import { TabBar } from '@/components/TabBar';
 // @ts-ignore;
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 // @ts-ignore;
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { UserStats } from '@/components/UserStats';
 // @ts-ignore;
-import { HoverCard } from '@/components/HoverEffects';
+import { QuickActions } from '@/components/QuickActions';
+// @ts-ignore;
+import { OrderStatusGrid } from '@/components/OrderStatusGrid';
+// @ts-ignore;
+import { MenuList } from '@/components/MenuList';
 // @ts-ignore;
 
 export default function UserPage(props) {
@@ -44,7 +48,7 @@ export default function UserPage(props) {
     icon: <ShoppingBag className="w-5 h-5" />,
     label: '我的订单',
     description: '查看订单状态和历史',
-    onClick: () => handleNavigation('orders'),
+    onClick: () => handleNavigation('orders-history'),
     badge: '3'
   }, {
     icon: <Heart className="w-5 h-5" />,
@@ -75,6 +79,31 @@ export default function UserPage(props) {
     label: '会员中心',
     description: '会员权益和等级',
     onClick: () => handleNavigation('membership'),
+    badge: null
+  }];
+  const accountItems = [{
+    icon: <Edit className="w-5 h-5" />,
+    label: '个人资料',
+    description: '编辑个人信息',
+    onClick: () => handleNavigation('profile-edit'),
+    badge: null
+  }, {
+    icon: <Lock className="w-5 h-5" />,
+    label: '账户安全',
+    description: '密码和隐私设置',
+    onClick: () => handleNavigation('account-security'),
+    badge: null
+  }, {
+    icon: <Bell className="w-5 h-5" />,
+    label: '消息通知',
+    description: '查看系统通知',
+    onClick: () => handleNavigation('notifications'),
+    badge: '2'
+  }, {
+    icon: <Smartphone className="w-5 h-5" />,
+    label: '设备管理',
+    description: '管理登录设备',
+    onClick: () => handleNavigation('devices'),
     badge: null
   }];
   const serviceItems = [{
@@ -139,18 +168,13 @@ export default function UserPage(props) {
                     {currentUser?.type === 'vip' ? 'VIP会员' : '普通会员'}
                   </p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => handleNavigation('profile')} className="text-white hover:bg-white/10">
-                  <Settings className="w-5 h-5" />
+                <Button variant="ghost" size="sm" onClick={() => handleNavigation('profile-edit')} className="text-white hover:bg-white/10">
+                  <Edit className="w-5 h-5" />
                 </Button>
               </div>
 
               {/* 用户统计 */}
-              <div className="grid grid-cols-4 gap-4 mt-6">
-                {stats.map((stat, index) => <div key={index} className="text-center">
-                    <div className="text-2xl font-bold">{stat.value}</div>
-                    <div className="text-xs text-blue-100">{stat.label}</div>
-                  </div>)}
-              </div>
+              <UserStats stats={stats} />
             </div>
           </div>
 
@@ -161,20 +185,7 @@ export default function UserPage(props) {
                 <CardTitle>快捷功能</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  {menuItems.slice(0, 4).map((item, index) => <HoverCard key={index} onClick={item.onClick} className="flex items-center space-x-3 p-4 bg-card border rounded-lg cursor-pointer hover:bg-accent">
-                      <div className="text-primary">
-                        {item.icon}
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium text-foreground">{item.label}</div>
-                        <div className="text-xs text-muted-foreground">{item.description}</div>
-                      </div>
-                      {item.badge && <div className="bg-destructive text-destructive-foreground text-xs px-2 py-1 rounded-full">
-                          {item.badge}
-                        </div>}
-                    </HoverCard>)}
-                </div>
+                <QuickActions items={menuItems} />
               </CardContent>
             </Card>
 
@@ -182,41 +193,13 @@ export default function UserPage(props) {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>我的订单</CardTitle>
-                <Button variant="ghost" size="sm" onClick={() => handleNavigation('orders')}>
+                <Button variant="ghost" size="sm" onClick={() => handleNavigation('orders-history')}>
                   查看全部
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-4 gap-4">
-                  <div className="text-center cursor-pointer" onClick={() => handleNavigation('orders', {
-                  status: 'pending'
-                })}>
-                    <div className="relative">
-                      <Clock className="w-8 h-8 mx-auto mb-2 text-orange-500" />
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
-                    </div>
-                    <div className="text-sm">待付款</div>
-                  </div>
-                  <div className="text-center cursor-pointer" onClick={() => handleNavigation('orders', {
-                  status: 'shipped'
-                })}>
-                    <Package className="w-8 h-8 mx-auto mb-2 text-blue-500" />
-                    <div className="text-sm">待收货</div>
-                  </div>
-                  <div className="text-center cursor-pointer" onClick={() => handleNavigation('orders', {
-                  status: 'completed'
-                })}>
-                    <CheckCircle className="w-8 h-8 mx-auto mb-2 text-green-500" />
-                    <div className="text-sm">已完成</div>
-                  </div>
-                  <div className="text-center cursor-pointer" onClick={() => handleNavigation('orders', {
-                  status: 'review'
-                })}>
-                    <Star className="w-8 h-8 mx-auto mb-2 text-purple-500" />
-                    <div className="text-sm">待评价</div>
-                  </div>
-                </div>
+                <OrderStatusGrid onNavigate={handleNavigation} />
               </CardContent>
             </Card>
 
@@ -225,24 +208,18 @@ export default function UserPage(props) {
               <CardHeader>
                 <CardTitle>账户管理</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
-                {menuItems.slice(4).map((item, index) => <div key={index} onClick={item.onClick} className="flex items-center justify-between p-4 bg-card border rounded-lg cursor-pointer hover:bg-accent">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-primary">
-                        {item.icon}
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground">{item.label}</div>
-                        <div className="text-xs text-muted-foreground">{item.description}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {item.badge && <div className="bg-destructive text-destructive-foreground text-xs px-2 py-1 rounded-full">
-                          {item.badge}
-                        </div>}
-                      <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                    </div>
-                  </div>)}
+              <CardContent>
+                <MenuList items={accountItems} />
+              </CardContent>
+            </Card>
+
+            {/* 购物管理 */}
+            <Card>
+              <CardHeader>
+                <CardTitle>购物管理</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <MenuList items={menuItems.slice(4)} />
               </CardContent>
             </Card>
 
@@ -251,19 +228,8 @@ export default function UserPage(props) {
               <CardHeader>
                 <CardTitle>客户服务</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
-                {serviceItems.map((item, index) => <div key={index} onClick={item.onClick} className="flex items-center justify-between p-4 bg-card border rounded-lg cursor-pointer hover:bg-accent">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-primary">
-                        {item.icon}
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground">{item.label}</div>
-                        <div className="text-xs text-muted-foreground">{item.description}</div>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                  </div>)}
+              <CardContent>
+                <MenuList items={serviceItems} />
               </CardContent>
             </Card>
 
