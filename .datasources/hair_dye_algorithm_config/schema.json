@@ -1,0 +1,187 @@
+
+{
+  "name": "hair_dye_algorithm_config",
+  "title": "推荐算法配置",
+  "schemas": [
+    {
+      "name": "algorithm_id",
+      "title": "算法ID",
+      "type": "String"
+    },
+    {
+      "name": "algorithm_name",
+      "title": "算法名称",
+      "type": "String"
+    },
+    {
+      "name": "algorithm_type",
+      "title": "算法类型",
+      "type": "String"
+    },
+    {
+      "name": "description",
+      "title": "算法描述",
+      "type": "MultiLineString"
+    },
+    {
+      "name": "status",
+      "title": "算法状态",
+      "type": "String"
+    },
+    {
+      "name": "weight",
+      "title": "算法权重",
+      "type": "Number"
+    },
+    {
+      "name": "strategy",
+      "title": "推荐策略",
+      "type": "String"
+    },
+    {
+      "name": "config",
+      "title": "算法配置",
+      "type": "Object"
+    },
+    {
+      "name": "performance",
+      "title": "性能指标",
+      "type": "Object"
+    },
+    {
+      "name": "filters",
+      "title": "过滤器配置",
+      "type": "Object"
+    },
+    {
+      "name": "boost",
+      "title": "加权配置",
+      "type": "Object"
+    },
+    {
+      "name": "diversity",
+      "title": "多样性配置",
+      "type": "Object"
+    },
+    {
+      "name": "freshness",
+      "title": "新鲜度配置",
+      "type": "Object"
+    },
+    {
+      "name": "effective_time",
+      "title": "生效时间",
+      "type": "DateTime"
+    },
+    {
+      "name": "expire_time",
+      "title": "过期时间",
+      "type": "DateTime"
+    },
+    {
+      "name": "version",
+      "title": "配置版本",
+      "type": "String"
+    },
+    {
+      "name": "priority",
+      "title": "优先级",
+      "type": "Number"
+    },
+    {
+      "name": "auto_optimization",
+      "title": "自动优化",
+      "type": "Boolean"
+    },
+    {
+      "name": "optimization_frequency",
+      "title": "优化频率",
+      "type": "String"
+    },
+    {
+      "name": "target_audience",
+      "title": "目标用户",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "exclusion_criteria",
+      "title": "排除条件",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "success_threshold",
+      "title": "成功阈值",
+      "type": "Number"
+    },
+    {
+      "name": "min_sample_size",
+      "title": "最小样本量",
+      "type": "Number"
+    },
+    {
+      "name": "max_recommendations",
+      "title": "最大推荐数",
+      "type": "Number"
+    },
+    {
+      "name": "response_time_limit",
+      "title": "响应时间限制",
+      "type": "Number"
+    },
+    {
+      "name": "cache_enabled",
+      "title": "启用缓存",
+      "type": "Boolean"
+    },
+    {
+      "name": "cache_ttl",
+      "title": "缓存有效期",
+      "type": "Number"
+    },
+    {
+      "name": "monitoring_enabled",
+      "title": "启用监控",
+      "type": "Boolean"
+    },
+    {
+      "name": "alert_thresholds",
+      "title": "告警阈值",
+      "type": "Object"
+    },
+    {
+      "name": "last_updated",
+      "title": "最后更新时间",
+      "type": "DateTime"
+    },
+    {
+      "name": "updated_by",
+      "title": "更新人",
+      "type": "String"
+    },
+    {
+      "name": "update_reason",
+      "title": "更新原因",
+      "type": "MultiLineString"
+    },
+    {
+      "name": "tags",
+      "title": "标签",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "notes",
+      "title": "备注",
+      "type": "MultiLineString"
+    }
+  ]
+}
+  

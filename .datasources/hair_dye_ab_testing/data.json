@@ -1,0 +1,524 @@
+
+[
+  {
+    "_id": "TEST001",
+    "name": "推荐算法对比测试",
+    "description": "对比AI智能推荐算法与传统推荐算法的效果，验证AI算法在提升点击率和转化率方面的优势",
+    "type": "algorithm",
+    "status": "running",
+    "created_at": "2024-01-15",
+    "start_date": "2024-01-16",
+    "end_date": "2024-02-15",
+    "duration": 30,
+    "traffic_allocation": {
+      "control": 50,
+      "variant": 50
+    },
+    "groups": [
+      {
+        "id": "control",
+        "name": "对照组",
+        "algorithm": "traditional",
+        "description": "传统协同过滤推荐算法",
+        "users": 1250,
+        "config": {
+          "similarity": "cosine",
+          "neighbors": 50,
+          "min_rating": 3
+        }
+      },
+      {
+        "id": "variant",
+        "name": "实验组",
+        "algorithm": "ai_smart",
+        "description": "AI智能推荐算法，基于深度学习",
+        "users": 1275,
+        "config": {
+          "model": "transformer",
+          "layers": 6,
+          "embedding": 128
+        }
+      }
+    ],
+    "metrics": {
+      "clickRate": {
+        "control": 8.5,
+        "variant": 12.3,
+        "improvement": 44.7,
+        "p_value": 0.002
+      },
+      "conversionRate": {
+        "control": 2.8,
+        "variant": 4.1,
+        "improvement": 46.4,
+        "p_value": 0.001
+      },
+      "satisfaction": {
+        "control": 82.5,
+        "variant": 89.2,
+        "improvement": 8.1,
+        "p_value": 0.015
+      },
+      "revenue": {
+        "control": 45678,
+        "variant": 67890,
+        "improvement": 48.5,
+        "p_value": 0.001
+      },
+      "avgSessionDuration": {
+        "control": 245,
+        "variant": 312,
+        "improvement": 27.3,
+        "p_value": 0.008
+      }
+    },
+    "confidence": 95.2,
+    "significance": true,
+    "sample_size": 2525,
+    "target_metrics": ["clickRate", "conversionRate", "revenue"],
+    "hypothesis": "AI智能推荐算法相比传统算法能够显著提升用户点击率和转化率",
+    "config": {
+      "traffic_split_type": "random",
+      "target_audience": "all_users",
+      "exclusion_criteria": ["new_users", "bot_traffic"],
+      "success_threshold": 0.05
+    },
+    "results": {
+      "daily_data": [
+        {
+          "date": "2024-01-16",
+          "control_users": 42,
+          "variant_users": 43,
+          "control_clicks": 4,
+          "variant_clicks": 5,
+          "control_conversions": 1,
+          "variant_conversions": 2
+        },
+        {
+          "date": "2024-01-17",
+          "control_users": 45,
+          "variant_users": 47,
+          "control_clicks": 4,
+          "variant_clicks": 6,
+          "control_conversions": 1,
+          "variant_conversions": 2
+        }
+      ],
+      "statistical_power": 0.85,
+      "effect_size": 0.65
+    },
+    "winner": "variant",
+    "recommendation": "建议全面采用AI智能推荐算法，预期可提升46%的转化率和48%的收入增长",
+    "tags": ["算法优化", "推荐系统", "AI", "核心指标"],
+    "priority": "high",
+    "owner": "product_team",
+    "notes": "测试进展顺利，建议提前结束并推广实验组方案",
+    "createdAt": 1705276800000,
+    "updatedAt": 1707360000000,
+    "createBy": "admin",
+    "updateBy": "admin"
+  },
+  {
+    "_id": "TEST002",
+    "name": "价格敏感度测试",
+    "description": "测试不同价格区间对推荐效果的影响，了解用户对价格的敏感程度",
+    "type": "pricing",
+    "status": "completed",
+    "created_at": "2024-01-10",
+    "start_date": "2024-01-11",
+    "end_date": "2024-01-25",
+    "duration": 14,
+    "traffic_allocation": {
+      "control": 33,
+      "variant1": 33,
+      "variant2": 34
+    },
+    "groups": [
+      {
+        "id": "control",
+        "name": "低价组",
+        "priceRange": "0-100",
+        "description": "推荐100元以下的产品",
+        "users": 890,
+        "config": {
+          "max_price": 100,
+          "min_price": 0
+        }
+      },
+      {
+        "id": "variant1",
+        "name": "中价组",
+        "priceRange": "100-500",
+        "description": "推荐100-500元的产品",
+        "users": 912,
+        "config": {
+          "max_price": 500,
+          "min_price": 100
+        }
+      },
+      {
+        "id": "variant2",
+        "name": "高价组",
+        "priceRange": "500+",
+        "description": "推荐500元以上的产品",
+        "users": 934,
+        "config": {
+          "max_price": 9999,
+          "min_price": 500
+        }
+      }
+    ],
+    "metrics": {
+      "clickRate": {
+        "control": 15.2,
+        "variant1": 12.8,
+        "variant2": 8.9,
+        "best": "control",
+        "improvement_vs_worst": 70.8
+      },
+      "conversionRate": {
+        "control": 4.5,
+        "variant1": 3.9,
+        "variant2": 2.1,
+        "best": "control",
+        "improvement_vs_worst": 114.3
+      },
+      "satisfaction": {
+        "control": 88.5,
+        "variant1": 85.2,
+        "variant2": 79.8,
+        "best": "control",
+        "improvement_vs_worst": 10.9
+      },
+      "avgOrderValue": {
+        "control": 156,
+        "variant1": 287,
+        "variant2": 456,
+        "best": "variant2",
+        "improvement_vs_worst": 192.3
+      }
+    },
+    "confidence": 98.7,
+    "significance": true,
+    "sample_size": 2736,
+    "target_metrics": ["clickRate", "conversionRate", "avgOrderValue"],
+    "hypothesis": "不同价格区间的推荐会对用户行为产生显著影响，需要找到最优的价格策略",
+    "config": {
+      "traffic_split_type": "random",
+      "target_audience": "returning_users",
+      "exclusion_criteria": ["new_users"],
+      "success_threshold": 0.05
+    },
+    "results": {
+      "statistical_power": 0.92,
+      "effect_size": 0.78,
+      "price_elasticity": -0.65
+    },
+    "winner": "control",
+    "recommendation": "低价产品虽然转化率高，但客单价低；高价产品转化率低但客单价高。建议采用混合策略，根据用户画像推荐不同价格区间",
+    "tags": ["价格策略", "用户行为", "转化优化"],
+    "priority": "medium",
+    "owner": "marketing_team",
+    "notes": "价格敏感度分析完成，为个性化推荐提供了重要依据",
+    "createdAt": 1704873600000,
+    "updatedAt": 1706169600000,
+    "createBy": "admin",
+    "updateBy": "admin"
+  },
+  {
+    "_id": "TEST003",
+    "name": "界面布局测试",
+    "description": "测试不同推荐界面布局对用户行为的影响，优化用户体验",
+    "type": "ui",
+    "status": "draft",
+    "created_at": "2024-01-20",
+    "start_date": null,
+    "end_date": null,
+    "duration": 0,
+    "traffic_allocation": {
+      "control": 50,
+      "variant": 50
+    },
+    "groups": [
+      {
+        "id": "control",
+        "name": "网格布局",
+        "layout": "grid",
+        "description": "当前使用的网格布局",
+        "users": 0,
+        "config": {
+          "columns": 2,
+          "image_size": "medium",
+          "show_price": true
+        }
+      },
+      {
+        "id": "variant",
+        "name": "列表布局",
+        "layout": "list",
+        "description": "新的列表布局设计",
+        "users": 0,
+        "config": {
+          "layout_type": "vertical",
+          "image_size": "small",
+          "show_description": true
+        }
+      }
+    ],
+    "metrics": {},
+    "confidence": 0,
+    "significance": false,
+    "sample_size": 0,
+    "target_metrics": ["clickRate", "engagement", "user_satisfaction"],
+    "hypothesis": "列表布局相比网格布局能够提供更好的信息展示，提升用户参与度",
+    "config": {
+      "traffic_split_type": "random",
+      "target_audience": "mobile_users",
+      "exclusion_criteria": ["desktop_users"],
+      "success_threshold": 0.05,
+      "min_sample_size": 1000
+    },
+    "results": {},
+    "winner": null,
+    "recommendation": null,
+    "tags": ["UI优化", "用户体验", "移动端"],
+    "priority": "low",
+    "owner": "design_team",
+    "notes": "等待设计团队最终确认布局方案后启动测试",
+    "createdAt": 1705718400000,
+    "updatedAt": 1705718400000,
+    "createBy": "admin",
+    "updateBy": "admin"
+  },
+  {
+    "_id": "TEST004",
+    "name": "推荐频率优化测试",
+    "description": "测试不同推荐频率对用户满意度和转化的影响，找到最佳推荐频率",
+    "type": "frequency",
+    "status": "running",
+    "created_at": "2024-01-18",
+    "start_date": "2024-01-19",
+    "end_date": "2024-02-18",
+    "duration": 30,
+    "traffic_allocation": {
+      "control": 25,
+      "variant1": 25,
+      "variant2": 25,
+      "variant3": 25
+    },
+    "groups": [
+      {
+        "id": "control",
+        "name": "低频组",
+        "frequency": "daily",
+        "description": "每天推荐一次",
+        "users": 680,
+        "config": {
+          "interval_hours": 24,
+          "max_recommendations": 5
+        }
+      },
+      {
+        "id": "variant1",
+        "name": "中频组",
+        "frequency": "twice_daily",
+        "description": "每天推荐两次",
+        "users": 695,
+        "config": {
+          "interval_hours": 12,
+          "max_recommendations": 8
+        }
+      },
+      {
+        "id": "variant2",
+        "name": "高频组",
+        "frequency": "realtime",
+        "description": "实时推荐",
+        "users": 712,
+        "config": {
+          "interval_hours": 1,
+          "max_recommendations": 15
+        }
+      },
+      {
+        "id": "variant3",
+        "name": "智能组",
+        "frequency": "adaptive",
+        "description": "基于用户行为智能调整",
+        "users": 688,
+        "config": {
+          "algorithm": "adaptive",
+          "max_recommendations": 12
+        }
+      }
+    ],
+    "metrics": {
+      "clickRate": {
+        "control": 6.2,
+        "variant1": 8.9,
+        "variant2": 11.5,
+        "variant3": 10.2,
+        "best": "variant2",
+        "improvement": 85.5
+      },
+      "conversionRate": {
+        "control": 2.1,
+        "variant1": 2.8,
+        "variant2": 3.2,
+        "variant3": 3.5,
+        "best": "variant3",
+        "improvement": 66.7
+      },
+      "userSatisfaction": {
+        "control": 85.5,
+        "variant1": 82.3,
+        "variant2": 76.8,
+        "variant3": 88.9,
+        "best": "variant3",
+        "improvement": 4.0
+      },
+      "unsubscribeRate": {
+        "control": 0.8,
+        "variant1": 1.2,
+        "variant2": 2.5,
+        "variant3": 0.9,
+        "best": "control",
+        "improvement": 0.0
+      }
+    },
+    "confidence": 87.3,
+    "significance": true,
+    "sample_size": 2775,
+    "target_metrics": ["clickRate", "conversionRate", "userSatisfaction", "unsubscribeRate"],
+    "hypothesis": "智能推荐频率能够在保持用户满意度的同时提升转化效果",
+    "config": {
+      "traffic_split_type": "random",
+      "target_audience": "active_users",
+      "exclusion_criteria": ["inactive_users"],
+      "success_threshold": 0.05
+    },
+    "results": {
+      "statistical_power": 0.78,
+      "effect_size": 0.45,
+      "optimal_frequency": "adaptive"
+    },
+    "winner": "variant3",
+    "recommendation": "智能推荐频率表现最佳，建议采用自适应推荐策略，根据用户活跃度调整推荐频率",
+    "tags": ["推荐频率", "用户满意度", "个性化"],
+    "priority": "high",
+    "owner": "product_team",
+    "notes": "智能推荐策略在各项指标上表现优异，建议加快测试进度",
+    "createdAt": 1705545600000,
+    "updatedAt": 1707187200000,
+    "createBy": "admin",
+    "updateBy": "admin"
+  },
+  {
+    "_id": "TEST005",
+    "name": "个性化程度测试",
+    "description": "测试不同个性化程度对推荐效果的影响，平衡个性化与多样性",
+    "type": "personalization",
+    "status": "completed",
+    "created_at": "2024-01-05",
+    "start_date": "2024-01-06",
+    "end_date": "2024-01-20",
+    "duration": 14,
+    "traffic_allocation": {
+      "control": 33,
+      "variant1": 33,
+      "variant2": 34
+    },
+    "groups": [
+      {
+        "id": "control",
+        "name": "低个性化",
+        "personalization": "low",
+        "description": "主要基于热门推荐",
+        "users": 1024,
+        "config": {
+          "personalization_weight": 0.3,
+          "diversity_weight": 0.7
+        }
+      },
+      {
+        "id": "variant1",
+        "name": "中个性化",
+        "personalization": "medium",
+        "description": "平衡个性化和多样性",
+        "users": 1056,
+        "config": {
+          "personalization_weight": 0.6,
+          "diversity_weight": 0.4
+        }
+      },
+      {
+        "id": "variant2",
+        "name": "高个性化",
+        "personalization": "high",
+        "description": "主要基于用户历史行为",
+        "users": 1089,
+        "config": {
+          "personalization_weight": 0.9,
+          "diversity_weight": 0.1
+        }
+      }
+    ],
+    "metrics": {
+      "clickRate": {
+        "control": 7.8,
+        "variant1": 11.2,
+        "variant2": 13.5,
+        "best": "variant2",
+        "improvement": 73.1
+      },
+      "conversionRate": {
+        "control": 2.5,
+        "variant1": 3.8,
+        "variant2": 4.2,
+        "best": "variant2",
+        "improvement": 68.0
+      },
+      "diversityScore": {
+        "control": 0.85,
+        "variant1": 0.72,
+        "variant2": 0.45,
+        "best": "control",
+        "improvement": 0.0
+      },
+      "serendipity": {
+        "control": 0.68,
+        "variant1": 0.75,
+        "variant2": 0.52,
+        "best": "variant1",
+        "improvement": 10.3
+      }
+    },
+    "confidence": 94.1,
+    "significance": true,
+    "sample_size": 3169,
+    "target_metrics": ["clickRate", "conversionRate", "diversityScore", "serendipity"],
+    "hypothesis": "适度的个性化能够在提升转化率的同时保持推荐的多样性",
+    "config": {
+      "traffic_split_type": "random",
+      "target_audience": "all_users",
+      "exclusion_criteria": [],
+      "success_threshold": 0.05
+    },
+    "results": {
+      "statistical_power": 0.88,
+      "effect_size": 0.72,
+      "optimal_balance": "medium"
+    },
+    "winner": "variant1",
+    "recommendation": "中等个性化程度在转化率和多样性之间取得了最佳平衡，建议采用6:4的个性化与多样性权重配比",
+    "tags": ["个性化", "多样性", "算法优化"],
+    "priority": "medium",
+    "owner": "algorithm_team",
+    "notes": "个性化程度测试为推荐算法优化提供了重要参考，建议定期重新测试以适应用户行为变化",
+    "createdAt": 1704451200000,
+    "updatedAt": 1705708800000,
+    "createBy": "admin",
+    "updateBy": "admin"
+  }
+]
+  

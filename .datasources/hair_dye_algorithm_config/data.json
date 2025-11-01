@@ -1,0 +1,456 @@
+
+[
+  {
+    "_id": "config_001",
+    "algorithm_id": "collaborative_filtering",
+    "algorithm_name": "协同过滤算法",
+    "algorithm_type": "traditional",
+    "description": "基于用户行为相似性进行推荐，通过分析用户的历史行为和偏好找到相似用户，推荐相似用户喜欢的产品",
+    "status": "active",
+    "weight": 30,
+    "strategy": "balanced",
+    "config": {
+      "similarity": "cosine",
+      "neighbors": 50,
+      "min_rating": 3,
+      "user_based": true,
+      "item_based": false,
+      "normalize": true
+    },
+    "performance": {
+      "accuracy": 85.2,
+      "coverage": 78.5,
+      "diversity": 72.3,
+      "response_time": 120,
+      "precision": 82.1,
+      "recall": 79.8,
+      "f1_score": 80.9
+    },
+    "filters": {
+      "priceRange": {
+        "enabled": true,
+        "min": 0,
+        "max": 1000
+      },
+      "category": {
+        "enabled": true,
+        "categories": ["hair-dye", "tools", "accessories"]
+      },
+      "brand": {
+        "enabled": false,
+        "brands": []
+      }
+    },
+    "boost": {
+      "newProducts": 1.2,
+      "popularProducts": 1.5,
+      "highMargin": 1.1,
+      "seasonal": 1.3
+    },
+    "diversity": {
+      "enabled": true,
+      "threshold": 0.3,
+      "method": "category_diversity"
+    },
+    "freshness": {
+      "enabled": true,
+      "decay": 0.95,
+      "time_window": 30
+    },
+    "effective_time": "2024-01-01T00:00:00.000Z",
+    "expire_time": "2024-12-31T23:59:59.000Z",
+    "version": "v2.1.0",
+    "priority": 2,
+    "auto_optimization": true,
+    "optimization_frequency": "weekly",
+    "target_audience": ["returning_users", "active_users"],
+    "exclusion_criteria": ["new_users", "bot_traffic"],
+    "success_threshold": 0.05,
+    "min_sample_size": 1000,
+    "max_recommendations": 20,
+    "response_time_limit": 200,
+    "cache_enabled": true,
+    "cache_ttl": 3600,
+    "monitoring_enabled": true,
+    "alert_thresholds": {
+      "accuracy_min": 80,
+      "response_time_max": 150,
+      "coverage_min": 75
+    },
+    "last_updated": "2025-10-16T08:30:00.000Z",
+    "updated_by": "admin",
+    "update_reason": "优化相似度计算方法，提升推荐准确性",
+    "tags": ["传统算法", "协同过滤", "用户行为", "稳定版本"],
+    "notes": "该算法在用户数据充足时表现良好，适合有明确行为偏好的用户群体",
+    "createdAt": 1726368000000,
+    "updatedAt": 1729046400000,
+    "owner": "system",
+    "createBy": "admin",
+    "updateBy": "admin"
+  },
+  {
+    "_id": "config_002",
+    "algorithm_id": "content_based",
+    "algorithm_name": "内容推荐算法",
+    "algorithm_type": "traditional",
+    "description": "基于产品特征相似性进行推荐，通过分析产品的属性、类别、品牌等特征找到相似产品进行推荐",
+    "status": "active",
+    "weight": 25,
+    "strategy": "balanced",
+    "config": {
+      "features": ["category", "brand", "price", "color", "ingredients"],
+      "threshold": 0.7,
+      "similarity_metric": "cosine",
+      "feature_weights": {
+        "category": 0.3,
+        "brand": 0.2,
+        "price": 0.2,
+        "color": 0.2,
+        "ingredients": 0.1
+      }
+    },
+    "performance": {
+      "accuracy": 82.1,
+      "coverage": 85.7,
+      "diversity": 68.9,
+      "response_time": 95,
+      "precision": 79.5,
+      "recall": 84.2,
+      "f1_score": 81.8
+    },
+    "filters": {
+      "priceRange": {
+        "enabled": true,
+        "min": 0,
+        "max": 1000
+      },
+      "category": {
+        "enabled": true,
+        "categories": ["hair-dye", "tools", "accessories"]
+      },
+      "brand": {
+        "enabled": false,
+        "brands": []
+      }
+    },
+    "boost": {
+      "newProducts": 1.2,
+      "popularProducts": 1.5,
+      "highMargin": 1.1,
+      "seasonal": 1.3
+    },
+    "diversity": {
+      "enabled": true,
+      "threshold": 0.3,
+      "method": "feature_diversity"
+    },
+    "freshness": {
+      "enabled": true,
+      "decay": 0.95,
+      "time_window": 30
+    },
+    "effective_time": "2024-01-01T00:00:00.000Z",
+    "expire_time": "2024-12-31T23:59:59.000Z",
+    "version": "v2.0.3",
+    "priority": 3,
+    "auto_optimization": true,
+    "optimization_frequency": "biweekly",
+    "target_audience": ["all_users"],
+    "exclusion_criteria": [],
+    "success_threshold": 0.05,
+    "min_sample_size": 500,
+    "max_recommendations": 20,
+    "response_time_limit": 150,
+    "cache_enabled": true,
+    "cache_ttl": 7200,
+    "monitoring_enabled": true,
+    "alert_thresholds": {
+      "accuracy_min": 78,
+      "response_time_max": 120,
+      "coverage_min": 80
+    },
+    "last_updated": "2025-10-15T14:20:00.000Z",
+    "updated_by": "admin",
+    "update_reason": "调整特征权重，优化产品相似度计算",
+    "tags": ["传统算法", "内容推荐", "产品特征", "高覆盖率"],
+    "notes": "该算法覆盖率高，适合冷启动场景和新用户推荐",
+    "createdAt": 1726281600000,
+    "updatedAt": 1729046400000,
+    "owner": "system",
+    "createBy": "admin",
+    "updateBy": "admin"
+  },
+  {
+    "_id": "config_003",
+    "algorithm_id": "deep_learning",
+    "algorithm_name": "深度学习算法",
+    "algorithm_type": "ai",
+    "description": "基于神经网络的个性化推荐，使用深度学习模型学习用户和产品的复杂特征表示，提供更精准的个性化推荐",
+    "status": "active",
+    "weight": 35,
+    "strategy": "accuracy",
+    "config": {
+      "model": "transformer",
+      "layers": 6,
+      "embedding": 128,
+      "attention_heads": 8,
+      "dropout": 0.1,
+      "learning_rate": 0.001,
+      "batch_size": 64,
+      "epochs": 100,
+      "optimizer": "adam"
+    },
+    "performance": {
+      "accuracy": 91.5,
+      "coverage": 88.2,
+      "diversity": 79.6,
+      "response_time": 200,
+      "precision": 89.2,
+      "recall": 87.8,
+      "f1_score": 88.5
+    },
+    "filters": {
+      "priceRange": {
+        "enabled": true,
+        "min": 0,
+        "max": 1000
+      },
+      "category": {
+        "enabled": true,
+        "categories": ["hair-dye", "tools", "accessories"]
+      },
+      "brand": {
+        "enabled": false,
+        "brands": []
+      }
+    },
+    "boost": {
+      "newProducts": 1.2,
+      "popularProducts": 1.5,
+      "highMargin": 1.1,
+      "seasonal": 1.3
+    },
+    "diversity": {
+      "enabled": true,
+      "threshold": 0.3,
+      "method": "embedding_diversity"
+    },
+    "freshness": {
+      "enabled": true,
+      "decay": 0.95,
+      "time_window": 30
+    },
+    "effective_time": "2024-01-01T00:00:00.000Z",
+    "expire_time": "2024-12-31T23:59:59.000Z",
+    "version": "v3.2.1",
+    "priority": 1,
+    "auto_optimization": true,
+    "optimization_frequency": "daily",
+    "target_audience": ["active_users", "vip_users"],
+    "exclusion_criteria": ["new_users"],
+    "success_threshold": 0.05,
+    "min_sample_size": 2000,
+    "max_recommendations": 15,
+    "response_time_limit": 300,
+    "cache_enabled": true,
+    "cache_ttl": 1800,
+    "monitoring_enabled": true,
+    "alert_thresholds": {
+      "accuracy_min": 88,
+      "response_time_max": 250,
+      "coverage_min": 85
+    },
+    "last_updated": "2025-10-16T09:15:00.000Z",
+    "updated_by": "system",
+    "update_reason": "自动优化模型参数，提升推荐准确性",
+    "tags": ["AI算法", "深度学习", "神经网络", "高精度"],
+    "notes": "该算法准确性最高，适合有充足数据的活跃用户，但计算资源消耗较大",
+    "createdAt": 1726195200000,
+    "updatedAt": 1729046400000,
+    "owner": "system",
+    "createBy": "admin",
+    "updateBy": "system"
+  },
+  {
+    "_id": "config_004",
+    "algorithm_id": "hybrid",
+    "algorithm_name": "混合推荐算法",
+    "algorithm_type": "hybrid",
+    "description": "结合多种算法的综合推荐系统，通过加权融合、级联、切换等方式整合多个推荐算法的优势",
+    "status": "active",
+    "weight": 10,
+    "strategy": "balanced",
+    "config": {
+      "methods": ["collaborative", "content", "deep"],
+      "combination": "weighted",
+      "weights": {
+        "collaborative": 0.3,
+        "content": 0.3,
+        "deep": 0.4
+      },
+      "switching_threshold": 0.7,
+      "cascade_order": ["content", "collaborative", "deep"]
+    },
+    "performance": {
+      "accuracy": 88.7,
+      "coverage": 92.1,
+      "diversity": 85.3,
+      "response_time": 150,
+      "precision": 86.5,
+      "recall": 89.2,
+      "f1_score": 87.8
+    },
+    "filters": {
+      "priceRange": {
+        "enabled": true,
+        "min": 0,
+        "max": 1000
+      },
+      "category": {
+        "enabled": true,
+        "categories": ["hair-dye", "tools", "accessories"]
+      },
+      "brand": {
+        "enabled": false,
+        "brands": []
+      }
+    },
+    "boost": {
+      "newProducts": 1.2,
+      "popularProducts": 1.5,
+      "highMargin": 1.1,
+      "seasonal": 1.3
+    },
+    "diversity": {
+      "enabled": true,
+      "threshold": 0.3,
+      "method": "hybrid_diversity"
+    },
+    "freshness": {
+      "enabled": true,
+      "decay": 0.95,
+      "time_window": 30
+    },
+    "effective_time": "2024-01-01T00:00:00.000Z",
+    "expire_time": "2024-12-31T23:59:59.000Z",
+    "version": "v1.5.2",
+    "priority": 4,
+    "auto_optimization": true,
+    "optimization_frequency": "weekly",
+    "target_audience": ["all_users"],
+    "exclusion_criteria": [],
+    "success_threshold": 0.05,
+    "min_sample_size": 1500,
+    "max_recommendations": 25,
+    "response_time_limit": 200,
+    "cache_enabled": true,
+    "cache_ttl": 3600,
+    "monitoring_enabled": true,
+    "alert_thresholds": {
+      "accuracy_min": 85,
+      "response_time_max": 180,
+      "coverage_min": 90
+    },
+    "last_updated": "2025-10-14T16:45:00.000Z",
+    "updated_by": "admin",
+    "update_reason": "优化混合策略权重，平衡准确性和多样性",
+    "tags": ["混合算法", "多算法融合", "平衡策略", "高覆盖率"],
+    "notes": "该算法综合了多种算法的优势，在各种场景下都有较好的表现，适合作为默认推荐策略",
+    "createdAt": 1726108800000,
+    "updatedAt": 1729046400000,
+    "owner": "system",
+    "createBy": "admin",
+    "updateBy": "admin"
+  },
+  {
+    "_id": "config_005",
+    "algorithm_id": "popularity_based",
+    "algorithm_name": "热门推荐算法",
+    "algorithm_type": "traditional",
+    "description": "基于产品热度的推荐算法，推荐当前最受欢迎、销量最高的产品，适合新用户和热门趋势展示",
+    "status": "inactive",
+    "weight": 0,
+    "strategy": "business",
+    "config": {
+      "time_window": 7,
+      "metrics": ["views", "purchases", "ratings"],
+      "weights": {
+        "views": 0.3,
+        "purchases": 0.5,
+        "ratings": 0.2
+      },
+      "decay_factor": 0.9
+    },
+    "performance": {
+      "accuracy": 75.8,
+      "coverage": 95.2,
+      "diversity": 45.6,
+      "response_time": 50,
+      "precision": 72.3,
+      "recall": 78.9,
+      "f1_score": 75.4
+    },
+    "filters": {
+      "priceRange": {
+        "enabled": false,
+        "min": 0,
+        "max": 1000
+      },
+      "category": {
+        "enabled": true,
+        "categories": ["hair-dye", "tools", "accessories"]
+      },
+      "brand": {
+        "enabled": false,
+        "brands": []
+      }
+    },
+    "boost": {
+      "newProducts": 1.0,
+      "popularProducts": 2.0,
+      "highMargin": 1.3,
+      "seasonal": 1.5
+    },
+    "diversity": {
+      "enabled": false,
+      "threshold": 0.0,
+      "method": "none"
+    },
+    "freshness": {
+      "enabled": true,
+      "decay": 0.9,
+      "time_window": 7
+    },
+    "effective_time": "2024-01-01T00:00:00.000Z",
+    "expire_time": "2024-12-31T23:59:59.000Z",
+    "version": "v1.2.0",
+    "priority": 5,
+    "auto_optimization": false,
+    "optimization_frequency": "monthly",
+    "target_audience": ["new_users", "guest_users"],
+    "exclusion_criteria": [],
+    "success_threshold": 0.03,
+    "min_sample_size": 100,
+    "max_recommendations": 10,
+    "response_time_limit": 100,
+    "cache_enabled": true,
+    "cache_ttl": 14400,
+    "monitoring_enabled": false,
+    "alert_thresholds": {
+      "accuracy_min": 70,
+      "response_time_max": 80,
+      "coverage_min": 90
+    },
+    "last_updated": "2025-10-10T11:30:00.000Z",
+    "updated_by": "admin",
+    "update_reason": "暂停使用，仅在特定场景下启用",
+    "tags": ["传统算法", "热门推荐", "新用户", "高响应速度"],
+    "notes": "该算法响应速度快，覆盖率高，但个性化程度低，适合作为新用户的默认推荐",
+    "createdAt": 1726022400000,
+    "updatedAt": 1729046400000,
+    "owner": "system",
+    "createBy": "admin",
+    "updateBy": "admin"
+  }
+]
+  

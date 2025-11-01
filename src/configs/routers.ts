@@ -44,6 +44,10 @@ import ORDERS_HISTORY from '../pages/orders-history.jsx';
 import FAVORITES from '../pages/favorites.jsx';
 import NOTIFICATIONS from '../pages/notifications.jsx';
 import RECOMMENDATION_ANALYTICS from '../pages/recommendation-analytics.jsx';
+import AB_TESTING from '../pages/ab-testing.jsx';
+import ALGORITHM_MANAGEMENT from '../pages/algorithm-management.jsx';
+import FEEDBACK_MANAGEMENT from '../pages/feedback-management.jsx';
+import RECOMMENDATION_HEATMAP from '../pages/recommendation-heatmap.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -182,4 +186,16 @@ export const routers = [{
 }, {
   id: "recommendation-analytics",
   component: RECOMMENDATION_ANALYTICS
+}, {
+  id: "ab-testing",
+  component: AB_TESTING
+}, {
+  id: "algorithm-management",
+  component: ALGORITHM_MANAGEMENT
+}, {
+  id: "feedback-management",
+  component: FEEDBACK_MANAGEMENT
+}, {
+  id: "recommendation-heatmap",
+  component: RECOMMENDATION_HEATMAP
 }]

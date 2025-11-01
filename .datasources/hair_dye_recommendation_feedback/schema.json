@@ -1,0 +1,176 @@
+
+{
+  "name": "hair_dye_recommendation_feedback",
+  "title": "推荐反馈管理",
+  "schemas": [
+    {
+      "name": "user_id",
+      "title": "用户ID",
+      "type": "String"
+    },
+    {
+      "name": "recommendation_id",
+      "title": "推荐ID",
+      "type": "String"
+    },
+    {
+      "name": "product_id",
+      "title": "产品ID",
+      "type": "String"
+    },
+    {
+      "name": "product_name",
+      "title": "产品名称",
+      "type": "String"
+    },
+    {
+      "name": "algorithm",
+      "title": "推荐算法",
+      "type": "String"
+    },
+    {
+      "name": "confidence",
+      "title": "推荐置信度",
+      "type": "Number"
+    },
+    {
+      "name": "feedback_type",
+      "title": "反馈类型",
+      "type": "String"
+    },
+    {
+      "name": "feedback_value",
+      "title": "反馈值",
+      "type": "Boolean"
+    },
+    {
+      "name": "reason",
+      "title": "反馈原因",
+      "type": "String"
+    },
+    {
+      "name": "rating",
+      "title": "推荐评分",
+      "type": "Number"
+    },
+    {
+      "name": "comment",
+      "title": "详细评论",
+      "type": "MultiLineString"
+    },
+    {
+      "name": "category",
+      "title": "反馈分类",
+      "type": "String"
+    },
+    {
+      "name": "sentiment",
+      "title": "情感倾向",
+      "type": "String"
+    },
+    {
+      "name": "priority",
+      "title": "优先级",
+      "type": "String"
+    },
+    {
+      "name": "processed",
+      "title": "是否已处理",
+      "type": "Boolean"
+    },
+    {
+      "name": "processed_by",
+      "title": "处理人",
+      "type": "String"
+    },
+    {
+      "name": "processed_time",
+      "title": "处理时间",
+      "type": "DateTime"
+    },
+    {
+      "name": "action_taken",
+      "title": "处理措施",
+      "type": "String"
+    },
+    {
+      "name": "response",
+      "title": "回复内容",
+      "type": "MultiLineString"
+    },
+    {
+      "name": "feedback_source",
+      "title": "反馈来源",
+      "type": "String"
+    },
+    {
+      "name": "device_info",
+      "title": "设备信息",
+      "type": "Object"
+    },
+    {
+      "name": "session_id",
+      "title": "会话ID",
+      "type": "String"
+    },
+    {
+      "name": "page_context",
+      "title": "页面上下文",
+      "type": "Object"
+    },
+    {
+      "name": "user_segment",
+      "title": "用户分群",
+      "type": "String"
+    },
+    {
+      "name": "recommendation_position",
+      "title": "推荐位置",
+      "type": "Number"
+    },
+    {
+      "name": "interaction_time",
+      "title": "交互时长",
+      "type": "Number"
+    },
+    {
+      "name": "click_count",
+      "title": "点击次数",
+      "type": "Number"
+    },
+    {
+      "name": "view_count",
+      "title": "浏览次数",
+      "type": "Number"
+    },
+    {
+      "name": "conversion_status",
+      "title": "转化状态",
+      "type": "String"
+    },
+    {
+      "name": "follow_up_required",
+      "title": "需要跟进",
+      "type": "Boolean"
+    },
+    {
+      "name": "follow_up_time",
+      "title": "跟进时间",
+      "type": "DateTime"
+    },
+    {
+      "name": "tags",
+      "title": "标签",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "metadata",
+      "title": "扩展数据",
+      "type": "Object"
+    }
+  ]
+}
+  

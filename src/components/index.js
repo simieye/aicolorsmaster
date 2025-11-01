@@ -62,3 +62,4 @@ export * from './UserStats.jsx';
 export * from './OrderStatusGrid.jsx';
 export * from './MenuList.jsx';
 export * from './AIChatInterface.jsx';
+export * from './RecommendationFeedback.jsx';

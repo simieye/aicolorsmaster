@@ -17,6 +17,8 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 // @ts-ignore;
 import { ShoppingCart as ShoppingCartComponent } from '@/components/ShoppingCart';
 // @ts-ignore;
+import { RecommendationFeedback } from '@/components/RecommendationFeedback';
+// @ts-ignore;
 
 export default function ProductDetailPage(props) {
   const {
@@ -372,6 +374,14 @@ export default function ProductDetailPage(props) {
       description: `${product?.name} 已添加到收藏`
     });
   };
+  const handleRecommendationFeedback = feedbackData => {
+    console.log('收到推荐反馈:', feedbackData);
+    // 这里可以调用API保存反馈数据
+    toast({
+      title: "反馈已记录",
+      description: "感谢您的反馈，我们将持续优化推荐算法"
+    });
+  };
   if (!product) {
     return <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -570,6 +580,8 @@ export default function ProductDetailPage(props) {
                           👍
                         </Button>
                       </div>
+                      {/* 添加反馈组件 */}
+                      <RecommendationFeedback recommendationId={`similar_${item.productId}`} productId={item.productId} productName={item.name} algorithm="collaborative_filtering" confidence={item.matchScore / 100} onFeedbackSubmit={handleRecommendationFeedback} className="mt-2" />
                     </div>)}
                 </div>
               </div>}
@@ -627,6 +639,8 @@ export default function ProductDetailPage(props) {
                           👍
                         </Button>
                       </div>
+                      {/* 添加反馈组件 */}
+                      <RecommendationFeedback recommendationId={`complementary_${item.productId}`} productId={item.productId} productName={item.name} algorithm="content_based" confidence={0.85} onFeedbackSubmit={handleRecommendationFeedback} className="mt-2" />
                     </div>)}
                 </div>
               </div>}
@@ -684,6 +698,8 @@ export default function ProductDetailPage(props) {
                           👍
                         </Button>
                       </div>
+                      {/* 添加反馈组件 */}
+                      <RecommendationFeedback recommendationId={`upgrade_${item.productId}`} productId={item.productId} productName={item.name} algorithm="deep_learning" confidence={0.92} onFeedbackSubmit={handleRecommendationFeedback} className="mt-2" />
                     </div>)}
                 </div>
               </div>}

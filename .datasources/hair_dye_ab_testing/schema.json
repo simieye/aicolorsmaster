@@ -1,0 +1,137 @@
+
+{
+  "name": "hair_dye_ab_testing",
+  "title": "A/B测试管理",
+  "schemas": [
+    {
+      "name": "name",
+      "title": "测试名称",
+      "type": "String"
+    },
+    {
+      "name": "description",
+      "title": "测试描述",
+      "type": "MultiLineString"
+    },
+    {
+      "name": "type",
+      "title": "测试类型",
+      "type": "String"
+    },
+    {
+      "name": "status",
+      "title": "测试状态",
+      "type": "String"
+    },
+    {
+      "name": "created_at",
+      "title": "创建时间",
+      "type": "Date"
+    },
+    {
+      "name": "start_date",
+      "title": "开始时间",
+      "type": "Date"
+    },
+    {
+      "name": "end_date",
+      "title": "结束时间",
+      "type": "Date"
+    },
+    {
+      "name": "duration",
+      "title": "测试时长",
+      "type": "Number"
+    },
+    {
+      "name": "traffic_allocation",
+      "title": "流量分配",
+      "type": "Object"
+    },
+    {
+      "name": "groups",
+      "title": "测试分组",
+      "type": "Array",
+      "items": {
+        "type": "Object"
+      }
+    },
+    {
+      "name": "metrics",
+      "title": "测试指标",
+      "type": "Object"
+    },
+    {
+      "name": "confidence",
+      "title": "置信度",
+      "type": "Number"
+    },
+    {
+      "name": "significance",
+      "title": "统计显著性",
+      "type": "Boolean"
+    },
+    {
+      "name": "sample_size",
+      "title": "样本大小",
+      "type": "Number"
+    },
+    {
+      "name": "target_metrics",
+      "title": "目标指标",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "hypothesis",
+      "title": "测试假设",
+      "type": "MultiLineString"
+    },
+    {
+      "name": "config",
+      "title": "测试配置",
+      "type": "Object"
+    },
+    {
+      "name": "results",
+      "title": "详细结果",
+      "type": "Object"
+    },
+    {
+      "name": "winner",
+      "title": "获胜组",
+      "type": "String"
+    },
+    {
+      "name": "recommendation",
+      "title": "推荐建议",
+      "type": "MultiLineString"
+    },
+    {
+      "name": "tags",
+      "title": "标签",
+      "type": "Array",
+      "items": {
+        "type": "String"
+      }
+    },
+    {
+      "name": "priority",
+      "title": "优先级",
+      "type": "String"
+    },
+    {
+      "name": "owner",
+      "title": "负责人",
+      "type": "String"
+    },
+    {
+      "name": "notes",
+      "title": "备注",
+      "type": "MultiLineString"
+    }
+  ]
+}
+  
