@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import performanceMonitor from '@/lib/PerformanceMonitor';
 
 /**
