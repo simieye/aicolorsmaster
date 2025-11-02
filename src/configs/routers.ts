@@ -48,6 +48,7 @@ import AB_TESTING from '../pages/ab-testing.jsx';
 import ALGORITHM_MANAGEMENT from '../pages/algorithm-management.jsx';
 import FEEDBACK_MANAGEMENT from '../pages/feedback-management.jsx';
 import RECOMMENDATION_HEATMAP from '../pages/recommendation-heatmap.jsx';
+import PERFORMANCE_MONITORING from '../pages/performance-monitoring.jsx';
 export const routers = [{
   id: "home",
   component: HOME
@@ -198,4 +199,7 @@ export const routers = [{
 }, {
   id: "recommendation-heatmap",
   component: RECOMMENDATION_HEATMAP
+}, {
+  id: "performance-monitoring",
+  component: PERFORMANCE_MONITORING
 }]

@@ -1,13 +1,9 @@
 // @ts-ignore;
 import React, { useState, useEffect, useCallback } from 'react';
 // @ts-ignore;
-import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
+import { Button, useToast } from '@/components/ui';
 // @ts-ignore;
-import { MessageCircle, Send, User, Bot, Clock, Phone, Mail, MapPin, Star, ThumbsUp, ThumbsDown, CheckCircle, AlertCircle, Info, ChevronDown, ChevronUp, Filter, Search, Download, RefreshCw, Settings, Headphones, FileText, Calendar, TrendingUp, Users, Zap, Shield, Award, X, Wifi, WifiOff } from 'lucide-react';
-
-// @ts-ignore;
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
-// @ts-ignore;
+import { RefreshCw, MessageCircle, FileText, TrendingUp, Users, Clock, Star, Wifi, WifiOff } from 'lucide-react';
 
 // @ts-ignore;
 import { TopNavigation } from '@/components/TopNavigation';
@@ -16,7 +12,13 @@ import { TabBar } from '@/components/TabBar';
 // @ts-ignore;
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 // @ts-ignore;
-
+import { LoadingSpinner, ErrorState, DataLoader } from '@/components/LoadingStates';
+// @ts-ignore;
+import { ChatInterface } from '@/components/consultation/ChatInterface';
+// @ts-ignore;
+import { ConsultationHistory } from '@/components/consultation/ConsultationHistory';
+// @ts-ignore;
+import { ServiceStats } from '@/components/consultation/ServiceStats';
 export default function OnlineConsultationPage(props) {
   const {
     $w
@@ -51,7 +53,6 @@ export default function OnlineConsultationPage(props) {
     }
   });
   const [showDetails, setShowDetails] = useState(false);
-  const [selectedHistory, setSelectedHistory] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [isLoading, setIsLoading] = useState(false);
@@ -59,6 +60,8 @@ export default function OnlineConsultationPage(props) {
   const [currentServiceType, setCurrentServiceType] = useState('ai'); // ai, human
   const [isOnline, setIsOnline] = useState(true);
   const [queuePosition, setQueuePosition] = useState(0);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [statsLoading, setStatsLoading] = useState(false);
   const currentUser = $w?.auth?.currentUser;
 
   // 初始化聊天
@@ -88,7 +91,7 @@ export default function OnlineConsultationPage(props) {
     }
   }, [isAIEnabled]);
 
-  // 检查连接状态
+  // 检查连���状态
   const checkConnectionStatus = useCallback(() => {
     setIsOnline(navigator.onLine);
     const handleOnline = () => setIsOnline(true);
@@ -122,7 +125,7 @@ export default function OnlineConsultationPage(props) {
   };
   const loadConsultationHistory = async () => {
     try {
-      setIsLoading(true);
+      setHistoryLoading(true);
       const mockHistory = generateMockConsultationHistory();
       setConsultationHistory(mockHistory);
     } catch (error) {
@@ -133,7 +136,7 @@ export default function OnlineConsultationPage(props) {
         variant: "destructive"
       });
     } finally {
-      setIsLoading(false);
+      setHistoryLoading(false);
     }
   };
   const generateMockConsultationHistory = () => {
@@ -151,7 +154,7 @@ export default function OnlineConsultationPage(props) {
         rating: Math.floor(Math.random() * 5) + 1,
         satisfaction: Math.random() > 0.3 ? 'satisfied' : 'neutral',
         topic: ['产品咨询', '使用指导', '售后问题', '技术支持', '投诉建议'][Math.floor(Math.random() * 5)],
-        summary: `关于染发产品使用的咨询${i + 1}`,
+        summary: `关于���发产品使用的咨询${i + 1}`,
         timestamp: date.toISOString(),
         messages: [{
           type: 'user',
@@ -168,6 +171,7 @@ export default function OnlineConsultationPage(props) {
   };
   const loadServiceStats = async () => {
     try {
+      setStatsLoading(true);
       const mockStats = {
         totalConsultations: 1250,
         todayConsultations: 45,
@@ -233,6 +237,8 @@ export default function OnlineConsultationPage(props) {
         description: "无法获取服务统计数据",
         variant: "destructive"
       });
+    } finally {
+      setStatsLoading(false);
     }
   };
   const handleSendMessage = async () => {
@@ -360,12 +366,6 @@ export default function OnlineConsultationPage(props) {
     const rows = consultationHistory.map(item => [item.id, item.userId, item.userName, item.type, item.status, item.duration, item.rating, item.satisfaction, item.topic, item.summary, item.timestamp]);
     return [headers, ...rows].map(row => row.join(',')).join('\n');
   };
-  const filteredHistory = consultationHistory.filter(item => {
-    const matchesType = filterType === 'all' || item.type === filterType;
-    const matchesSearch = !searchTerm || item.userName.toLowerCase().includes(searchTerm.toLowerCase()) || item.topic.toLowerCase().includes(searchTerm.toLowerCase()) || item.summary.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesType && matchesSearch;
-  });
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
   if (activeTab === 'chat') {
     return <ErrorBoundary $w={$w}>
         <div className="min-h-screen bg-background">
@@ -404,69 +404,8 @@ export default function OnlineConsultationPage(props) {
               </div>
             </div>
 
-            {/* 聊天区域 */}
-            <div className="flex flex-col h-[calc(100vh-200px)]">
-              {/* 消息列表 */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages && messages.map((message, index) => <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-2' : 'order-1'}`}>
-                      <div className={`flex items-center space-x-2 mb-1 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        {message.sender === 'ai' && <Bot className="w-4 h-4 text-blue-500" />}
-                        {message.sender === 'human' && <User className="w-4 h-4 text-green-500" />}
-                        {message.sender === 'user' && <User className="w-4 h-4 text-green-500" />}
-                        {message.sender === 'system' && <Info className="w-4 h-4 text-orange-500" />}
-                        <span className="text-xs text-muted-foreground">
-                          {message.sender === 'ai' ? 'AI客服' : message.sender === 'human' ? '人工客服' : message.sender === 'system' ? '系统' : '用户'} - {new Date(message.timestamp).toLocaleTimeString()}
-                        </span>
-                      </div>
-                      <div className={`p-3 rounded-lg ${message.sender === 'user' ? 'bg-primary text-primary-foreground' : message.sender === 'system' ? 'bg-orange-100 text-orange-800 border border-orange-200' : 'bg-muted'}`}>
-                        <p className="text-sm">{message.content}</p>
-                      </div>
-                    </div>
-                  </div>)}
-                {isTyping && <div className="flex justify-start">
-                    <div className="bg-muted p-3 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{
-                      animationDelay: '0.1s'
-                    }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{
-                      animationDelay: '0.2s'
-                    }}></div>
-                      </div>
-                    </div>
-                  </div>}
-              </div>
-
-              {/* 输入区域 */}
-              <div className="border-t p-4 bg-card">
-                <div className="flex items-center space-x-2">
-                  <input type="text" value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSendMessage()} placeholder="请输入您的问题..." disabled={connectionStatus === 'connecting' || !isOnline} className="flex-1 px-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50" />
-                  <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping || connectionStatus === 'connecting' || !isOnline}>
-                    <Send className="w-4 h-4" />
-                  </Button>
-                </div>
-                <div className="flex items-center justify-between mt-2">
-                  <div className="flex items-center space-x-2">
-                    <Button variant="ghost" size="sm" onClick={() => setShowDetails(!showDetails)}>
-                      <Info className="w-4 h-4 mr-1" />
-                      服务详情
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={handleEndConsultation}>
-                      <Phone className="w-4 h-4 mr-1" />
-                      结束咨询
-                    </Button>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <span className="text-xs text-muted-foreground">服务评价:</span>
-                    {[1, 2, 3, 4, 5].map(star => <button key={star} onClick={() => handleRateConsultation(star)} className="text-yellow-500 hover:text-yellow-600">
-                        <Star className={`w-4 h-4 ${star <= 3 ? 'fill-current' : ''}`} />
-                      </button>)}
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* 聊天界面 */}
+            <ChatInterface messages={messages} inputMessage={inputMessage} setInputMessage={setInputMessage} onSendMessage={handleSendMessage} isTyping={isTyping} connectionStatus={connectionStatus} currentServiceType={currentServiceType} isOnline={isOnline} queuePosition={queuePosition} onToggleAI={handleToggleAI} onEndConsultation={handleEndConsultation} onRateConsultation={handleRateConsultation} showDetails={showDetails} setShowDetails={setShowDetails} />
 
             {/* 服务详情 */}
             {showDetails && <div className="border-t p-4 bg-muted">
@@ -475,15 +414,15 @@ export default function OnlineConsultationPage(props) {
                     <h4 className="font-medium mb-2">服务特色</h4>
                     <ul className="space-y-1 text-sm">
                       <li className="flex items-center space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <div className="w-4 h-4 text-green-500">✓</div>
                         <span>24小时在线服务</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <div className="w-4 h-4 text-green-500">✓</div>
                         <span>专业染发顾问</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <div className="w-4 h-4 text-green-500">✓</div>
                         <span>个性化解决方案</span>
                       </li>
                     </ul>
@@ -492,15 +431,15 @@ export default function OnlineConsultationPage(props) {
                     <h4 className="font-medium mb-2">联系方式</h4>
                     <ul className="space-y-1 text-sm">
                       <li className="flex items-center space-x-2">
-                        <Phone className="w-4 h-4 text-blue-500" />
+                        <span className="w-4 h-4 text-blue-500">📞</span>
                         <span>400-123-4567</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <Mail className="w-4 h-4 text-blue-500" />
+                        <span className="w-4 h-4 text-blue-500">📧</span>
                         <span>service@example.com</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <MapPin className="w-4 h-4 text-blue-500" />
+                        <span className="w-4 h-4 text-blue-500">📍</span>
                         <span>全国服务网点</span>
                       </li>
                     </ul>
@@ -534,108 +473,7 @@ export default function OnlineConsultationPage(props) {
         <div className="min-h-screen bg-background">
           <TopNavigation title="咨询记录" showBack={true} />
           
-          <div className="pb-20">
-            {/* 搜索和筛选 */}
-            <div className="bg-card border-b p-4">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                <div className="flex items-center space-x-4">
-                  <div className="relative">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                    <input type="text" placeholder="搜索咨询记录..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-64" />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Filter className="w-4 h-4 text-muted-foreground" />
-                    <select value={filterType} onChange={e => setFilterType(e.target.value)} className="px-3 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-                      <option value="all">全部类型</option>
-                      <option value="ai">AI客服</option>
-                      <option value="human">人工客服</option>
-                    </select>
-                  </div>
-                </div>
-                <Button variant="outline" onClick={handleExportHistory} disabled={isLoading}>
-                  <Download className="w-4 h-4 mr-2" />
-                  {isLoading ? '导出中...' : '导出记录'}
-                </Button>
-              </div>
-            </div>
-
-            {/* 咨询记录列表 */}
-            <div className="p-4 space-y-4">
-              {!filteredHistory || filteredHistory.length === 0 ? <div className="text-center py-8 text-muted-foreground">
-                  <FileText className="w-12 h-12 mx-auto mb-2" />
-                  <p>暂无咨询记录</p>
-                </div> : filteredHistory.map(item => <Card key={item.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedHistory(item)}>
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          {item.type === 'ai' ? <Bot className="w-4 h-4 text-blue-500" /> : <User className="w-4 h-4 text-green-500" />}
-                          <span className="font-medium">{item.userName}</span>
-                          <span className={`px-2 py-1 rounded text-xs ${item.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>
-                            {item.status === 'completed' ? '已完成' : '进行中'}
-                          </span>
-                          <span className="text-sm text-muted-foreground">{item.topic}</span>
-                        </div>
-                        <p className="text-sm text-muted-foreground mb-2">{item.summary}</p>
-                        <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-                          <span>{new Date(item.timestamp).toLocaleString()}</span>
-                          <span>时长: {item.duration}分钟</span>
-                          <div className="flex items-center space-x-1">
-                            <Star className="w-3 h-3 text-yellow-500" />
-                            <span>{item.rating}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>)}
-            </div>
-
-            {/* 咨询详情弹窗 */}
-            {selectedHistory && <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-                <div className="bg-card rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold">咨询详情</h3>
-                      <Button variant="ghost" size="sm" onClick={() => setSelectedHistory(null)}>
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-muted-foreground">用户:</span>
-                          <span className="ml-2">{selectedHistory.userName}</span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">类型:</span>
-                          <span className="ml-2">{selectedHistory.type === 'ai' ? 'AI客服' : '人工客服'}</span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">状态:</span>
-                          <span className="ml-2">{selectedHistory.status === 'completed' ? '已完成' : '进行中'}</span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">时长:</span>
-                          <span className="ml-2">{selectedHistory.duration}分钟</span>
-                        </div>
-                      </div>
-                      <div>
-                        <h4 className="font-medium mb-2">对话记录</h4>
-                        <div className="space-y-2">
-                          {selectedHistory.messages && selectedHistory.messages.map((msg, index) => <div key={index} className={`p-2 rounded ${msg.type === 'user' ? 'bg-primary/10' : 'bg-muted'}`}>
-                              <div className="text-xs text-muted-foreground mb-1">
-                                {msg.type === 'user' ? '用户' : '客服'} - {new Date(msg.timestamp).toLocaleTimeString()}
-                              </div>
-                              <div className="text-sm">{msg.content}</div>
-                            </div>)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>}
-          </div>
+          <ConsultationHistory consultationHistory={consultationHistory} loading={historyLoading} searchTerm={searchTerm} setSearchTerm={setSearchTerm} filterType={filterType} setFilterType={setFilterType} onExportHistory={handleExportHistory} />
 
           {/* 底部导航 */}
           <div className="fixed bottom-0 left-0 right-0 bg-card border-t">
@@ -662,153 +500,7 @@ export default function OnlineConsultationPage(props) {
         <div className="min-h-screen bg-background">
           <TopNavigation title="服务统计" showBack={true} />
           
-          <div className="pb-20 p-4 space-y-6">
-            {/* 统计卡片 */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <MessageCircle className="w-8 h-8 text-blue-500" />
-                    <span className="text-sm text-muted-foreground">总咨询量</span>
-                  </div>
-                  <div className="text-2xl font-bold">{serviceStats.totalConsultations?.toLocaleString()}</div>
-                  <div className="text-xs text-green-600">+12.5%</div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <Calendar className="w-8 h-8 text-green-500" />
-                    <span className="text-sm text-muted-foreground">今日咨询</span>
-                  </div>
-                  <div className="text-2xl font-bold">{serviceStats.todayConsultations}</div>
-                  <div className="text-xs text-green-600">+8.3%</div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <Star className="w-8 h-8 text-yellow-500" />
-                    <span className="text-sm text-muted-foreground">满意度</span>
-                  </div>
-                  <div className="text-2xl font-bold">{serviceStats.satisfactionRate}%</div>
-                  <div className="text-xs text-green-600">+2.1%</div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <Clock className="w-8 h-8 text-purple-500" />
-                    <span className="text-sm text-muted-foreground">平均时长</span>
-                  </div>
-                  <div className="text-2xl font-bold">{serviceStats.averageDuration}分钟</div>
-                  <div className="text-xs text-green-600">-1.2分钟</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* 咨询趋势 */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <TrendingUp className="w-5 h-5" />
-                  <span>咨询趋势</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={serviceStats.dailyTrend || []}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="consultations" stroke="#3b82f6" name="咨询量" />
-                    <Line type="monotone" dataKey="satisfaction" stroke="#10b981" name="满意度" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            {/* 主题分布 */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>咨询主题分布</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <PieChart>
-                      <Pie data={serviceStats.topicDistribution || []} cx="50%" cy="50%" labelLine={false} label={({
-                      name,
-                      percent
-                    }) => `${name} ${(percent * 100).toFixed(0)}%`} outerRadius={80} fill="#8884d8" dataKey="count">
-                        {(serviceStats.topicDistribution || []).map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>服务性能指标</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm">准确率</span>
-                        <span className="text-sm font-medium">{serviceStats.performanceMetrics?.accuracy}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-blue-500 h-2 rounded-full" style={{
-                        width: `${serviceStats.performanceMetrics?.accuracy}%`
-                      }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm">响应速度</span>
-                        <span className="text-sm font-medium">{serviceStats.performanceMetrics?.responseSpeed}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-green-500 h-2 rounded-full" style={{
-                        width: `${serviceStats.performanceMetrics?.responseSpeed}%`
-                      }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm">问题解决率</span>
-                        <span className="text-sm font-medium">{serviceStats.performanceMetrics?.problemSolving}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-yellow-500 h-2 rounded-full" style={{
-                        width: `${serviceStats.performanceMetrics?.problemSolving}%`
-                      }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm">用户满意度</span>
-                        <span className="text-sm font-medium">{serviceStats.performanceMetrics?.userSatisfaction}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-purple-500 h-2 rounded-full" style={{
-                        width: `${serviceStats.performanceMetrics?.userSatisfaction}%`
-                      }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          <ServiceStats serviceStats={serviceStats} loading={statsLoading} />
 
           {/* 底部导航 */}
           <div className="fixed bottom-0 left-0 right-0 bg-card border-t">
@@ -833,7 +525,8 @@ export default function OnlineConsultationPage(props) {
   return <ErrorBoundary $w={$w}>
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+          <div className="w-16 h-16 border-4 border-primary/20 rounded-full mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin absolute mx-auto mb-4"></div>
           <p>页面加载中...</p>
         </div>
       </div>

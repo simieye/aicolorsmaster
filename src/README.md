@@ -1,130 +1,185 @@
 
-# AI门店管理系统
+# 染发专家应用 - 测试文档
 
-## 项目概述
+## 测试概述
 
-AI门店管理系统是一个基于React和Tailwind CSS构建的现代化美发行业智能管理平台，集成了AI智能调色宝机、染发膏管理、企业文化管理、智能客服系统和客户预约系统等核心功能模块。
+本项目包含全面的单元测试和集成测试，确保应用的质量和稳定性。
 
-## 核心功能模块
-
-### 1. 门店管理增强版 (store-management-enhanced)
-- AI智能调色宝机管理
-- 染发膏库存管理
-- 销售数据统计
-- 设备状态监控
-- 智能推荐系统
-
-### 2. AI企业文化管理 (corporate-culture)
-- 企业价值观展示
-- 员工活动管理
-- 培训系统
-- 内部通知发布
-- 文化活动展示
-
-### 3. AI客服系统 (ai-customer-service)
-- 智能客服机器人
-- 工单管理系统
-- 知识库管理
-- 在线咨询功能
-- 快速回复模板
-
-### 4. AI客户预约系统 (ai-booking-system)
-- 在线预约日历
-- 客户信息管理
-- 服务项目管理
-- 智能排期推荐
-- 提醒通知系统
-
-### 5. 系统设置 (settings)
-- 个人资料管理
-- 通知设置
-- 系统配置
-- 安全设置
-- 主题切换
-
-## 技术栈
-
-- **前端框架**: React 18
-- **样式框架**: Tailwind CSS
-- **UI组件库**: Shadcn/UI
-- **图标库**: Lucide React
-- **状态管理**: React Hooks
-- **路由系统**: 自定义路由
-
-## 项目结构
+## 测试结构
 
 ```
-├── pages/                    # 页面组件
-│   ├── store-management-enhanced.jsx
-│   ├── corporate-culture.jsx
-│   ├── ai-customer-service.jsx
-│   ├── ai-booking-system.jsx
-│   └── settings.jsx
-├── components/               # 公共组件
-│   ├── TabBar.jsx
-│   ├── TopNavigation.jsx
-│   ├── CorporateCulture.jsx
-│   ├── AICustomerService.jsx
-│   └── AIBookingSystem.jsx
-├── lib/                     # 工具函数
-│   └── utils.js
-└── index.css               # 全局样式
+tests/
+├── setup.js                    # Jest 测试环境配置
+├── components/                 # 组件单元测试
+│   ├── LoadingStates.test.jsx
+│   ├── TabBar.test.jsx
+│   ├── ShoppingCart.test.jsx
+│   ├── AuthProvider.test.jsx
+│   └── consultation/
+│       └── ChatInterface.test.jsx
+├── hooks/                      # 自定义 Hook 测试
+│   └── useDataCache.test.js
+├── lib/                        # 工具库测试
+│   └── DataCache.test.js
+└── integration/                # 集成测试
+    └── App.test.jsx
 ```
 
-## 设计特色
+## 运行测试
 
-### 视觉设计
-- 现代化渐变背景
-- 毛玻璃效果 (Glass Morphism)
-- 响应式布局设计
-- 流畅的动画过渡
+### 安装依赖
+```bash
+npm install
+```
 
-### 用户体验
-- 直观的导航结构
-- 智能化的操作流程
-- 实时数据更新
-- 友好的交互反馈
+### 运行所有测试
+```bash
+npm test
+```
 
-### 技术特点
-- 组件化开发
-- 状态管理优化
-- 性能优化
-- 代码复用性高
+### 运行测试并生成覆盖率报告
+```bash
+npm run test:coverage
+```
 
-## 核心功能亮点
+### 监视模式运行测试
+```bash
+npm run test:watch
+```
 
-### AI智能调色宝机
-- 智能色彩识别
-- 自动配方生成
-- 用量精确计算
-- 历史数据管理
+### CI 环境运行测试
+```bash
+npm run test:ci
+```
 
-### 智能客服系统
-- 自然语言处理
-- 智能问答机器人
-- 工单自动分配
-- 知识库智能检索
+## 测试覆盖率
 
-### 预约管理系统
-- 可视化日历界面
-- 智能时间推荐
-- 客户偏好分析
-- 自动提醒通知
+项目设置了最低测试覆盖率要求：
+- 分支覆盖率：70%
+- 函数覆盖率：70%
+- 行覆盖率：70%
+- 语句覆盖率：70%
 
-## 部署说明
+## 测试组件
 
-1. 确保Node.js环境已安装
-2. 安装项目依赖
-3. 配置环境变量
-4. 启动开发服务器
-5. 构建生产版本
+### LoadingStates 组件
+- ✅ LoadingSpinner 渲染和状态
+- ✅ PageLoading 页面加载状态
+- ✅ 各种骨架屏组件
+- ✅ EmptyState 和 ErrorState 状态
+- ✅ DataLoader 数据加载包装器
+- ✅ LoadingButton 加载按钮
 
-## 开发团队
+### TabBar 组件
+- ✅ 导航项渲染
+- ✅ 活动状态高亮
+- ✅ 点击导航功能
+- ✅ 通知徽章显示
+- ✅ 响应式设计
 
-本项目由AI智能系统开发团队精心打造，致力于为美发行业提供最优质的数字化解决方案。
+### ShoppingCart 组件
+- ✅ 购物车商品显示
+- ✅ 数量更新功能
+- ✅ 商品删除功能
+- ✅ 总价计算
+- ✅ 结算流程
+- ✅ 空购物车状态
 
-## 版本信息
+### AuthProvider 组件
+- ✅ 用户登录/登出
+- ✅ 认证状态管理
+- ✅ 本地存储持久化
+- ✅ 错误处理
 
-- 当前版本: v1.0.0
-- 最后更新: 2024年1月
-- 兼容性: 现代浏览器
+### ChatInterface 组件
+- ✅ 消息渲染
+- ✅ 输入处理
+- ✅ 发送消息功能
+- ✅ 连接状态显示
+- ✅ 评分功能
+
+## 测试工具和库
+
+### Jest
+JavaScript 测试框架，用于运行测试和生成覆盖率报告。
+
+### React Testing Library
+提供 React 组件测试工具，专注于用户行为测试。
+
+### Mock 策略
+- **API 调用**: 使用 `jest.fn()` 模拟 fetch 和云开发 API
+- **本地存储**: 模拟 localStorage 和 sessionStorage
+- **浏览器 API**: 模拟 IntersectionObserver、ResizeObserver 等
+- **路由**: 模拟 react-router-dom 导航功能
+
+## 测试最佳实践
+
+### 1. 组件测试原则
+- 测试用户行为而非实现细节
+- 使用可访问性查询（getByRole、getByLabelText）
+- 避免测试内部状态
+
+### 2. 异步测试
+- 使用 `waitFor` 等待异步操作完成
+- 正确处理 Promise 和回调
+- 测试加载和错误状态
+
+### 3. Mock 策略
+- 只 mock 外部依赖
+- 保持 mock 的一致性
+- 在每个测试后清理 mock
+
+### 4. 测试覆盖率
+- 确保关键路径被测试
+- 关注边界情况
+- 定期检查覆盖率报告
+
+## 持续集成
+
+测试在 CI/CD 流水线中自动运行：
+- 每次提交代码时运行测试
+- 生成覆盖率报告
+- 确保测试通过才能合并代码
+
+## 调试测试
+
+### 调试单个测试
+```bash
+npm test -- --testNamePattern="LoadingSpinner"
+```
+
+### 调试测试文件
+```bash
+npm test -- tests/components/LoadingStates.test.jsx
+```
+
+### 生成详细报告
+```bash
+npm run test:coverage -- --verbose
+```
+
+## 添加新测试
+
+1. 在相应目录创建测试文件
+2. 遵循现有测试模式
+3. 确保测试覆盖率不下降
+4. 更新文档
+
+## 常见问题
+
+### Q: 测试失败怎么办？
+A: 检查控制台错误信息，确认 mock 设置正确，验证测试数据。
+
+### Q: 如何测试异步组件？
+A: 使用 `waitFor` 和 `act` 包装异步操作。
+
+### Q: Mock 不生效怎么办？
+A: 确保在测试文件顶部正确 mock，检查 mock 路径。
+
+## 贡献指南
+
+提交代码前请确保：
+- 所有测试通过
+- 测试覆盖率不降低
+- 新功能包含相应测试
+- 遵循现有测试模式
