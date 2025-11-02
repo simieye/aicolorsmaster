@@ -408,7 +408,7 @@ export default function OnlineConsultationPage(props) {
             <div className="flex flex-col h-[calc(100vh-200px)]">
               {/* 消息列表 */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((message, index) => <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                {messages && messages.map((message, index) => <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-2' : 'order-1'}`}>
                       <div className={`flex items-center space-x-2 mb-1 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                         {message.sender === 'ai' && <Bot className="w-4 h-4 text-blue-500" />}
@@ -561,7 +561,7 @@ export default function OnlineConsultationPage(props) {
 
             {/* 咨询记录列表 */}
             <div className="p-4 space-y-4">
-              {filteredHistory.length === 0 ? <div className="text-center py-8 text-muted-foreground">
+              {!filteredHistory || filteredHistory.length === 0 ? <div className="text-center py-8 text-muted-foreground">
                   <FileText className="w-12 h-12 mx-auto mb-2" />
                   <p>暂无咨询记录</p>
                 </div> : filteredHistory.map(item => <Card key={item.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedHistory(item)}>
@@ -623,7 +623,7 @@ export default function OnlineConsultationPage(props) {
                       <div>
                         <h4 className="font-medium mb-2">对话记录</h4>
                         <div className="space-y-2">
-                          {selectedHistory.messages.map((msg, index) => <div key={index} className={`p-2 rounded ${msg.type === 'user' ? 'bg-primary/10' : 'bg-muted'}`}>
+                          {selectedHistory.messages && selectedHistory.messages.map((msg, index) => <div key={index} className={`p-2 rounded ${msg.type === 'user' ? 'bg-primary/10' : 'bg-muted'}`}>
                               <div className="text-xs text-muted-foreground mb-1">
                                 {msg.type === 'user' ? '用户' : '客服'} - {new Date(msg.timestamp).toLocaleTimeString()}
                               </div>
@@ -720,7 +720,7 @@ export default function OnlineConsultationPage(props) {
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={serviceStats.dailyTrend}>
+                  <LineChart data={serviceStats.dailyTrend || []}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis />
@@ -742,11 +742,11 @@ export default function OnlineConsultationPage(props) {
                 <CardContent>
                   <ResponsiveContainer width="100%" height={250}>
                     <PieChart>
-                      <Pie data={serviceStats.topicDistribution} cx="50%" cy="50%" labelLine={false} label={({
+                      <Pie data={serviceStats.topicDistribution || []} cx="50%" cy="50%" labelLine={false} label={({
                       name,
                       percent
                     }) => `${name} ${(percent * 100).toFixed(0)}%`} outerRadius={80} fill="#8884d8" dataKey="count">
-                        {serviceStats.topicDistribution?.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+                        {(serviceStats.topicDistribution || []).map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                       </Pie>
                       <Tooltip />
                     </PieChart>
