@@ -92,3 +92,4 @@ export * from './testing/stress/StressTestMetrics.jsx';
 export * from './testing/stress/StressTestCharts.jsx';
 export * from './testing/stress/StressTestHistory.jsx';
 export * from './testing/TestExecutionMonitor.jsx';
+export * from './testing/ErrorLogViewer.jsx';
