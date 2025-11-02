@@ -277,7 +277,7 @@ export const RefreshLoading = () => <IconLoading icon={RefreshCw} text="刷新�
 
 // 全屏加载遮罩
 export const FullScreenLoading = ({
-  text = '处���中...'
+  text = '处理中...'
 }) => <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
     <div className="bg-card rounded-lg p-6 shadow-lg">
       <div className="flex items-center space-x-3">
