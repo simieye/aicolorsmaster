@@ -78,3 +78,7 @@ export * from './products/ProductCard.jsx';
 export * from './products/ProductFilters.jsx';
 export * from './products/ProductStats.jsx';
 export * from './products/ProductGrid.jsx';
+export * from './testing/TestScenarioSelector.jsx';
+export * from './testing/LoadingStatusDisplay.jsx';
+export * from './testing/TestDataDisplay.jsx';
+export * from './testing/PerformanceMetricsPanel.jsx';
