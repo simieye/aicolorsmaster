@@ -1,12 +1,9 @@
 // @ts-ignore;
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
 // @ts-ignore;
-import { Search, ShoppingCart, Heart, Star, Sparkles, TrendingUp, Clock, Eye, RefreshCw, Settings, Loader2, Brain, BookOpen, Calendar, Gift, Users, Zap } from 'lucide-react';
-
-// @ts-ignore;
-import { deepseekService } from '@/lib/deepseek';
+import { Home, ShoppingBag, User, Settings, Search, Bell, Menu, X, TrendingUp, Star, Package, Clock, ArrowRight, RefreshCw, AlertCircle, Activity } from 'lucide-react';
 
 // @ts-ignore;
 import { TopNavigation } from '@/components/TopNavigation';
@@ -14,6 +11,18 @@ import { TopNavigation } from '@/components/TopNavigation';
 import { TabBar } from '@/components/TabBar';
 // @ts-ignore;
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+// @ts-ignore;
+import { LoadingSpinner, PageLoading, InlineLoading, ButtonLoading } from '@/components/LoadingStates';
+
+// 性能监控相关
+// @ts-ignore;
+import { usePerformanceMonitor, useInteractionMonitor } from '@/hooks/usePerformanceMonitor';
+// @ts-ignore;
+import { useRenderTracking, usePerformanceBoundary } from '@/hooks/useRenderTracking';
+// @ts-ignore;
+import { useDataLoader, useBatchDataLoader } from '@/hooks/useDataLoader';
+
+// 组件相关
 // @ts-ignore;
 import { HomeHero } from '@/components/HomeHero';
 // @ts-ignore;
@@ -24,9 +33,8 @@ import { ProductShowcase } from '@/components/ProductShowcase';
 import { QuickActions } from '@/components/QuickActions';
 // @ts-ignore;
 import { RecentActivity } from '@/components/RecentActivity';
-
 // @ts-ignore;
-
+import { PerformanceMonitor } from '@/components/PerformanceMonitor';
 export default function HomePage(props) {
   const {
     $w
@@ -34,466 +42,421 @@ export default function HomePage(props) {
   const {
     toast
   } = useToast();
-  const [recommendations, setRecommendations] = useState({
-    products: [],
-    services: [],
-    content: [],
-    activities: []
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [userBehavior, setUserBehavior] = useState({
-    viewedProducts: [],
-    purchaseHistory: [],
-    favorites: [],
-    searchHistory: [],
-    timeSpent: {}
-  });
-  useEffect(() => {
-    loadUserBehavior();
-    loadPersonalizedRecommendations();
-  }, []);
-  const loadUserBehavior = () => {
-    // 从本地存储或用户数据中获取行为数据
-    const saved = localStorage.getItem('userBehavior');
-    if (saved) {
-      setUserBehavior(JSON.parse(saved));
-    } else {
-      // 模拟用户行为数据
-      setUserBehavior({
-        viewedProducts: ['PROD001', 'PROD003', 'PROD005'],
-        purchaseHistory: ['PROD002'],
-        favorites: ['PROD001', 'PROD004'],
-        searchHistory: ['染发剂', '天然染发', 'AI染发'],
-        timeSpent: {
-          'PROD001': 120,
-          'PROD003': 85
-        }
+
+  // 性能监控
+  const {
+    startMonitoring,
+    endMonitoring
+  } = usePerformanceMonitor('HomePage');
+  const {
+    startInteraction,
+    endInteraction
+  } = useInteractionMonitor();
+  const {
+    renderCount,
+    trackProps
+  } = useRenderTracking('HomePage', {
+    trackProps: true,
+    threshold: 16.67,
+    onSlowRender: data => {
+      console.warn('HomePage 渲染性能警告:', data);
+      toast({
+        title: "性能警告",
+        description: "页面渲染较慢，正在优化...",
+        variant: "default"
       });
     }
-  };
-  const loadPersonalizedRecommendations = async () => {
-    setIsLoading(true);
+  });
+  const {
+    isDegraded,
+    checkPerformance
+  } = usePerformanceBoundary('HomePage', {
+    renderThreshold: 20,
+    memoryThreshold: 40 * 1024 * 1024,
+    onPerformanceDegradation: data => {
+      console.warn('HomePage 性能下降，启用降级模式:', data);
+      toast({
+        title: "性能优化",
+        description: "已启用性能优化模式",
+        variant: "default"
+      });
+    }
+  });
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showPerformanceMonitor, setShowPerformanceMonitor] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // 获取当前用户信息
+  const currentUser = $w?.auth?.currentUser;
+
+  // 使用缓存的数据加载器
+  const recommendationsLoader = useDataLoader({
+    type: 'recommendations',
+    key: `home_recommendations_${currentUser?.userId || 'guest'}`,
+    loader: async () => {
+      const renderId = startMonitoring({
+        phase: 'recommendations_load'
+      });
+      try {
+        // 模拟API调用
+        await new Promise(resolve => setTimeout(resolve, 800));
+        const recommendations = generateRecommendations();
+        trackProps({
+          recommendationsCount: recommendations.length
+        });
+        return recommendations;
+      } finally {
+        endMonitoring(renderId);
+      }
+    },
+    options: {
+      ttl: 15 * 60 * 1000,
+      // 15分钟缓存
+      staleWhileRevalidate: true
+    },
+    autoLoad: true
+  });
+  const statsLoader = useDataLoader({
+    type: 'userStats',
+    key: `home_stats_${currentUser?.userId || 'guest'}`,
+    loader: async () => {
+      const renderId = startMonitoring({
+        phase: 'stats_load'
+      });
+      try {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        return generateStats();
+      } finally {
+        endMonitoring(renderId);
+      }
+    },
+    options: {
+      ttl: 20 * 60 * 1000 // 20分钟缓存
+    },
+    autoLoad: true
+  });
+  const recentActivityLoader = useDataLoader({
+    type: 'recentActivity',
+    key: `home_activity_${currentUser?.userId || 'guest'}`,
+    loader: async () => {
+      const renderId = startMonitoring({
+        phase: 'activity_load'
+      });
+      try {
+        await new Promise(resolve => setTimeout(resolve, 600));
+        return generateRecentActivity();
+      } finally {
+        endMonitoring(renderId);
+      }
+    },
+    options: {
+      ttl: 5 * 60 * 1000 // 5分钟缓存
+    },
+    autoLoad: true
+  });
+
+  // 批量加载器
+  const batchLoader = useBatchDataLoader([recommendationsLoader.config, statsLoader.config, recentActivityLoader.config]);
+
+  // 初始化加载
+  useEffect(() => {
+    const renderId = startMonitoring({
+      phase: 'initial_load'
+    });
     try {
-      const currentUser = $w?.auth?.currentUser;
-      const userProfile = {
-        userId: currentUser?.userId,
-        userName: currentUser?.nickName || currentUser?.name,
-        behavior: userBehavior,
-        preferences: {
-          categories: ['hair-dye', 'tools'],
-          priceRange: '100-300',
-          brandPreference: ['AI智能', '天然'],
-          colorPreference: ['棕色', '黑色']
-        }
+      if (batchLoader.loadAll) {
+        batchLoader.loadAll();
+      }
+      loadNotifications();
+    } finally {
+      endMonitoring(renderId);
+    }
+  }, [currentUser]);
+
+  // 性能检查
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkPerformance();
+    }, 10000); // 每10秒检查一次性能
+
+    return () => clearInterval(interval);
+  }, [checkPerformance]);
+
+  // 生成推荐数据
+  const generateRecommendations = useCallback(() => {
+    const categories = ['染发剂', '护理产品', '美发工具', '造型产品'];
+    const products = [{
+      name: '天然植物染发剂',
+      category: '染发剂',
+      price: 128,
+      rating: 4.8,
+      image: 'https://picsum.photos/seed/dye1/200/200.jpg'
+    }, {
+      name: '深度修复发膜',
+      category: '护理产品',
+      price: 89,
+      rating: 4.6,
+      image: 'https://picsum.photos/seed/mask1/200/200.jpg'
+    }, {
+      name: '专业卷发棒',
+      category: '美发工具',
+      price: 156,
+      rating: 4.7,
+      image: 'https://picsum.photos/seed/tool1/200/200.jpg'
+    }, {
+      name: '定型喷雾',
+      category: '造型产品',
+      price: 68,
+      rating: 4.5,
+      image: 'https://picsum.photos/seed/spray1/200/200.jpg'
+    }];
+    return categories.map(category => ({
+      category,
+      items: products.filter(p => p.category === category).slice(0, 3)
+    }));
+  }, []);
+
+  // 生成统计数据
+  const generateStats = useCallback(() => ({
+    totalOrders: currentUser ? 156 : 0,
+    totalSpent: currentUser ? 8956 : 0,
+    savedAmount: currentUser ? 1248 : 0,
+    memberLevel: currentUser ? '黄金会员' : '未登录'
+  }), [currentUser]);
+
+  // 生成最近活动
+  const generateRecentActivity = useCallback(() => {
+    if (!currentUser) return [];
+    return [{
+      type: 'order',
+      title: '订单已发货',
+      description: '您的订单 #12345 已发货',
+      time: '2小时前'
+    }, {
+      type: 'promotion',
+      title: '限时优惠',
+      description: '染发产品8折优惠进行中',
+      time: '5小时前'
+    }, {
+      type: 'review',
+      title: '评价提醒',
+      description: '您购买的商品等待评价',
+      time: '1天前'
+    }, {
+      type: 'system',
+      title: '会员升级',
+      description: '恭喜升级为黄金会员',
+      time: '3天前'
+    }];
+  }, [currentUser]);
+
+  // 加载通知
+  const loadNotifications = useCallback(() => {
+    const mockNotifications = [{
+      id: 1,
+      title: '新功能上线',
+      description: 'AI染发推荐功能已上线',
+      read: false
+    }, {
+      id: 2,
+      title: '限时优惠',
+      description: '全场染发产品8折',
+      read: false
+    }, {
+      id: 3,
+      title: '订单提醒',
+      description: '您有订单即将送达',
+      read: true
+    }];
+    setNotifications(mockNotifications);
+  }, []);
+
+  // 处理搜索
+  const handleSearch = useCallback(() => {
+    const interactionId = startInteraction('search', 'home_search');
+    try {
+      if (searchQuery.trim()) {
+        $w.utils.navigateTo({
+          pageId: 'products',
+          params: {
+            search: searchQuery
+          }
+        });
+      }
+    } finally {
+      endInteraction(interactionId);
+    }
+  }, [searchQuery, $w, startInteraction, endInteraction]);
+
+  // 处理刷新
+  const handleRefresh = useCallback(async () => {
+    const interactionId = startInteraction('refresh', 'home_refresh');
+    setRefreshing(true);
+    try {
+      await batchLoader.refreshAll();
+      toast({
+        title: "刷新成功",
+        description: "数据已更新"
+      });
+    } catch (error) {
+      toast({
+        title: "刷新失败",
+        description: "请稍后重试",
+        variant: "destructive"
+      });
+    } finally {
+      setRefreshing(false);
+      endInteraction(interactionId);
+    }
+  }, [batchLoader, toast, startInteraction, endInteraction]);
+
+  // 处理推荐反馈
+  const handleRecommendationFeedback = useCallback((category, item, action) => {
+    const interactionId = startInteraction('recommendation_feedback', `${category}_${item.name}`);
+    try {
+      // 记录用户行为
+      const feedback = {
+        category,
+        item: item.name,
+        action,
+        timestamp: Date.now(),
+        userId: currentUser?.userId || 'guest'
       };
 
-      // 生成多维度推荐
-      const [productRecs, serviceRecs, contentRecs, activityRecs] = await Promise.allSettled([generateProductRecommendations(userProfile), generateServiceRecommendations(userProfile), generateContentRecommendations(userProfile), generateActivityRecommendations(userProfile)]);
-      setRecommendations({
-        products: productRecs.status === 'fulfilled' ? productRecs.value : [],
-        services: serviceRecs.status === 'fulfilled' ? serviceRecs.value : [],
-        content: contentRecs.status === 'fulfilled' ? contentRecs.value : [],
-        activities: activityRecs.status === 'fulfilled' ? activityRecs.value : []
+      // 保存到 localStorage
+      const existingFeedback = JSON.parse(localStorage.getItem('recommendation_feedback') || '[]');
+      existingFeedback.push(feedback);
+      localStorage.setItem('recommendation_feedback', JSON.stringify(existingFeedback));
+      toast({
+        title: action === 'like' ? "感谢反馈" : "已记录",
+        description: `我们会根据您的偏好优化推荐`
       });
-    } catch (error) {
-      console.error('加载个性化推荐失败:', error);
-      // 设置默认推荐
-      setDefaultRecommendations();
     } finally {
-      setIsLoading(false);
+      endInteraction(interactionId);
     }
-  };
-  const generateProductRecommendations = async userProfile => {
-    try {
-      const response = await deepseekService.getProductRecommendations(userProfile, {
-        type: 'home_page',
-        limit: 6
-      });
-      return response.recommendations || [];
-    } catch (error) {
-      // 返回默认产品推荐
-      return [{
-        name: 'AI智能染发剂',
-        reason: '基于您的浏览历史推荐',
-        price: 199,
-        rating: 4.8,
-        image: 'https://picsum.photos/seed/home-rec1/200/200.jpg',
-        productId: 'PROD001',
-        tags: ['AI推荐', '热销']
-      }];
-    }
-  };
-  const generateServiceRecommendations = async userProfile => {
-    try {
-      const prompt = `基于用户信息推荐相关服务：
-用户信息：${JSON.stringify(userProfile)}
-请推荐3-4个适合的服务，包含服务名称、描述、推荐理由、价格等信息。
-以JSON格式返回。`;
-      const response = await deepseekService.chatCompletion([{
-        role: 'system',
-        content: '你是一个专业的服务推荐专家，根据用户需求推荐最适合的服务。'
-      }, {
-        role: 'user',
-        content: prompt
-      }]);
-      try {
-        return JSON.parse(response);
-      } catch (e) {
-        return getDefaultServiceRecommendations();
-      }
-    } catch (error) {
-      return getDefaultServiceRecommendations();
-    }
-  };
-  const generateContentRecommendations = async userProfile => {
-    try {
-      const prompt = `基于用户兴趣推荐相关内容：
-用户信息：${JSON.stringify(userProfile)}
-请推荐3-4篇相关文章或教程，包含标题、简介、推荐理由、阅读时间等。
-以JSON格式返回。`;
-      const response = await deepseekService.chatCompletion([{
-        role: 'system',
-        content: '你是一个专业的内容推荐专家，根据用户兴趣推荐有价值的内容。'
-      }, {
-        role: 'user',
-        content: prompt
-      }]);
-      try {
-        return JSON.parse(response);
-      } catch (e) {
-        return getDefaultContentRecommendations();
-      }
-    } catch (error) {
-      return getDefaultContentRecommendations();
-    }
-  };
-  const generateActivityRecommendations = async userProfile => {
-    try {
-      const prompt = `基于用户行为推荐相关活动：
-用户信息：${JSON.stringify(userProfile)}
-请推荐2-3个适合的活动，包含活动名称、描述、时间、推荐理由等。
-以JSON格式返回。`;
-      const response = await deepseekService.chatCompletion([{
-        role: 'system',
-        content: '你是一个专业的活动推荐专家，根据用户兴趣推荐有价值的活动。'
-      }, {
-        role: 'user',
-        content: prompt
-      }]);
-      try {
-        return JSON.parse(response);
-      } catch (e) {
-        return getDefaultActivityRecommendations();
-      }
-    } catch (error) {
-      return getDefaultActivityRecommendations();
-    }
-  };
-  const getDefaultServiceRecommendations = () => {
-    return [{
-      name: 'AI染发咨询',
-      description: '专业AI顾问为您提供个性化染发建议',
-      reason: '根据您的浏览记录推荐',
-      price: '免费',
-      icon: <Brain className="w-6 h-6" />,
-      tags: ['AI服务', '免费咨询']
-    }, {
-      name: '色彩搭配服务',
-      description: '专业色彩师为您定制专属配色方案',
-      reason: '适合追求个性化的您',
-      price: '¥99',
-      icon: <Sparkles className="w-6 h-6" />,
-      tags: ['专业服务', '定制化']
-    }];
-  };
-  const getDefaultContentRecommendations = () => {
-    return [{
-      title: '2024年染发趋势解析',
-      description: '了解今年最流行的染发色彩和技巧',
-      reason: '基于您对染发的兴趣推荐',
-      readTime: '5分钟',
-      category: '趋势分析',
-      image: 'https://picsum.photos/seed/content1/300/200.jpg'
-    }, {
-      title: '天然染发剂使用指南',
-      description: '详细介绍天然染发剂的选择和使用方法',
-      reason: '您关注天然染发产品',
-      readTime: '8分钟',
-      category: '使用指南',
-      image: 'https://picsum.photos/seed/content2/300/200.jpg'
-    }];
-  };
-  const getDefaultActivityRecommendations = () => {
-    return [{
-      name: 'AI染发体验日',
-      description: '现场体验AI智能染发技术，享受专属优惠',
-      reason: '新用户专享活动',
-      date: '2024-01-15',
-      location: '北京旗舰店',
-      tags: ['线下活动', '新用户']
-    }];
-  };
-  const setDefaultRecommendations = () => {
-    setRecommendations({
-      products: [{
-        name: 'AI智能染发剂',
-        reason: '基于您的浏览历史推荐',
-        price: 199,
-        rating: 4.8,
-        image: 'https://picsum.photos/seed/home-rec1/200/200.jpg',
-        productId: 'PROD001',
-        tags: ['AI推荐', '热销']
-      }],
-      services: getDefaultServiceRecommendations(),
-      content: getDefaultContentRecommendations(),
-      activities: getDefaultActivityRecommendations()
-    });
-  };
-  const handleRefreshRecommendations = () => {
-    loadPersonalizedRecommendations();
-  };
-  const handleRecommendationClick = (type, item) => {
-    // 记录用户点击行为
-    const newBehavior = {
-      ...userBehavior,
-      [`${type}Clicks`]: [...(userBehavior[`${type}Clicks`] || []), item.id || item.name]
-    };
-    setUserBehavior(newBehavior);
-    localStorage.setItem('userBehavior', JSON.stringify(newBehavior));
+  }, [currentUser, toast, startInteraction, endInteraction]);
 
-    // 根据类型跳转到相应页面
-    if ($w && $w.utils) {
-      switch (type) {
-        case 'products':
-          if (item.productId) {
-            $w.utils.navigateTo({
-              pageId: 'product-detail',
-              params: {
-                productId: item.productId
-              }
-            });
-          }
-          break;
-        case 'services':
-          $w.utils.navigateTo({
-            pageId: 'ai-chat'
-          });
-          break;
-        case 'content':
-          // 跳转到文章详情页
-          break;
-        case 'activities':
-          // 跳转到活动详情页
-          break;
-        default:
-          break;
-      }
+  // 优化的推荐数据
+  const optimizedRecommendations = useMemo(() => {
+    if (isDegraded) {
+      // 性能降级时返回简化的数据
+      return recommendationsLoader.data?.slice(0, 2) || [];
     }
-  };
-  const handleFeedback = (type, itemId, feedback) => {
-    // 记录用户反馈
-    console.log('推荐反馈:', type, itemId, feedback);
-    toast({
-      title: "感谢反馈",
-      description: "您的反馈将帮助我们改进推荐算法"
-    });
-  };
-  return <ErrorBoundary $w={$w}>
-      <div className="min-h-screen bg-background">
-        <TopNavigation showSearch={true} />
-        
-        <div className="pb-20">
-          {/* 个性化推荐头部 */}
-          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white p-6">
-            <div className="max-w-6xl mx-auto">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <Brain className="w-8 h-8" />
-                  <h1 className="text-2xl font-bold">为您推荐</h1>
-                  <div className="bg-white/20 px-3 py-1 rounded-full text-sm">
-                    AI智能分析
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm" onClick={handleRefreshRecommendations} disabled={isLoading} className="text-white hover:bg-white/10">
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-                </Button>
-              </div>
-              <p className="text-blue-100">
-                基于您的浏览历史和偏好，AI为您精选最合适的产品和服务
+    return recommendationsLoader.data || [];
+  }, [isDegraded, recommendationsLoader.data]);
+  if (batchLoader.hasErrors) {
+    return <ErrorBoundary $w={$w}>
+        <div className="min-h-screen bg-background">
+          <TopNavigation title="首页" />
+          <div className="container mx-auto px-4 py-8">
+            <div className="text-center py-12">
+              <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold mb-2">加载失败</h2>
+              <p className="text-muted-foreground mb-4">
+                {Object.values(batchLoader.errors).map(error => error?.message).filter(Boolean).join(', ') || '未知错误'}
               </p>
+              <Button onClick={() => batchLoader.retryAll()}>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                重新加载
+              </Button>
             </div>
           </div>
+          <TabBar />
+        </div>
+      </ErrorBoundary>;
+  }
+  if (batchLoader.isAnyLoading && !recommendationsLoader.data) {
+    return <PageLoading title="加载首页" description="正在为您准备个性化内容..." />;
+  }
+  return <ErrorBoundary $w={$w}>
+      <div className="min-h-screen bg-background">
+        <TopNavigation title="首页" showBack={false} actions={<div className="flex items-center gap-2">
+              {/* 搜索框 */}
+              <div className="relative hidden md:block">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <input type="text" placeholder="搜索产品..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSearch()} className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-64" />
+              </div>
 
-          {/* 产品推荐 */}
-          {recommendations.products.length > 0 && <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold flex items-center space-x-2">
-                  <ShoppingCart className="w-5 h-5 text-purple-600" />
-                  <span>推荐产品</span>
-                </h2>
-                <Button variant="outline" size="sm" onClick={() => $w?.utils?.navigateTo({
-              pageId: 'products'
-            })}>
-                  查看更多
+              {/* 通知 */}
+              <div className="relative">
+                <Button variant="ghost" size="sm" onClick={() => setShowNotifications(!showNotifications)}>
+                  <Bell className="w-5 h-5" />
+                  {notifications.filter(n => !n.read).length > 0 && <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>}
                 </Button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {recommendations.products.map((product, index) => <div key={index} className="bg-card border rounded-lg p-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleRecommendationClick('products', product)}>
-                    <div className="relative mb-2">
-                      <img src={product.image || 'https://picsum.photos/seed/home-product' + index + '/200/200.jpg'} alt={product.name} className="w-full h-24 object-cover rounded" />
-                      <div className="absolute top-1 right-1 bg-purple-600 text-white text-xs px-2 py-1 rounded-full flex items-center space-x-1">
-                        <Sparkles className="w-3 h-3" />
-                        <span>AI推荐</span>
-                      </div>
-                    </div>
-                    <h3 className="font-medium text-sm mb-1 line-clamp-2">{product.name}</h3>
-                    <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{product.reason}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-red-500">¥{product.price}</span>
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                        <span className="text-xs">{product.rating}</span>
-                      </div>
-                    </div>
-                    <div className="mt-2 flex space-x-1">
-                      <Button size="sm" variant="ghost" className="flex-1 text-xs" onClick={e => {
-                  e.stopPropagation();
-                  handleFeedback('products', product.id, 'like');
-                }}>
-                        👍
-                      </Button>
-                      <Button size="sm" variant="ghost" className="flex-1 text-xs" onClick={e => {
-                  e.stopPropagation();
-                  handleFeedback('products', product.id, 'dislike');
-                }}>
-                        👎
-                      </Button>
-                    </div>
-                  </div>)}
-              </div>
+
+              {/* 刷新 */}
+              <Button variant="ghost" size="sm" onClick={handleRefresh} disabled={refreshing}>
+                <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
+              </Button>
+
+              {/* 性能监控 */}
+              <Button variant="ghost" size="sm" onClick={() => setShowPerformanceMonitor(!showPerformanceMonitor)}>
+                <Activity className="w-5 h-5" />
+              </Button>
+            </div>} />
+
+        {/* 移动端搜索 */}
+        <div className="md:hidden px-4 py-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <input type="text" placeholder="搜索产品..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSearch()} className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-6 pb-20">
+          {/* 性能状态指示器 */}
+          {process.env.NODE_ENV === 'development' && <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700">
+              📊 渲染次数: {renderCount} | 
+              性能状态: {isDegraded ? '降级模式' : '正常'} |
+              缓存状态: {recommendationsLoader.isFromCache ? '来自缓存' : '新鲜数据'}
             </div>}
 
-          {/* 服务推荐 */}
-          {recommendations.services.length > 0 && <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold flex items-center space-x-2">
-                  <Zap className="w-5 h-5 text-blue-600" />
-                  <span>推荐服务</span>
-                </h2>
-                <Button variant="outline" size="sm" onClick={() => $w?.utils?.navigateTo({
-              pageId: 'ai-chat'
-            })}>
-                  查看更多
-                </Button>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                {recommendations.services.map((service, index) => <div key={index} className="bg-card border rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleRecommendationClick('services', service)}>
-                    <div className="flex items-start space-x-3">
-                      <div className="bg-blue-100 text-blue-600 p-2 rounded-lg">
-                        {service.icon}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold mb-1">{service.name}</h3>
-                        <p className="text-sm text-muted-foreground mb-2">{service.description}</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-blue-600">{service.price}</span>
-                          <div className="flex flex-wrap gap-1">
-                            {service.tags?.map((tag, tagIndex) => <span key={tagIndex} className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">
-                                {tag}
-                              </span>)}
-                          </div>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">{service.reason}</p>
-                      </div>
-                    </div>
-                  </div>)}
-              </div>
-            </div>}
+          {/* 主要内容 */}
+          <div className="space-y-6">
+            {/* Hero 区域 */}
+            <HomeHero currentUser={currentUser} onStartInteraction={startInteraction} onEndInteraction={endInteraction} />
 
-          {/* 内容推荐 */}
-          {recommendations.content.length > 0 && <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold flex items-center space-x-2">
-                  <BookOpen className="w-5 h-5 text-green-600" />
-                  <span>推荐阅读</span>
-                </h2>
-                <Button variant="outline" size="sm">
-                  查看更多
-                </Button>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                {recommendations.content.map((content, index) => <div key={index} className="bg-card border rounded-lg overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleRecommendationClick('content', content)}>
-                    <div className="flex">
-                      <img src={content.image || 'https://picsum.photos/seed/home-content' + index + '/150/100.jpg'} alt={content.title} className="w-32 h-24 object-cover" />
-                      <div className="flex-1 p-3">
-                        <h3 className="font-semibold text-sm mb-1 line-clamp-2">{content.title}</h3>
-                        <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{content.description}</p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <span className="bg-green-100 text-green-600 text-xs px-2 py-1 rounded">{content.category}</span>
-                            <span className="text-xs text-muted-foreground">{content.readTime}</span>
-                          </div>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">{content.reason}</p>
-                      </div>
-                    </div>
-                  </div>)}
-              </div>
-            </div>}
+            {/* 统计卡片 */}
+            <StatsCards stats={statsLoader.data} loading={statsLoader.loading} isDegraded={isDegraded} />
 
-          {/* 活动推荐 */}
-          {recommendations.activities.length > 0 && <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold flex items-center space-x-2">
-                  <Calendar className="w-5 h-5 text-orange-600" />
-                  <span>推荐活动</span>
-                </h2>
-                <Button variant="outline" size="sm">
-                  查看更多
-                </Button>
-              </div>
-              <div className="space-y-4">
-                {recommendations.activities.map((activity, index) => <div key={index} className="bg-card border rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleRecommendationClick('activities', activity)}>
-                    <div className="flex items-start space-x-3">
-                      <div className="bg-orange-100 text-orange-600 p-2 rounded-lg">
-                        <Gift className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold mb-1">{activity.name}</h3>
-                        <p className="text-sm text-muted-foreground mb-2">{activity.description}</p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                            <div className="flex items-center space-x-1">
-                              <Calendar className="w-4 h-4" />
-                              <span>{activity.date}</span>
-                            </div>
-                            {activity.location && <div className="flex items-center space-x-1">
-                                <Users className="w-4 h-4" />
-                                <span>{activity.location}</span>
-                              </div>}
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {activity.tags?.map((tag, tagIndex) => <span key={tagIndex} className="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded">
-                                {tag}
-                              </span>)}
-                          </div>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">{activity.reason}</p>
-                      </div>
-                    </div>
-                  </div>)}
-              </div>
-            </div>}
+            {/* 产品推荐 */}
+            <ProductShowcase recommendations={optimizedRecommendations} loading={recommendationsLoader.loading} onFeedback={handleRecommendationFeedback} isDegraded={isDegraded} />
 
-          {/* 原有的首页内容 */}
-          <HomeHero />
-          <StatsCards />
-          <ProductShowcase />
-          <QuickActions />
-          <RecentActivity />
+            {/* 快捷操作 */}
+            <QuickActions onStartInteraction={startInteraction} onEndInteraction={endInteraction} />
+
+            {/* 最近活动 */}
+            <RecentActivity activities={recentActivityLoader.data} loading={recentActivityLoader.loading} currentUser={currentUser} />
+          </div>
         </div>
 
         <TabBar />
+
+        {/* 通知弹窗 */}
+        {showNotifications && <div className="fixed top-16 right-4 w-80 bg-background border rounded-lg shadow-lg z-50">
+            <div className="p-4 border-b">
+              <h3 className="font-medium">通知</h3>
+            </div>
+            <div className="max-h-96 overflow-y-auto">
+              {notifications.map(notification => <div key={notification.id} className="p-4 border-b hover:bg-muted cursor-pointer">
+                  <div className="flex items-start gap-3">
+                    <div className={`w-2 h-2 rounded-full mt-2 ${notification.read ? 'bg-gray-300' : 'bg-blue-500'}`} />
+                    <div className="flex-1">
+                      <h4 className="font-medium text-sm">{notification.title}</h4>
+                      <p className="text-xs text-muted-foreground mt-1">{notification.description}</p>
+                      <p className="text-xs text-muted-foreground mt-2">{notification.time}</p>
+                    </div>
+                  </div>
+                </div>)}
+            </div>
+          </div>}
+
+        {/* 性能监控面板 */}
+        <PerformanceMonitor visible={showPerformanceMonitor} onToggle={() => setShowPerformanceMonitor(!showPerformanceMonitor)} />
       </div>
     </ErrorBoundary>;
 }

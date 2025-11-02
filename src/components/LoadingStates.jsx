@@ -1,7 +1,7 @@
 // @ts-ignore;
 import React from 'react';
 // @ts-ignore;
-import { Loader2, RefreshCw, AlertCircle, Package, ShoppingBag, User, FileText, TrendingUp, MessageCircle, Star } from 'lucide-react';
+import { Loader2, Package, ShoppingBag, User, FileText, TrendingUp, MessageCircle, Star, Clock, RefreshCw } from 'lucide-react';
 
 // 通用加载指示器组件
 export const LoadingSpinner = ({
@@ -12,7 +12,8 @@ export const LoadingSpinner = ({
   const sizeClasses = {
     small: 'w-4 h-4',
     default: 'w-6 h-6',
-    large: 'w-8 h-8'
+    large: 'w-8 h-8',
+    xl: 'w-12 h-12'
   };
   return <div className={`flex items-center justify-center space-x-2 ${className}`}>
       <Loader2 className={`animate-spin ${sizeClasses[size]}`} />
@@ -20,211 +21,314 @@ export const LoadingSpinner = ({
     </div>;
 };
 
-// 页面级加载组件
+// 页面级加载状态
 export const PageLoading = ({
-  message = '页面加载中...'
+  title = '页面加载中',
+  description = '请稍候，正在获取数据...'
 }) => <div className="min-h-screen bg-background flex items-center justify-center">
     <div className="text-center space-y-4">
-      <div className="relative">
-        <div className="w-16 h-16 border-4 border-primary/20 rounded-full"></div>
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
-      </div>
-      <div className="space-y-2">
-        <p className="text-lg font-medium text-foreground">{message}</p>
-        <p className="text-sm text-muted-foreground">请稍候，正在为您准备内容...</p>
+      <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto" />
+      <div>
+        <h2 className="text-lg font-semibold">{title}</h2>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
     </div>
   </div>;
 
-// 卡片加载骨架屏
-export const CardSkeleton = ({
-  count = 1
-}) => <>
+// 卡片加载状态
+export const CardLoading = ({
+  count = 1,
+  className = ''
+}) => <div className={`space-y-4 ${className}`}>
     {Array.from({
     length: count
-  }).map((_, index) => <div key={index} className="bg-card rounded-lg border p-4 space-y-3">
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-muted rounded-full animate-pulse"></div>
+  }).map((_, index) => <div key={index} className="bg-card border rounded-lg p-4 animate-pulse">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gray-200 rounded-lg"></div>
           <div className="flex-1 space-y-2">
-            <div className="h-4 bg-muted rounded animate-pulse w-3/4"></div>
-            <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
           </div>
         </div>
-        <div className="space-y-2">
-          <div className="h-3 bg-muted rounded animate-pulse"></div>
-          <div className="h-3 bg-muted rounded animate-pulse w-5/6"></div>
-        </div>
-        <div className="flex items-center justify-between">
-          <div className="h-6 bg-muted rounded animate-pulse w-20"></div>
-          <div className="h-8 bg-muted rounded animate-pulse w-24"></div>
-        </div>
       </div>)}
-  </>;
+  </div>;
 
-// 列表项加载骨架屏
-export const ListItemSkeleton = ({
-  count = 5
-}) => <>
+// 列表项加载状态
+export const ListItemLoading = ({
+  count = 5,
+  className = ''
+}) => <div className={`space-y-3 ${className}`}>
     {Array.from({
     length: count
-  }).map((_, index) => <div key={index} className="flex items-center space-x-4 p-4 border-b">
-        <div className="w-10 h-10 bg-muted rounded-full animate-pulse"></div>
+  }).map((_, index) => <div key={index} className="flex items-center space-x-3 p-3 bg-card border rounded-lg animate-pulse">
+        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
         <div className="flex-1 space-y-2">
-          <div className="h-4 bg-muted rounded animate-pulse w-3/4"></div>
-          <div className="h-3 bg-muted rounded animate-pulse w-1/2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+          <div className="h-3 bg-gray-200 rounded w-2/3"></div>
         </div>
-        <div className="h-6 bg-muted rounded animate-pulse w-16"></div>
+        <div className="w-20 h-8 bg-gray-200 rounded"></div>
       </div>)}
-  </>;
+  </div>;
 
-// 表格加载骨架屏
-export const TableSkeleton = ({
+// 表格加载状态
+export const TableLoading = ({
   rows = 5,
-  columns = 4
-}) => <div className="space-y-2">
+  columns = 4,
+  className = ''
+}) => <div className={`space-y-3 ${className}`}>
     {/* 表头 */}
-    <div className="grid gap-4 p-4 border-b bg-muted/50" style={{
+    <div className="grid gap-4" style={{
     gridTemplateColumns: `repeat(${columns}, 1fr)`
   }}>
       {Array.from({
       length: columns
-    }).map((_, index) => <div key={index} className="h-4 bg-muted rounded animate-pulse"></div>)}
+    }).map((_, index) => <div key={index} className="h-4 bg-gray-200 rounded animate-pulse"></div>)}
     </div>
     {/* 表格行 */}
     {Array.from({
     length: rows
-  }).map((_, rowIndex) => <div key={rowIndex} className="grid gap-4 p-4 border-b" style={{
+  }).map((_, rowIndex) => <div key={rowIndex} className="grid gap-4" style={{
     gridTemplateColumns: `repeat(${columns}, 1fr)`
   }}>
         {Array.from({
       length: columns
-    }).map((_, colIndex) => <div key={colIndex} className="h-3 bg-muted rounded animate-pulse"></div>)}
+    }).map((_, colIndex) => <div key={colIndex} className="h-3 bg-gray-200 rounded animate-pulse"></div>)}
       </div>)}
   </div>;
 
-// 专用加载组件
-export const ProductLoading = () => <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    <CardSkeleton count={8} />
-  </div>;
-export const OrderLoading = () => <div className="space-y-4">
-    <ListItemSkeleton count={5} />
-  </div>;
-export const UserLoading = () => <div className="space-y-6">
-    <div className="bg-card rounded-lg border p-6">
-      <div className="flex items-center space-x-4 mb-6">
-        <div className="w-20 h-20 bg-muted rounded-full animate-pulse"></div>
-        <div className="flex-1 space-y-3">
-          <div className="h-6 bg-muted rounded animate-pulse w-1/3"></div>
-          <div className="h-4 bg-muted rounded animate-pulse w-1/2"></div>
-          <div className="h-4 bg-muted rounded animate-pulse w-2/3"></div>
+// 统计卡片加载状态
+export const StatsCardLoading = ({
+  count = 4,
+  className = ''
+}) => <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ${className}`}>
+    {Array.from({
+    length: count
+  }).map((_, index) => <div key={index} className="bg-card border rounded-lg p-4 animate-pulse">
+        <div className="flex items-center justify-between mb-2">
+          <div className="w-8 h-8 bg-gray-200 rounded-lg"></div>
+          <div className="w-16 h-3 bg-gray-200 rounded"></div>
         </div>
+        <div className="w-24 h-6 bg-gray-200 rounded mb-2"></div>
+        <div className="w-20 h-3 bg-gray-200 rounded"></div>
+      </div>)}
+  </div>;
+
+// 图表加载状态
+export const ChartLoading = ({
+  height = 300,
+  className = ''
+}) => <div className={`bg-card border rounded-lg p-4 ${className}`}>
+    <div className="h-6 bg-gray-200 rounded w-1/3 mb-4 animate-pulse"></div>
+    <div className="bg-gray-100 rounded-lg animate-pulse flex items-center justify-center" style={{
+    height: `${height}px`
+  }}>
+      <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+    </div>
+  </div>;
+
+// 产品列表加载状态
+export const ProductListLoading = ({
+  count = 8,
+  className = ''
+}) => <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ${className}`}>
+    {Array.from({
+    length: count
+  }).map((_, index) => <div key={index} className="bg-card border rounded-lg overflow-hidden animate-pulse">
+        <div className="w-full h-48 bg-gray-200"></div>
+        <div className="p-4 space-y-3">
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-8 bg-gray-200 rounded w-full"></div>
+        </div>
+      </div>)}
+  </div>;
+
+// 订单列表加载状态
+export const OrderListLoading = ({
+  count = 5,
+  className = ''
+}) => <div className={`space-y-4 ${className}`}>
+    {Array.from({
+    length: count
+  }).map((_, index) => <div key={index} className="bg-card border rounded-lg p-4 animate-pulse">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-3">
+            <div className="w-16 h-3 bg-gray-200 rounded"></div>
+            <div className="w-20 h-3 bg-gray-200 rounded"></div>
+          </div>
+          <div className="w-16 h-6 bg-gray-200 rounded"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+          <div className="h-3 bg-gray-200 rounded"></div>
+          <div className="h-3 bg-gray-200 rounded"></div>
+          <div className="h-3 bg-gray-200 rounded"></div>
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="w-24 h-4 bg-gray-200 rounded"></div>
+          <div className="w-20 h-8 bg-gray-200 rounded"></div>
+        </div>
+      </div>)}
+  </div>;
+
+// 用户信息加载状态
+export const UserInfoLoading = ({
+  className = ''
+}) => <div className={`bg-card border rounded-lg p-6 ${className}`}>
+    <div className="flex items-center space-x-4 mb-6 animate-pulse">
+      <div className="w-20 h-20 bg-gray-200 rounded-full"></div>
+      <div className="flex-1 space-y-2">
+        <div className="h-5 bg-gray-200 rounded w-1/3"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-3 bg-gray-200 rounded w-2/3"></div>
       </div>
-      <div className="grid md:grid-cols-2 gap-4">
-        {Array.from({
-        length: 6
-      }).map((_, index) => <div key={index} className="space-y-2">
-            <div className="h-3 bg-muted rounded animate-pulse w-1/4"></div>
-            <div className="h-4 bg-muted rounded animate-pulse w-3/4"></div>
-          </div>)}
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {Array.from({
+      length: 6
+    }).map((_, index) => <div key={index} className="flex items-center justify-between py-2 animate-pulse">
+          <div className="w-20 h-3 bg-gray-200 rounded"></div>
+          <div className="w-32 h-3 bg-gray-200 rounded"></div>
+        </div>)}
+    </div>
+  </div>;
+
+// 聊天消息加载状态
+export const ChatMessageLoading = ({
+  className = ''
+}) => <div className={`flex items-start space-x-3 ${className}`}>
+    <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+    <div className="flex-1 space-y-2 animate-pulse">
+      <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+      <div className="bg-gray-100 rounded-lg p-3 space-y-2">
+        <div className="h-3 bg-gray-200 rounded"></div>
+        <div className="h-3 bg-gray-200 rounded w-4/5"></div>
+        <div className="h-3 bg-gray-200 rounded w-2/3"></div>
       </div>
     </div>
   </div>;
-export const StatsLoading = () => <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-    {Array.from({
-    length: 4
-  }).map((_, index) => <div key={index} className="bg-card rounded-lg border p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="w-8 h-8 bg-muted rounded animate-pulse"></div>
-          <div className="h-3 bg-muted rounded animate-pulse w-16"></div>
-        </div>
-        <div className="h-8 bg-muted rounded animate-pulse w-1/2 mb-2"></div>
-        <div className="h-3 bg-muted rounded animate-pulse w-1/3"></div>
-      </div>)}
-  </div>;
 
-// 空状态组件
-export const EmptyState = ({
-  icon = Package,
-  title = '暂无数据',
-  description = '当前没有相关数据',
-  action = null
-}) => {
-  const Icon = icon;
-  return <div className="flex flex-col items-center justify-center py-12 text-center">
-      <Icon className="w-16 h-16 text-muted-foreground mb-4" />
-      <h3 className="text-lg font-medium text-foreground mb-2">{title}</h3>
-      <p className="text-muted-foreground mb-6 max-w-md">{description}</p>
-      {action}
-    </div>;
-};
-
-// 错误状态组件
-export const ErrorState = ({
-  error,
-  onRetry,
-  title = '加载失败',
-  description = '数据加载失败，请稍后重试'
-}) => <div className="flex flex-col items-center justify-center py-12 text-center">
-    <AlertCircle className="w-16 h-16 text-destructive mb-4" />
-    <h3 className="text-lg font-medium text-foreground mb-2">{title}</h3>
-    <p className="text-muted-foreground mb-6 max-w-md">{description}</p>
-    {onRetry && <button onClick={onRetry} className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-        <RefreshCw className="w-4 h-4" />
-        <span>重试</span>
-      </button>}
-    {error && <details className="mt-4 text-xs text-muted-foreground">
-        <summary>错误详情</summary>
-        <pre className="mt-2 p-2 bg-muted rounded text-left overflow-auto">
-          {error.message || error}
-        </pre>
-      </details>}
-  </div>;
-
-// 数据加载包装器
-export const DataLoader = ({
-  loading,
-  error,
-  data,
-  children,
-  loadingComponent,
-  errorComponent,
-  emptyComponent,
-  onRetry
-}) => {
-  if (loading) {
-    return loadingComponent || <PageLoading />;
-  }
-  if (error) {
-    return errorComponent || <ErrorState error={error} onRetry={onRetry} />;
-  }
-  if (!data || Array.isArray(data) && data.length === 0) {
-    return emptyComponent || <EmptyState />;
-  }
-  return children;
-};
-
-// 带有加载状态的按钮
-export const LoadingButton = ({
-  loading,
-  children,
-  disabled,
+// 专门的加载状态组件，根据不同场景显示不同的加载指示器
+export const ContextualLoading = ({
+  type,
+  count = 1,
   className = '',
   ...props
-}) => <button className={`relative ${className}`} disabled={disabled || loading} {...props}>
-    {loading && <Loader2 className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 animate-spin" />}
-    <span className={loading ? 'opacity-0' : ''}>
-      {children}
-    </span>
-  </button>;
+}) => {
+  const loadingComponents = {
+    page: PageLoading,
+    card: CardLoading,
+    list: ListItemLoading,
+    table: TableLoading,
+    stats: StatsCardLoading,
+    chart: ChartLoading,
+    products: ProductListLoading,
+    orders: OrderListLoading,
+    user: UserInfoLoading,
+    chat: ChatMessageLoading,
+    spinner: LoadingSpinner
+  };
+  const LoadingComponent = loadingComponents[type] || LoadingSpinner;
+  return <LoadingComponent count={count} className={className} {...props} />;
+};
 
-// 专用空状态组件
-export const ProductEmpty = () => <EmptyState icon={Package} title="暂无产品" description="当前没有可用的产品，请稍后再来查看" action={<button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-        刷新页面
-      </button>} />;
-export const OrderEmpty = () => <EmptyState icon={ShoppingBag} title="暂无订单" description="您还没有任何订单，快去选购心仪的产品吧" action={<button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-        去购物
-      </button>} />;
-export const UserEmpty = () => <EmptyState icon={User} title="暂无用户" description="当前没有用户数据" />;
-export const MessageEmpty = () => <EmptyState icon={MessageCircle} title="暂无消息" description="您还没有收到任何消息" />;
-export const ReviewEmpty = () => <EmptyState icon={Star} title="暂无评价" description="还没有用户评价，成为第一个评价的人吧" />;
-export const ChartEmpty = () => <EmptyState icon={TrendingUp} title="暂无数据" description="当前时间范围内没有可显示的数据" />;
+// 骨架屏组件 - 用于复杂布局的加载状态
+export const Skeleton = ({
+  className,
+  ...props
+}) => <div className={`animate-pulse rounded-md bg-gray-200 ${className}`} {...props} />;
+
+// 带图标的加载状态
+export const IconLoading = ({
+  icon: Icon = Loader2,
+  text = '加载中...',
+  className = ''
+}) => <div className={`flex items-center justify-center space-x-2 ${className}`}>
+    <Icon className="w-5 h-5 animate-spin text-primary" />
+    {text && <span className="text-sm text-muted-foreground">{text}</span>}
+  </div>;
+
+// 产品加载状态
+export const ProductLoading = () => <IconLoading icon={Package} text="产品加载中..." />;
+
+// 订单加载状态
+export const OrderLoading = () => <IconLoading icon={ShoppingBag} text="订单加载中..." />;
+
+// 用户加载状态
+export const UserLoading = () => <IconLoading icon={User} text="用户信息加载中..." />;
+
+// 文档加载状态
+export const DocumentLoading = () => <IconLoading icon={FileText} text="文档加载中..." />;
+
+// 统计加载状态
+export const StatsLoading = () => <IconLoading icon={TrendingUp} text="统计数据加载中..." />;
+
+// 消息加载状态
+export const MessageLoading = () => <IconLoading icon={MessageCircle} text="消息加载中..." />;
+
+// 评价加载状态
+export const RatingLoading = () => <IconLoading icon={Star} text="评价加载中..." />;
+
+// 时间加载状态
+export const TimeLoading = () => <IconLoading icon={Clock} text="时间数据加载中..." />;
+
+// 刷新加载状态
+export const RefreshLoading = () => <IconLoading icon={RefreshCw} text="刷新中..." />;
+
+// 全屏加载遮罩
+export const FullScreenLoading = ({
+  text = '处���中...'
+}) => <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-card rounded-lg p-6 shadow-lg">
+      <div className="flex items-center space-x-3">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+        <span className="text-sm font-medium">{text}</span>
+      </div>
+    </div>
+  </div>;
+
+// 内联加载指示器
+export const InlineLoading = ({
+  text = '加载中...',
+  className = ''
+}) => <div className={`flex items-center space-x-2 ${className}`}>
+    <Loader2 className="w-4 h-4 animate-spin text-primary" />
+    <span className="text-xs text-muted-foreground">{text}</span>
+  </div>;
+
+// 按钮加载状态
+export const ButtonLoading = ({
+  text = '处理中...',
+  className = ''
+}) => <div className={`flex items-center justify-center space-x-2 ${className}`}>
+    <Loader2 className="w-4 h-4 animate-spin" />
+    <span>{text}</span>
+  </div>;
+export default {
+  LoadingSpinner,
+  PageLoading,
+  CardLoading,
+  ListItemLoading,
+  TableLoading,
+  StatsCardLoading,
+  ChartLoading,
+  ProductListLoading,
+  OrderListLoading,
+  UserInfoLoading,
+  ChatMessageLoading,
+  ContextualLoading,
+  Skeleton,
+  IconLoading,
+  ProductLoading,
+  OrderLoading,
+  UserLoading,
+  DocumentLoading,
+  StatsLoading,
+  MessageLoading,
+  RatingLoading,
+  TimeLoading,
+  RefreshLoading,
+  FullScreenLoading,
+  InlineLoading,
+  ButtonLoading
+};
