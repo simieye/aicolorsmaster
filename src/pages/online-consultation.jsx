@@ -1,9 +1,9 @@
 // @ts-ignore;
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, CardHeader, CardTitle, useToast } from '@/components/ui';
 // @ts-ignore;
-import { MessageCircle, Send, User, Bot, Clock, Phone, Mail, MapPin, Star, ThumbsUp, ThumbsDown, CheckCircle, AlertCircle, Info, ChevronDown, ChevronUp, Filter, Search, Download, RefreshCw, Settings, Headphones, FileText, Calendar, TrendingUp, Users, Zap, Shield, Award, X } from 'lucide-react';
+import { MessageCircle, Send, User, Bot, Clock, Phone, Mail, MapPin, Star, ThumbsUp, ThumbsDown, CheckCircle, AlertCircle, Info, ChevronDown, ChevronUp, Filter, Search, Download, RefreshCw, Settings, Headphones, FileText, Calendar, TrendingUp, Users, Zap, Shield, Award, X, Wifi, WifiOff } from 'lucide-react';
 
 // @ts-ignore;
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
@@ -57,6 +57,8 @@ export default function OnlineConsultationPage(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('connected'); // connected, connecting, disconnected
   const [currentServiceType, setCurrentServiceType] = useState('ai'); // ai, human
+  const [isOnline, setIsOnline] = useState(true);
+  const [queuePosition, setQueuePosition] = useState(0);
   const currentUser = $w?.auth?.currentUser;
 
   // 初始化聊天
@@ -64,6 +66,7 @@ export default function OnlineConsultationPage(props) {
     initializeChat();
     loadConsultationHistory();
     loadServiceStats();
+    checkConnectionStatus();
   }, []);
 
   // 监听客服类型切换
@@ -71,16 +74,32 @@ export default function OnlineConsultationPage(props) {
     if (isAIEnabled) {
       setCurrentServiceType('ai');
       setConnectionStatus('connected');
+      setQueuePosition(0);
     } else {
       setCurrentServiceType('human');
       // 模拟连接人工客服的过程
       setConnectionStatus('connecting');
+      setQueuePosition(Math.floor(Math.random() * 5) + 1);
       setTimeout(() => {
         setConnectionStatus('connected');
-        addSystemMessage('已为您连接人工客服，请稍候...');
-      }, 2000);
+        setQueuePosition(0);
+        addSystemMessage('已为您连接人工客服，我是客服小王，很高兴为您服务！');
+      }, 3000);
     }
   }, [isAIEnabled]);
+
+  // 检查连接状态
+  const checkConnectionStatus = useCallback(() => {
+    setIsOnline(navigator.onLine);
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
   const initializeChat = () => {
     const welcomeMessage = {
       id: 'welcome',
@@ -103,6 +122,7 @@ export default function OnlineConsultationPage(props) {
   };
   const loadConsultationHistory = async () => {
     try {
+      setIsLoading(true);
       const mockHistory = generateMockConsultationHistory();
       setConsultationHistory(mockHistory);
     } catch (error) {
@@ -112,6 +132,8 @@ export default function OnlineConsultationPage(props) {
         description: "无法获取咨询历史",
         variant: "destructive"
       });
+    } finally {
+      setIsLoading(false);
     }
   };
   const generateMockConsultationHistory = () => {
@@ -214,7 +236,7 @@ export default function OnlineConsultationPage(props) {
     }
   };
   const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || connectionStatus === 'connecting') return;
     const userMessage = {
       id: `user_${Date.now()}`,
       type: 'user',
@@ -269,7 +291,9 @@ export default function OnlineConsultationPage(props) {
       '价格': '我们的产品价格从99元到399元不等，根据产品系列和规格有所不同。您有预算范围吗？',
       '使用': '使用方法很简单：1. 先做皮肤测试 2. 按照说明书调配 3. 均匀涂抹 4. 等待20-30分钟 5. 彻底清洗。需要我详细说明吗？',
       '效果': '我们的染发剂颜色持久，可以保持6-8周，同时含有护发成分，染发后头发依然柔顺有光泽。',
-      '售后': '我们提供7天无理由退换货，30天质量问题包换，还有专业的客服团队为您服务。'
+      '售后': '我们提供7天无理由退换货，30天质量问题包换，还有专业的客服团队为您服务。',
+      '切换': '我可以为您转接人工客服，请稍等...',
+      '人工': '正在为您连接人工客服，预计等待时间2-3分钟...'
     };
     for (const [key, response] of Object.entries(responses)) {
       if (userMessage.includes(key)) {
@@ -279,7 +303,7 @@ export default function OnlineConsultationPage(props) {
     return '感谢您的咨询！我会尽力为您解答。如果您需要更详细的帮助，我可以为您转接人工客服。';
   };
   const generateHumanResponse = userMessage => {
-    const responses = ['您好，我是人工客服小王。关于您的问题，我来为您详细解答...', '感谢您的耐心等待。根据您的描述，我建议您...', '我理解您的需求。让我为您查询一下相关信息...', '很高兴为您服务。关于这个问题，我们的专业建议是...'];
+    const responses = ['您好，我是人工客服小王。关于您的问题，我来为您详细解答...', '感谢您的耐心等待。根据您的描述，我建议您选择我们的天然植物染发剂系列。', '我理解您的需求。让我为您查询一下相关的产品信息和优惠活动...', '很高兴为您服务。关于这个问题，我们的专业建议是先进行皮肤过敏测试。', '根据您的发质情况，我推荐使用我们的保湿修护型染发产品。'];
     return responses[Math.floor(Math.random() * responses.length)];
   };
   const handleToggleAI = () => {
@@ -296,7 +320,7 @@ export default function OnlineConsultationPage(props) {
         title: "正在连接人工客服",
         description: "请稍候，正在为您安排专业客服..."
       });
-      addSystemMessage('正在为您连接人工客服，请稍候...');
+      addSystemMessage('正在为您连接人工客服，当前排队位置：' + queuePosition);
     }
   };
   const handleEndConsultation = () => {
@@ -356,8 +380,10 @@ export default function OnlineConsultationPage(props) {
                   <span className="font-medium">
                     {currentServiceType === 'ai' ? 'AI客服在线' : connectionStatus === 'connecting' ? '连接中...' : '人工客服在线'}
                   </span>
+                  {!isOnline && <WifiOff className="w-4 h-4 ml-2" />}
+                  {queuePosition > 0 && <span className="ml-2 text-sm">排队位置: {queuePosition}</span>}
                 </div>
-                <Button variant="ghost" size="sm" onClick={handleToggleAI} disabled={connectionStatus === 'connecting'} className="text-white hover:bg-white/10 disabled:opacity-50">
+                <Button variant="ghost" size="sm" onClick={handleToggleAI} disabled={connectionStatus === 'connecting' || !isOnline} className="text-white hover:bg-white/10 disabled:opacity-50">
                   <RefreshCw className="w-4 h-4 mr-2" />
                   切换客服
                 </Button>
@@ -416,8 +442,8 @@ export default function OnlineConsultationPage(props) {
               {/* 输入区域 */}
               <div className="border-t p-4 bg-card">
                 <div className="flex items-center space-x-2">
-                  <input type="text" value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSendMessage()} placeholder="请输入您的问题..." disabled={connectionStatus === 'connecting'} className="flex-1 px-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50" />
-                  <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping || connectionStatus === 'connecting'}>
+                  <input type="text" value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSendMessage()} placeholder="请输入您的问题..." disabled={connectionStatus === 'connecting' || !isOnline} className="flex-1 px-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50" />
+                  <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping || connectionStatus === 'connecting' || !isOnline}>
                     <Send className="w-4 h-4" />
                   </Button>
                 </div>
@@ -526,16 +552,19 @@ export default function OnlineConsultationPage(props) {
                     </select>
                   </div>
                 </div>
-                <Button variant="outline" onClick={handleExportHistory}>
+                <Button variant="outline" onClick={handleExportHistory} disabled={isLoading}>
                   <Download className="w-4 h-4 mr-2" />
-                  导出记录
+                  {isLoading ? '导出中...' : '导出记录'}
                 </Button>
               </div>
             </div>
 
             {/* 咨询记录列表 */}
             <div className="p-4 space-y-4">
-              {filteredHistory.map(item => <Card key={item.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedHistory(item)}>
+              {filteredHistory.length === 0 ? <div className="text-center py-8 text-muted-foreground">
+                  <FileText className="w-12 h-12 mx-auto mb-2" />
+                  <p>暂无咨询记录</p>
+                </div> : filteredHistory.map(item => <Card key={item.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedHistory(item)}>
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
