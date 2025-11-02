@@ -135,9 +135,12 @@ export function useBatchDataLoader(configs) {
 
   const results = {};
 
-  configs.forEach((config, index) => {
-    const key = config.key || `loader_${index}`;
-    results[key] = useDataLoader(config);
+  // 安全地创建配置对象
+  const safeConfigs = Array.isArray(configs) ? configs.filter(config => config && typeof config === 'object') : [];
+
+  safeConfigs.forEach((config, index) => {
+    const configKey = config?.key || `loader_${index}`;
+    results[configKey] = useDataLoader(config);
   });
 
   // 批量加载
