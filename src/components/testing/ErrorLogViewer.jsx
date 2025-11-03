@@ -1,5 +1,5 @@
 // @ts-ignore;
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 // @ts-ignore;
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Alert, AlertDescription, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Input, ScrollArea } from '@/components/ui';
 // @ts-ignore;
@@ -16,26 +16,98 @@ export function ErrorLogViewer({
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedErrors, setExpandedErrors] = useState(new Set());
   const [showDetails, setShowDetails] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const searchTimeoutRef = useRef(null);
 
-  // 将错误对象转换为数组格式
+  // 安全的错误数据转换 - 使用 useMemo 优化
   const errorList = useMemo(() => {
-    const list = [];
-    Object.entries(errors).forEach(([key, error]) => {
-      list.push({
-        id: key,
-        key,
-        ...error,
-        timestamp: error.timestamp || Date.now(),
-        type: error.type || 'error',
-        severity: error.severity || 'medium'
-      });
-    });
-    return list.sort((a, b) => b.timestamp - a.timestamp);
-  }, [errors]);
+    try {
+      const list = [];
 
-  // 过滤和搜索错误
+      // 处理不同格式的错误数据
+      if (typeof errors === 'object' && errors !== null) {
+        Object.entries(errors).forEach(([key, error]) => {
+          if (error && typeof error === 'object') {
+            list.push({
+              id: key || `error_${Date.now()}_${Math.random()}`,
+              key: key,
+              ...error,
+              timestamp: error.timestamp || Date.now(),
+              type: error.type || 'error',
+              severity: error.severity || 'medium',
+              message: error.message || error.description || '未知错误'
+            });
+          }
+        });
+      }
+
+      // 从测试结果中提取错误
+      if (Array.isArray(testResults)) {
+        testResults.forEach((result, index) => {
+          if (result && result.errors && typeof result.errors === 'object') {
+            Object.entries(result.errors).forEach(([key, error]) => {
+              if (error && typeof error === 'object') {
+                list.push({
+                  id: `test_${index}_${key}`,
+                  key: key,
+                  ...error,
+                  timestamp: error.timestamp || result.endTime || Date.now(),
+                  type: error.type || 'error',
+                  severity: error.severity || 'medium',
+                  message: error.message || error.description || '未知错误',
+                  source: `测试结果 ${index + 1}`
+                });
+              }
+            });
+          }
+
+          // 处理测试结果中的错误状态
+          if (result && (result.status === 'failed' || result.status === 'error')) {
+            list.push({
+              id: `test_status_${index}`,
+              key: `test_${index}_status`,
+              timestamp: result.endTime || Date.now(),
+              type: 'error',
+              severity: 'high',
+              message: result.error || `测试执行${result.status}`,
+              source: `测试 ${index + 1}`,
+              context: {
+                testId: result.id,
+                scenario: result.scenario,
+                duration: result.duration
+              }
+            });
+          }
+        });
+      }
+      return list.sort((a, b) => b.timestamp - a.timestamp);
+    } catch (error) {
+      console.error('Error processing error data:', error);
+      return [];
+    }
+  }, [errors, testResults]);
+
+  // 防抖搜索 - 使用 useCallback 优化
+  const handleSearchChange = useCallback(value => {
+    setSearchTerm(value);
+
+    // 清除之前的搜索定时器
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // 设置新的搜索定时器
+    searchTimeoutRef.current = setTimeout(() => {
+      setIsProcessing(false);
+    }, 300);
+  }, []);
+
+  // 过滤和搜索错误 - 使用 useMemo 优化
   const filteredErrors = useMemo(() => {
+    setIsProcessing(true);
     return errorList.filter(error => {
+      if (!error || !error.message) return false;
+
       // 类型过滤
       if (filterType !== 'all' && error.type !== filterType) {
         return false;
@@ -44,13 +116,13 @@ export function ErrorLogViewer({
       // 搜索过滤
       if (searchTerm) {
         const searchLower = searchTerm.toLowerCase();
-        return error.message?.toLowerCase().includes(searchLower) || error.key?.toLowerCase().includes(searchLower) || error.source?.toLowerCase().includes(searchLower);
+        return error.message.toLowerCase().includes(searchLower) || error.key && error.key.toLowerCase().includes(searchLower) || error.source && error.source.toLowerCase().includes(searchLower);
       }
       return true;
     });
   }, [errorList, filterType, searchTerm]);
 
-  // 错误统计
+  // 错误统计 - 使用 useMemo 优化
   const errorStats = useMemo(() => {
     const stats = {
       total: errorList.length,
@@ -61,11 +133,15 @@ export function ErrorLogViewer({
       byType: {}
     };
     errorList.forEach(error => {
-      stats.byType[error.type] = (stats.byType[error.type] || 0) + 1;
+      if (error.type) {
+        stats.byType[error.type] = (stats.byType[error.type] || 0) + 1;
+      }
     });
     return stats;
   }, [errorList]);
-  const getSeverityIcon = severity => {
+
+  // 使用 useCallback 优化图标获取
+  const getSeverityIcon = useCallback(severity => {
     switch (severity) {
       case 'critical':
         return <XCircle className="w-4 h-4 text-red-500" />;
@@ -78,8 +154,10 @@ export function ErrorLogViewer({
       default:
         return <AlertTriangle className="w-4 h-4 text-gray-500" />;
     }
-  };
-  const getSeverityBadge = severity => {
+  }, []);
+
+  // 使用 useCallback 优化徽章获取
+  const getSeverityBadge = useCallback(severity => {
     const variants = {
       critical: 'destructive',
       high: 'destructive',
@@ -95,8 +173,10 @@ export function ErrorLogViewer({
     return <Badge variant={variants[severity] || 'outline'}>
         {labels[severity] || '未知'}
       </Badge>;
-  };
-  const getTypeIcon = type => {
+  }, []);
+
+  // 使用 useCallback 优化类型图标获取
+  const getTypeIcon = useCallback(type => {
     switch (type) {
       case 'network':
         return <Bug className="w-4 h-4" />;
@@ -107,11 +187,19 @@ export function ErrorLogViewer({
       default:
         return <AlertTriangle className="w-4 h-4" />;
     }
-  };
-  const formatTimestamp = timestamp => {
-    return new Date(timestamp).toLocaleString();
-  };
-  const toggleErrorExpansion = errorId => {
+  }, []);
+
+  // 使用 useCallback 优化时间戳格式化
+  const formatTimestamp = useCallback(timestamp => {
+    try {
+      return new Date(timestamp).toLocaleString();
+    } catch (error) {
+      return '无效时间戳';
+    }
+  }, []);
+
+  // 切换错误展开状态
+  const toggleErrorExpansion = useCallback(errorId => {
     const newExpanded = new Set(expandedErrors);
     if (newExpanded.has(errorId)) {
       newExpanded.delete(errorId);
@@ -119,35 +207,62 @@ export function ErrorLogViewer({
       newExpanded.add(errorId);
     }
     setExpandedErrors(newExpanded);
-  };
-  const exportErrorLogs = () => {
-    const exportData = {
-      errors: errorList,
-      stats: errorStats,
-      exportedAt: Date.now(),
-      testResults: testResults.map(r => ({
-        id: r.id,
-        status: r.status,
-        timestamp: r.endTime
-      }))
-    };
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: 'application/json'
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `error-logs-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-  const clearAllErrors = () => {
+  }, [expandedErrors]);
+
+  // 导出错误日志
+  const exportErrorLogs = useCallback(() => {
+    try {
+      const exportData = {
+        errors: errorList,
+        stats: errorStats,
+        exportedAt: Date.now(),
+        testResults: testResults.map(r => ({
+          id: r.id,
+          status: r.status,
+          timestamp: r.endTime
+        }))
+      };
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+        type: 'application/json'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `error-logs-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('导出失败，请重试');
+    }
+  }, [errorList, errorStats, testResults]);
+
+  // 清除所有错误
+  const clearAllErrors = useCallback(() => {
     if (confirm('确定要清除所有错误日志吗？此操作不可恢复。')) {
       onClear && onClear();
       setSelectedError(null);
       setExpandedErrors(new Set());
+      setSearchTerm('');
+      setFilterType('all');
     }
-  };
+  }, [onClear]);
+
+  // 重置过滤器
+  const resetFilters = useCallback(() => {
+    setSearchTerm('');
+    setFilterType('all');
+    setShowDetails(true);
+  }, []);
+
+  // 清理搜索定时器
+  React.useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
   return <div className="space-y-6">
       {/* 错误统计概览 */}
       <Card>
@@ -158,11 +273,15 @@ export function ErrorLogViewer({
               错误日志分析
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={exportErrorLogs}>
+              <Button variant="outline" size="sm" onClick={resetFilters}>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                重置过滤
+              </Button>
+              <Button variant="outline" size="sm" onClick={exportErrorLogs} disabled={errorList.length === 0}>
                 <Download className="w-4 h-4 mr-2" />
                 导出日志
               </Button>
-              <Button variant="outline" size="sm" onClick={clearAllErrors}>
+              <Button variant="outline" size="sm" onClick={clearAllErrors} disabled={errorList.length === 0}>
                 <Trash2 className="w-4 h-4 mr-2" />
                 清除
               </Button>
@@ -202,7 +321,10 @@ export function ErrorLogViewer({
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input placeholder="搜索错误信息..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10" />
+                <Input placeholder="搜索错误信息..." value={searchTerm} onChange={e => handleSearchChange(e.target.value)} className="pl-10" />
+                {isProcessing && <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                  </div>}
               </div>
             </div>
             <div className="flex gap-2">
@@ -248,7 +370,7 @@ export function ErrorLogViewer({
                       <div className="flex items-center gap-3">
                         {getSeverityIcon(error.severity)}
                         <div>
-                          <h4 className="font-medium text-sm">{error.key}</h4>
+                          <h4 className="font-medium text-sm">{error.key || '未知错误'}</h4>
                           <p className="text-xs text-muted-foreground">
                             {formatTimestamp(error.timestamp)}
                           </p>
@@ -270,11 +392,11 @@ export function ErrorLogViewer({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                           <div>
                             <span className="font-medium">错误类型: </span>
-                            <span>{error.type}</span>
+                            <span>{error.type || '未知'}</span>
                           </div>
                           <div>
                             <span className="font-medium">严重程度: </span>
-                            <span>{error.severity}</span>
+                            <span>{error.severity || '未知'}</span>
                           </div>
                           {error.source && <div>
                               <span className="font-medium">来源: </span>

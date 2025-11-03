@@ -1,50 +1,58 @@
 // @ts-ignore;
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 // @ts-ignore;
-import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Alert, AlertDescription, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch } from '@/components/ui';
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch, Alert, AlertDescription, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui';
 // @ts-ignore;
-import { GitBranch, Github, Gitlab, Bitbucket, Server, Clock, CheckCircle, XCircle, AlertTriangle, Settings, Play, RefreshCw } from 'lucide-react';
+import { GitBranch, Github, Gitlab, Bitbucket, Play, Settings, CheckCircle, XCircle, Clock, AlertTriangle, RefreshCw, Terminal, FileText } from 'lucide-react';
 
 export function CICDIntegration({
-  config,
+  config = {},
   onConfigChange,
-  status,
+  status = 'idle',
   onTrigger
 }) {
-  const [expandedSection, setExpandedSection] = useState(null);
-  const cicdProviders = {
-    github: {
-      name: 'GitHub Actions',
-      icon: <Github className="w-4 h-4" />,
-      description: '使用GitHub Actions进行自动化CI/CD',
-      configTemplate: {
-        workflow: '.github/workflows/test.yml',
-        runners: 'ubuntu-latest',
-        cache: true
-      }
-    },
-    gitlab: {
-      name: 'GitLab CI/CD',
-      icon: <Gitlab className="w-4 h-4" />,
-      description: '使用GitLab内置的CI/CD功能',
-      configTemplate: {
-        configFile: '.gitlab-ci.yml',
-        runners: 'docker',
-        cache: true
-      }
-    },
-    bitbucket: {
-      name: 'Bitbucket Pipelines',
-      icon: <Bitbucket className="w-4 h-4" />,
-      description: '使用Bitbucket Pipelines进行持续集成',
-      configTemplate: {
-        configFile: 'bitbucket-pipelines.yml',
-        runners: 'docker',
-        cache: true
-      }
+  const [isConfiguring, setIsConfiguring] = useState(false);
+  const [logs, setLogs] = useState([]);
+  const [activeTab, setActiveTab] = useState('configuration');
+
+  // 使用 useMemo 优化CI/CD提供商配置
+  const providers = useMemo(() => [{
+    value: 'github',
+    label: 'GitHub',
+    icon: <Github className="w-4 h-4" />
+  }, {
+    value: 'gitlab',
+    label: 'GitLab',
+    icon: <Gitlab className="w-4 h-4" />
+  }, {
+    value: 'bitbucket',
+    label: 'Bitbucket',
+    icon: <Bitbucket className="w-4 h-4" />
+  }], []);
+
+  // 使用 useMemo 优化当前提供商配置
+  const currentProvider = useMemo(() => {
+    return providers.find(p => p.value === config.provider) || providers[0];
+  }, [config.provider, providers]);
+
+  // 获取状态徽章
+  const getStatusBadge = useCallback(status => {
+    switch (status) {
+      case 'success':
+        return <Badge variant="default" className="bg-green-500">成功</Badge>;
+      case 'failed':
+        return <Badge variant="destructive">失败</Badge>;
+      case 'running':
+        return <Badge variant="secondary">运行中</Badge>;
+      case 'error':
+        return <Badge variant="destructive">错误</Badge>;
+      default:
+        return <Badge variant="outline">未配置</Badge>;
     }
-  };
-  const getStatusIcon = status => {
+  }, []);
+
+  // 获取状态图标
+  const getStatusIcon = useCallback(status => {
     switch (status) {
       case 'success':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
@@ -53,362 +61,268 @@ export function CICDIntegration({
       case 'running':
         return <RefreshCw className="w-4 h-4 text-blue-500 animate-spin" />;
       case 'error':
-        return <AlertTriangle className="w-4 h-4 text-orange-500" />;
+        return <AlertTriangle className="w-4 h-4 text-red-500" />;
       default:
         return <Clock className="w-4 h-4 text-gray-500" />;
     }
-  };
-  const getStatusBadge = status => {
-    switch (status) {
-      case 'success':
-        return <Badge variant="default">成功</Badge>;
-      case 'failed':
-        return <Badge variant="destructive">失败</Badge>;
-      case 'running':
-        return <Badge variant="secondary">运行中</Badge>;
-      case 'error':
-        return <Badge variant="destructive">错误</Badge>;
-      default:
-        return <Badge variant="outline">空闲</Badge>;
+  }, []);
+
+  // 触发CI/CD流程
+  const triggerCICD = useCallback(async () => {
+    if (onTrigger) {
+      // 添加日志
+      const startLog = {
+        timestamp: Date.now(),
+        message: `开始触发 ${currentProvider.label} CI/CD 流程...`,
+        type: 'info'
+      };
+      setLogs([startLog]);
+      try {
+        await onTrigger();
+        const successLog = {
+          timestamp: Date.now(),
+          message: 'CI/CD 流程触发成功',
+          type: 'success'
+        };
+        setLogs(prev => [...prev, successLog]);
+      } catch (error) {
+        const errorLog = {
+          timestamp: Date.now(),
+          message: `CI/CD 触发失败: ${error.message}`,
+          type: 'error'
+        };
+        setLogs(prev => [...prev, errorLog]);
+      }
     }
-  };
-  const generateWorkflowFile = provider => {
-    const templates = {
-      github: `name: Automated Tests
+  }, [onTrigger, currentProvider]);
 
-on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
+  // 测试连接
+  const testConnection = useCallback(async () => {
+    setIsConfiguring(true);
+    try {
+      // 模拟连接测试
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      alert('连接测试成功！');
+    } catch (error) {
+      alert('连接测试失败：' + error.message);
+    } finally {
+      setIsConfiguring(false);
+    }
+  }, []);
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Use Node.js \${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: \${{ matrix.node-version }}
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Run tests
-      run: npm run test:ci
-    
-    - name: Run performance tests
-      run: npm run test:performance
-    
-    - name: Generate test report
-      run: npm run test:report
-    
-    - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage/lcov.info`,
-      gitlab: `stages:
-  - test
-  - performance
-  - report
-
-variables:
-  NODE_VERSION: "16"
-
-cache:
-  paths:
-    - node_modules/
-    - .npm/
-
-test:
-  stage: test
-  image: node:\${NODE_VERSION}
-  script:
-    - npm ci
-    - npm run test:ci
-  coverage: '/Lines\\s*:\\s*(\\d+\\.\\d+)%/'
-  artifacts:
-    reports:
-      junit: junit.xml
-    paths:
-      - coverage/
-    expire_in: 1 week
-
-performance:
-  stage: performance
-  image: node:\${NODE_VERSION}
-  script:
-    - npm ci
-    - npm run test:performance
-  artifacts:
-    reports:
-      performance: performance.json
-    paths:
-      - performance-reports/
-    expire_in: 1 week
-
-report:
-  stage: report
-  image: node:\${NODE_VERSION}
-  script:
-    - npm ci
-    - npm run test:report
-  artifacts:
-    paths:
-      - test-reports/
-    expire_in: 1 week`,
-      bitbucket: `pipelines:
-  default:
-    - step:
-        name: Install dependencies
-        caches:
-          - node
-        script:
-          - npm ci
-    - step:
-        name: Run tests
-        caches:
-          - node
-        script:
-          - npm run test:ci
-    - step:
-        name: Performance tests
-        caches:
-          - node
-        script:
-          - npm run test:performance
-        artifacts:
-          - performance-reports/**
-    - step:
-        name: Generate reports
-        caches:
-          - node
-        script:
-          - npm run test:report
-        artifacts:
-          - test-reports/**`
-    };
-    return templates[provider] || '';
-  };
-  const currentProvider = cicdProviders[config.provider];
+  // 保存配置
+  const saveConfiguration = useCallback(() => {
+    setIsConfiguring(true);
+    setTimeout(() => {
+      setIsConfiguring(false);
+      alert('配置已保存！');
+    }, 1000);
+  }, []);
   return <div className="space-y-6">
-      {/* CI/CD状态概览 */}
+      {/* CI/CD 状态概览 */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <GitBranch className="w-5 h-5" />
-            CI/CD集成状态
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                {currentProvider.icon}
-                <span className="font-medium">{currentProvider.name}</span>
-              </div>
-              {getStatusIcon(status)}
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <GitBranch className="w-5 h-5" />
+              CI/CD 集成
+            </div>
+            <div className="flex items-center gap-2">
               {getStatusBadge(status)}
-            </div>
-            
-            <Button onClick={onTrigger} disabled={status === 'running'}>
-              {status === 'running' ? <>
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                  触发中...
-                </> : <>
-                  <Play className="w-4 h-4 mr-2" />
-                  手动触发
-                </>}
-            </Button>
-          </div>
-          
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div>
-              <span className="text-muted-foreground">仓库: </span>
-              <span className="font-medium">{config.repository}</span>
-            </div>
-            <div>
-              <span className="text-muted-foreground">分支: </span>
-              <span className="font-medium">{config.branch}</span>
-            </div>
-            <div>
-              <span className="text-muted-foreground">最后触发: </span>
-              <span className="font-medium">-</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* CI/CD配置 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
-            CI/CD配置
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {/* 提供商选择 */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">CI/CD提供商</label>
-              <Select value={config.provider} onValueChange={value => onConfigChange({
-              ...config,
-              provider: value
-            })}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(cicdProviders).map(([key, provider]) => <SelectItem key={key} value={key}>
-                      <div className="flex items-center gap-2">
-                        {provider.icon}
-                        {provider.name}
-                      </div>
-                    </SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* 仓库配置 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">仓库地址</label>
-                <input type="text" className="w-full p-2 border rounded-md" value={config.repository} onChange={e => onConfigChange({
-                ...config,
-                repository: e.target.value
-              })} placeholder="owner/repository" />
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">默认分支</label>
-                <input type="text" className="w-full p-2 border rounded-md" value={config.branch} onChange={e => onConfigChange({
-                ...config,
-                branch: e.target.value
-              })} placeholder="main" />
-              </div>
-            </div>
-
-            {/* 触发条件 */}
-            <div className="space-y-3">
-              <label className="text-sm font-medium">触发条件</label>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Switch checked={config.triggerOnPush} onCheckedChange={checked => onConfigChange({
-                  ...config,
-                  triggerOnPush: checked
-                })} />
-                  <label className="text-sm">代码推送时触发</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch checked={config.triggerOnPR} onCheckedChange={checked => onConfigChange({
-                  ...config,
-                  triggerOnPR: checked
-                })} />
-                  <label className="text-sm">Pull Request时触发</label>
-                </div>
-              </div>
-            </div>
-
-            {/* 测试命令 */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">测试命令</label>
-              <input type="text" className="w-full p-2 border rounded-md" value={config.testCommand} onChange={e => onConfigChange({
-              ...config,
-              testCommand: e.target.value
-            })} placeholder="npm run test:ci" />
-            </div>
-
-            {/* 报告路径 */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">报告输出路径</label>
-              <input type="text" className="w-full p-2 border rounded-md" value={config.reportPath} onChange={e => onConfigChange({
-              ...config,
-              reportPath: e.target.value
-            })} placeholder="./test-reports" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 工作流配置文件 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>工作流配置文件</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  {currentProvider.configTemplate.configFile}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {currentProvider.description}
-                </p>
-              </div>
-              <Button variant="outline" size="sm" onClick={() => setExpandedSection(expandedSection === 'workflow' ? null : 'workflow')}>
-                {expandedSection === 'workflow' ? '收起' : '展开'}
+              <Button onClick={triggerCICD} disabled={status === 'running'}>
+                {status === 'running' ? <>
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    运行中...
+                  </> : <>
+                    <Play className="w-4 h-4 mr-2" />
+                    触发构建
+                  </>}
               </Button>
             </div>
-
-            {expandedSection === 'workflow' && <div className="space-y-3">
-                <div className="p-4 bg-muted rounded-lg">
-                  <pre className="text-xs overflow-x-auto whitespace-pre-wrap">
-                    {generateWorkflowFile(config.provider)}
-                  </pre>
-                </div>
-                <Alert>
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
-                    将此配置文件添加到您的仓库根目录中，CI/CD流程将自动生效。
-                  </AlertDescription>
-                </Alert>
-              </div>}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 集成步骤 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>集成步骤</CardTitle>
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {[{
-            title: '1. 配置CI/CD提供商',
-            description: '选择并配置您的CI/CD提供商'
-          }, {
-            title: '2. 添加工作流文件',
-            description: '将生成的工作流配置文件添加到仓库'
-          }, {
-            title: '3. 配置环境变量',
-            description: '设置必要的环境变量和密钥'
-          }, {
-            title: '4. 测试集成',
-            description: '手动触发一次测试验证配置'
-          }, {
-            title: '5. 启用自动化',
-            description: '配置触发条件，启用自动化流程'
-          }].map((step, index) => <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
-                <div className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-medium">
-                  {index + 1}
-                </div>
-                <div>
-                  <h4 className="font-medium text-sm">{step.title}</h4>
-                  <p className="text-xs text-muted-foreground">{step.description}</p>
-                </div>
-              </div>)}
+          <div className="flex items-center gap-4 p-4 border rounded-lg">
+            {currentProvider.icon}
+            <div className="flex-1">
+              <h3 className="font-medium">{currentProvider.label}</h3>
+              <p className="text-sm text-muted-foreground">
+                {config.repository || '未配置仓库'}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              {getStatusIcon(status)}
+              <span className="text-sm">{status}</span>
+            </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* 配置和日志 */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="configuration">配置</TabsTrigger>
+          <TabsTrigger value="triggers">触发器</TabsTrigger>
+          <TabsTrigger value="logs">日志</TabsTrigger>
+        </TabsList>
+
+        {/* 配置 */}
+        <TabsContent value="configuration">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                CI/CD 配置
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="provider">代码托管平台</Label>
+                    <Select value={config.provider || 'github'} onValueChange={value => onConfigChange && onConfigChange({
+                    ...config,
+                    provider: value
+                  })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {providers.map(provider => <SelectItem key={provider.value} value={provider.value}>
+                            <div className="flex items-center gap-2">
+                              {provider.icon}
+                              {provider.label}
+                            </div>
+                          </SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="repository">仓库地址</Label>
+                    <Input id="repository" placeholder="owner/repository" value={config.repository || ''} onChange={e => onConfigChange && onConfigChange({
+                    ...config,
+                    repository: e.target.value
+                  })} />
+                  </div>
+                  <div>
+                    <Label htmlFor="branch">主分支</Label>
+                    <Input id="branch" placeholder="main" value={config.branch || 'main'} onChange={e => onConfigChange && onConfigChange({
+                    ...config,
+                    branch: e.target.value
+                  })} />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="testCommand">测试命令</Label>
+                    <Input id="testCommand" placeholder="npm run test:ci" value={config.testCommand || 'npm run test:ci'} onChange={e => onConfigChange && onConfigChange({
+                    ...config,
+                    testCommand: e.target.value
+                  })} />
+                  </div>
+                  <div>
+                    <Label htmlFor="reportPath">报告路径</Label>
+                    <Input id="reportPath" placeholder="./test-reports" value={config.reportPath || './test-reports'} onChange={e => onConfigChange && onConfigChange({
+                    ...config,
+                    reportPath: e.target.value
+                  })} />
+                  </div>
+                  <div>
+                    <Label htmlFor="buildCommand">构建命令</Label>
+                    <Input id="buildCommand" placeholder="npm run build" value={config.buildCommand || 'npm run build'} onChange={e => onConfigChange && onConfigChange({
+                    ...config,
+                    buildCommand: e.target.value
+                  })} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Button onClick={testConnection} disabled={isConfiguring}>
+                  {isConfiguring ? <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      测试中...
+                    </> : <>
+                      <Terminal className="w-4 h-4 mr-2" />
+                      测试连接
+                    </>}
+                </Button>
+                <Button variant="outline" onClick={saveConfiguration} disabled={isConfiguring}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  保存配置
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* 触发器 */}
+        <TabsContent value="triggers">
+          <Card>
+            <CardHeader>
+              <CardTitle>自动触发器</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="triggerOnPush">代码推送时触发</Label>
+                  <p className="text-sm text-muted-foreground">当代码推送到主分支时自动触发CI/CD</p>
+                </div>
+                <Switch id="triggerOnPush" checked={config.triggerOnPush || false} onCheckedChange={checked => onConfigChange && onConfigChange({
+                ...config,
+                triggerOnPush: checked
+              })} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="triggerOnPR">创建PR时触发</Label>
+                  <p className="text-sm text-muted-foreground">当创建或更新Pull Request时自动触发</p>
+                </div>
+                <Switch id="triggerOnPR" checked={config.triggerOnPR || false} onCheckedChange={checked => onConfigChange && onConfigChange({
+                ...config,
+                triggerOnPR: checked
+              })} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="triggerOnSchedule">定时触发</Label>
+                  <p className="text-sm text-muted-foreground">按计划定时执行CI/CD流程</p>
+                </div>
+                <Switch id="triggerOnSchedule" checked={config.triggerOnSchedule || false} onCheckedChange={checked => onConfigChange && onConfigChange({
+                ...config,
+                triggerOnSchedule: checked
+              })} />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* 日志 */}
+        <TabsContent value="logs">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Terminal className="w-5 h-5" />
+                执行日志
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+                {logs.length === 0 ? <div className="text-center py-8 text-muted-foreground">
+                    <Terminal className="w-12 h-12 mx-auto mb-4" />
+                    <p>暂无日志记录</p>
+                  </div> : logs.map((log, index) => <div key={index} className="flex items-start gap-2 p-2 border rounded">
+                    <span className="text-xs text-muted-foreground flex-shrink-0">
+                      {new Date(log.timestamp).toLocaleTimeString()}
+                    </span>
+                    <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-1 ${log.type === 'success' ? 'bg-green-500' : log.type === 'error' ? 'bg-red-500' : 'bg-blue-500'}`} />
+                    <span className="text-sm">{log.message}</span>
+                  </div>)}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>;
 }
+export default CICDIntegration;

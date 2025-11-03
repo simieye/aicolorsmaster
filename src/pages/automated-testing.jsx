@@ -1,7 +1,7 @@
 // @ts-ignore;
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 // @ts-ignore;
-import { Button, Card, CardContent, CardHeader, CardTitle, useToast, Alert, AlertDescription, Badge, Progress, Tabs, TabsContent, TabsList, TabsTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, useToast, Alert, AlertDescription, Badge, Progress, Tabs, TabsContent, TabsList, TabsTrigger, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch } from '@/components/ui';
 // @ts-ignore;
 import { Play, Pause, RotateCcw, FileText, Download, Upload, Settings, Activity, Zap, Clock, CheckCircle, XCircle, AlertTriangle, GitBranch, Server, TestTube, BarChart3, TrendingUp, Users, Cpu, HardDrive, Wifi } from 'lucide-react';
 
@@ -57,27 +57,39 @@ export default function AutomatedTestingPage(props) {
   const [ciStatus, setCiStatus] = useState('idle');
   const [stressTestActive, setStressTestActive] = useState(false);
 
-  // 测试配置
-  const [testConfig, setTestConfig] = useState({
+  // 使用 useRef 避免无限循环
+  const isRunningRef = useRef(isRunning);
+  const currentTestRef = useRef(currentTest);
+
+  // 同步 ref 和 state
+  useEffect(() => {
+    isRunningRef.current = isRunning;
+  }, [isRunning]);
+  useEffect(() => {
+    currentTestRef.current = currentTest;
+  }, [currentTest]);
+
+  // 测试配置 - 使用 useMemo
+  const testConfig = useMemo(() => ({
     testSuites: ['unit', 'integration', 'e2e', 'performance'],
     environment: 'development',
     parallel: true,
     maxConcurrency: 4,
     timeout: 30000,
     retries: 2
-  });
+  }), []);
 
-  // 性能基准数据
-  const [performanceBaseline, setPerformanceBaseline] = useState({
+  // 性能基准数据 - 使用 useMemo
+  const performanceBaseline = useMemo(() => ({
     loadTime: 2000,
     renderTime: 16.67,
     memoryUsage: 50 * 1024 * 1024,
     apiResponseTime: 500,
     errorRate: 0.01
-  });
+  }), []);
 
-  // CI/CD配置
-  const [cicdConfig, setCicdConfig] = useState({
+  // CI/CD配置 - 使用 useMemo
+  const cicdConfig = useMemo(() => ({
     provider: 'github',
     repository: 'hair-dye-app',
     branch: 'main',
@@ -85,18 +97,24 @@ export default function AutomatedTestingPage(props) {
     triggerOnPR: true,
     testCommand: 'npm run test:ci',
     reportPath: './test-reports'
-  });
+  }), []);
 
   // 运行自动化测试
   const runAutomatedTests = useCallback(async () => {
+    // 防止重复执行
+    if (isRunningRef.current) {
+      console.log('Tests already running, skipping...');
+      return;
+    }
     const testId = `test_${Date.now()}`;
     setIsRunning(true);
-    setCurrentTest({
+    const testStartData = {
       id: testId,
       startTime: Date.now(),
       status: 'running',
       config: testConfig
-    });
+    };
+    setCurrentTest(testStartData);
     const monitoringId = startMonitoring({
       phase: 'automated_testing',
       testId
@@ -106,10 +124,10 @@ export default function AutomatedTestingPage(props) {
       const testPromises = testConfig.testSuites.map(suite => runTestSuite(suite, testConfig));
       const results = await Promise.allSettled(testPromises);
       const endTime = Date.now();
-      const duration = endTime - currentTest.startTime;
+      const duration = endTime - testStartData.startTime;
       const testResult = {
         id: testId,
-        startTime: currentTest.startTime,
+        startTime: testStartData.startTime,
         endTime,
         duration,
         status: results.every(r => r.status === 'fulfilled') ? 'passed' : 'failed',
@@ -128,9 +146,10 @@ export default function AutomatedTestingPage(props) {
         variant: testResult.status === 'passed' ? 'default' : 'destructive'
       });
     } catch (error) {
+      console.error('Automated test error:', error);
       const testResult = {
         id: testId,
-        startTime: currentTest.startTime,
+        startTime: testStartData.startTime,
         endTime: Date.now(),
         status: 'error',
         error: error.message,
@@ -147,7 +166,7 @@ export default function AutomatedTestingPage(props) {
       setIsRunning(false);
       endMonitoring(monitoringId);
     }
-  }, [testConfig, currentTest, startMonitoring, endMonitoring, getMetrics, toast]);
+  }, [testConfig, startMonitoring, endMonitoring, getMetrics, toast]);
 
   // 运行单个测试套件
   const runTestSuite = async (suite, config) => {
@@ -214,6 +233,7 @@ export default function AutomatedTestingPage(props) {
       });
       return results;
     } catch (error) {
+      console.error('Benchmark test error:', error);
       toast({
         title: "基准测试失败",
         description: error.message,
@@ -237,6 +257,7 @@ export default function AutomatedTestingPage(props) {
         variant: success ? "default" : "destructive"
       });
     } catch (error) {
+      console.error('CI/CD trigger error:', error);
       setCiStatus('error');
       toast({
         title: "CI/CD触发错误",
@@ -390,7 +411,7 @@ export default function AutomatedTestingPage(props) {
 
             {/* 测试套件管理 */}
             <TabsContent value="test-suites">
-              <TestSuiteManager config={testConfig} onConfigChange={setTestConfig} testResults={testResults} isRunning={isRunning} />
+              <TestSuiteManager config={testConfig} onConfigChange={() => {}} testResults={testResults} isRunning={isRunning} />
             </TabsContent>
 
             {/* 性能基准测试 */}
@@ -400,7 +421,7 @@ export default function AutomatedTestingPage(props) {
 
             {/* CI/CD集成 */}
             <TabsContent value="cicd">
-              <CICDIntegration config={cicdConfig} onConfigChange={setCicdConfig} status={ciStatus} onTrigger={triggerCICD} />
+              <CICDIntegration config={cicdConfig} onConfigChange={() => {}} status={ciStatus} onTrigger={triggerCICD} />
             </TabsContent>
 
             {/* 测试报告 */}

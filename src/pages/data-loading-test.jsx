@@ -1,5 +1,5 @@
 // @ts-ignore;
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 // @ts-ignore;
 import { Button, Card, CardContent, CardHeader, CardTitle, useToast, Alert, AlertDescription, Badge, Progress, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui';
 // @ts-ignore;
@@ -63,6 +63,7 @@ export default function DataLoadingTestPage(props) {
   // 使用 useRef 避免无限循环
   const isRunningRef = useRef(isRunning);
   const currentTestRef = useRef(currentTest);
+  const batchLoaderRef = useRef(null);
 
   // 同步 ref 和 state
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function DataLoadingTestPage(props) {
   }, [currentTest]);
 
   // 测试场景定义 - 使用 useMemo 避免重复创建
-  const testScenarios = React.useMemo(() => ({
+  const testScenarios = useMemo(() => ({
     normal: {
       name: '正常数据加载',
       description: '测试正常情况下的数据加载',
@@ -315,13 +316,19 @@ export default function DataLoadingTestPage(props) {
   }), []);
 
   // 获取当前场景的配置 - 使用 useMemo
-  const currentScenario = React.useMemo(() => testScenarios[selectedScenario], [selectedScenario, testScenarios]);
+  const currentScenario = useMemo(() => testScenarios[selectedScenario], [selectedScenario, testScenarios]);
   const batchLoader = useBatchDataLoader(currentScenario?.configs || []);
+
+  // 更新 batchLoader ref
+  useEffect(() => {
+    batchLoaderRef.current = batchLoader;
+  }, [batchLoader]);
 
   // 运行测试 - 修复无限循环问题
   const runTest = useCallback(async () => {
     // 防止重复执行
     if (isRunningRef.current) {
+      console.log('Test already running, skipping...');
       return;
     }
     const interactionId = startInteraction('run_test', selectedScenario);
@@ -350,7 +357,7 @@ export default function DataLoadingTestPage(props) {
         duration,
         status: batchLoader.hasErrors ? 'partial' : 'success',
         results: results,
-        errors: batchLoader.errors,
+        errors: batchLoader.errors || {},
         performance: {
           duration,
           cacheHits: Object.values(batchLoader).filter(loader => loader.isFromCache).length,
@@ -367,13 +374,14 @@ export default function DataLoadingTestPage(props) {
         variant: batchLoader.hasErrors ? "default" : "default"
       });
     } catch (error) {
+      console.error('Test execution error:', error);
       const testResult = {
         scenario: selectedScenario,
         startTime: testStartData.startTime,
         endTime: Date.now(),
         status: 'failed',
         error: error.message,
-        errors: batchLoader.errors
+        errors: batchLoader.errors || {}
       };
       setTestResults(prev => [...prev, testResult]);
       setTestHistory(prev => [...prev, testResult]);
@@ -393,23 +401,25 @@ export default function DataLoadingTestPage(props) {
   const resetTest = useCallback(() => {
     setTestResults([]);
     setCurrentTest(null);
-    if (batchLoader.cancelAll) {
-      batchLoader.cancelAll();
+    if (batchLoaderRef.current && batchLoaderRef.current.cancelAll) {
+      batchLoaderRef.current.cancelAll();
     }
-  }, [batchLoader]);
+  }, []);
 
   // 清除缓存
   const clearCache = useCallback(() => {
-    Object.values(batchLoader).forEach(loader => {
-      if (loader.clearCache) {
-        loader.clearCache();
-      }
-    });
+    if (batchLoaderRef.current) {
+      Object.values(batchLoaderRef.current).forEach(loader => {
+        if (loader.clearCache) {
+          loader.clearCache();
+        }
+      });
+    }
     toast({
       title: "缓存已清除",
       description: "所有测试数据缓存已清除"
     });
-  }, [batchLoader, toast]);
+  }, [toast]);
 
   // 导出测试结果
   const exportResults = useCallback(() => {
@@ -445,7 +455,7 @@ export default function DataLoadingTestPage(props) {
   // 导出错误日志
   const exportErrorLogs = useCallback(() => {
     const errorData = {
-      errors: batchLoader.errors,
+      errors: batchLoaderRef.current?.errors || {},
       testResults: testResults.filter(r => r.errors && Object.keys(r.errors).length > 0),
       timestamp: Date.now()
     };
@@ -458,7 +468,7 @@ export default function DataLoadingTestPage(props) {
     a.download = `error-logs-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [batchLoader.errors, testResults]);
+  }, [testResults]);
   return <ErrorBoundary $w={$w}>
       <div className="min-h-screen bg-background">
         <TopNavigation title="数据加载测试" showBack={true} actions={<div className="flex items-center gap-2">
@@ -587,7 +597,7 @@ export default function DataLoadingTestPage(props) {
 
             {/* 错误日志 */}
             <TabsContent value="errors">
-              <ErrorLogViewer errors={batchLoader.errors} testResults={testResults} onClear={clearErrorLogs} onExport={exportErrorLogs} />
+              <ErrorLogViewer errors={batchLoader.errors || {}} testResults={testResults} onClear={clearErrorLogs} onExport={exportErrorLogs} />
             </TabsContent>
           </Tabs>
         </div>

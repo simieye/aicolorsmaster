@@ -1,180 +1,167 @@
 // @ts-ignore;
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 // @ts-ignore;
-import { Card, CardContent, CardHeader, CardTitle, Button, Progress, Badge, Alert, AlertDescription } from '@/components/ui';
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Progress, Alert, AlertDescription, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui';
 // @ts-ignore;
-import { BarChart3, TrendingUp, TrendingDown, Clock, Zap, HardDrive, Wifi, Cpu, Activity, Play, RotateCcw } from 'lucide-react';
+import { BarChart3, TrendingUp, TrendingDown, Clock, Zap, HardDrive, Cpu, Wifi, Play, RefreshCw, Download, AlertTriangle, CheckCircle } from 'lucide-react';
 
 export function PerformanceBenchmark({
-  baseline,
+  baseline = {},
   onRunBenchmark
 }) {
-  const [benchmarkResults, setBenchmarkResults] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [currentMetrics, setCurrentMetrics] = useState(null);
-  const performanceMetrics = [{
-    key: 'loadTime',
-    name: '页面加载时间',
-    icon: <Clock className="w-4 h-4" />,
-    unit: 'ms',
-    description: '从请求开始到页面完全加载的时间',
-    threshold: {
-      good: 2000,
-      warning: 3000,
-      critical: 5000
-    }
-  }, {
-    key: 'renderTime',
-    name: '渲染时间',
-    icon: <Zap className="w-4 h-4" />,
-    unit: 'ms',
-    description: '组件渲染和更新的平均时间',
-    threshold: {
-      good: 16.67,
-      warning: 33.33,
-      critical: 100
-    }
-  }, {
-    key: 'memoryUsage',
-    name: '内存使用',
-    icon: <HardDrive className="w-4 h-4" />,
-    unit: 'MB',
-    description: 'JavaScript堆内存使用量',
-    threshold: {
-      good: 50,
-      warning: 100,
-      critical: 200
-    }
-  }, {
-    key: 'apiResponseTime',
-    name: 'API响应时间',
-    icon: <Wifi className="w-4 h-4" />,
-    unit: 'ms',
-    description: 'API请求的平均响应时间',
-    threshold: {
-      good: 500,
-      warning: 1000,
-      critical: 2000
-    }
-  }, {
-    key: 'errorRate',
-    name: '错误率',
-    icon: <Activity className="w-4 h-4" />,
-    unit: '%',
-    description: '请求失败率',
-    threshold: {
-      good: 1,
-      warning: 5,
-      critical: 10
-    }
-  }];
-  const getMetricStatus = (value, threshold) => {
-    if (value <= threshold.good) return 'good';
-    if (value <= threshold.warning) return 'warning';
-    return 'critical';
-  };
-  const getStatusColor = status => {
-    switch (status) {
-      case 'good':
-        return 'text-green-500';
-      case 'warning':
-        return 'text-yellow-500';
-      case 'critical':
-        return 'text-red-500';
-      default:
-        return 'text-gray-500';
-    }
-  };
-  const getStatusBadge = status => {
-    switch (status) {
-      case 'good':
-        return <Badge variant="default">优秀</Badge>;
-      case 'warning':
-        return <Badge variant="secondary">警告</Badge>;
-      case 'critical':
-        return <Badge variant="destructive">严重</Badge>;
-      default:
-        return <Badge variant="outline">未知</Badge>;
-    }
-  };
-  const formatValue = (value, unit) => {
-    if (unit === 'MB') {
-      return (value / (1024 * 1024)).toFixed(1);
-    }
-    if (unit === '%') {
-      return (value * 100).toFixed(2);
-    }
-    return value.toFixed(1);
-  };
-  const calculateImprovement = (current, baseline) => {
-    if (!baseline) return null;
-    const improvement = (baseline - current) / baseline * 100;
-    return {
-      value: improvement.toFixed(1),
-      isPositive: improvement > 0
-    };
-  };
-  const runBenchmark = async () => {
+  const [currentResults, setCurrentResults] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [activeTab, setActiveTab] = useState('overview');
+
+  // 使用 useMemo 优化基准数据
+  const baselineMetrics = useMemo(() => ({
+    loadTime: baseline.loadTime || 2000,
+    renderTime: baseline.renderTime || 16.67,
+    memoryUsage: baseline.memoryUsage || 50 * 1024 * 1024,
+    apiResponseTime: baseline.apiResponseTime || 500,
+    errorRate: baseline.errorRate || 0.01
+  }), [baseline]);
+
+  // 模拟运行基准测试
+  const runBenchmark = useCallback(async () => {
     setIsRunning(true);
-    setCurrentMetrics(null);
     try {
-      // 模拟基准测试
+      // 模拟测试过程
+      await new Promise(resolve => setTimeout(resolve, 2000));
       const results = {
         timestamp: Date.now(),
         metrics: {
-          loadTime: Math.random() * 2000 + 1000,
-          renderTime: Math.random() * 20 + 10,
-          memoryUsage: Math.random() * 50 * 1024 * 1024 + 30 * 1024 * 1024,
-          apiResponseTime: Math.random() * 500 + 200,
-          errorRate: Math.random() * 0.05
+          loadTime: Math.random() * 1000 + 1500,
+          renderTime: Math.random() * 10 + 12,
+          memoryUsage: Math.random() * 20 * 1024 * 1024 + 40 * 1024 * 1024,
+          apiResponseTime: Math.random() * 300 + 200,
+          errorRate: Math.random() * 0.02
         }
       };
-      setCurrentMetrics(results);
-      setBenchmarkResults(prev => [...prev, results]);
-      await onRunBenchmark(results);
+
+      // 计算对比数据
+      results.comparison = {
+        loadTime: (results.metrics.loadTime / baselineMetrics.loadTime * 100).toFixed(1),
+        renderTime: (results.metrics.renderTime / baselineMetrics.renderTime * 100).toFixed(1),
+        memoryUsage: (results.metrics.memoryUsage / baselineMetrics.memoryUsage * 100).toFixed(1),
+        apiResponseTime: (results.metrics.apiResponseTime / baselineMetrics.apiResponseTime * 100).toFixed(1),
+        errorRate: (results.metrics.errorRate / baselineMetrics.errorRate * 100).toFixed(1)
+      };
+      setCurrentResults(results);
+      setHistory(prev => [...prev.slice(-9), results]); // 保留最近10次记录
+
+      if (onRunBenchmark) {
+        onRunBenchmark(results);
+      }
     } catch (error) {
-      console.error('基准测试失败:', error);
+      console.error('Benchmark error:', error);
     } finally {
       setIsRunning(false);
     }
-  };
-  const getHistoricalTrend = key => {
-    const recent = benchmarkResults.slice(-5);
-    if (recent.length < 2) return null;
-    const values = recent.map(r => r.metrics[key]);
-    const trend = values[values.length - 1] - values[0];
-    return {
-      trend,
-      isImproving: key === 'errorRate' ? trend < 0 : trend < 0
+  }, [baselineMetrics, onRunBenchmark]);
+
+  // 格式化数值
+  const formatValue = useCallback((value, unit) => {
+    if (unit === 'bytes') {
+      return (value / 1024 / 1024).toFixed(1) + ' MB';
+    }
+    if (unit === 'percentage') {
+      return (value * 100).toFixed(2) + '%';
+    }
+    if (unit === 'ms') {
+      return value.toFixed(2) + ' ms';
+    }
+    return value.toFixed(2);
+  }, []);
+
+  // 获取状态图标
+  const getStatusIcon = useCallback((current, baseline, lowerIsBetter = true) => {
+    const ratio = current / baseline;
+    if (lowerIsBetter) {
+      return ratio < 1 ? <TrendingDown className="w-4 h-4 text-green-500" /> : <TrendingUp className="w-4 h-4 text-red-500" />;
+    } else {
+      return ratio > 1 ? <TrendingUp className="w-4 h-4 text-green-500" /> : <TrendingDown className="w-4 h-4 text-red-500" />;
+    }
+  }, []);
+
+  // 获取指标配置
+  const getMetricConfig = useCallback(key => {
+    const configs = {
+      loadTime: {
+        label: '页面加载时间',
+        icon: <Clock className="w-4 h-4" />,
+        unit: 'ms',
+        lowerIsBetter: true
+      },
+      renderTime: {
+        label: '渲染时间',
+        icon: <Zap className="w-4 h-4" />,
+        unit: 'ms',
+        lowerIsBetter: true
+      },
+      memoryUsage: {
+        label: '内存使用',
+        icon: <HardDrive className="w-4 h-4" />,
+        unit: 'bytes',
+        lowerIsBetter: true
+      },
+      apiResponseTime: {
+        label: 'API响应时间',
+        icon: <Wifi className="w-4 h-4" />,
+        unit: 'ms',
+        lowerIsBetter: true
+      },
+      errorRate: {
+        label: '错误率',
+        icon: <AlertTriangle className="w-4 h-4" />,
+        unit: 'percentage',
+        lowerIsBetter: true
+      }
     };
-  };
+    return configs[key] || {
+      label: key,
+      icon: <BarChart3 className="w-4 h-4" />,
+      unit: '',
+      lowerIsBetter: true
+    };
+  }, []);
+
+  // 导出基准测试结果
+  const exportResults = useCallback(() => {
+    const exportData = {
+      baseline: baselineMetrics,
+      current: currentResults,
+      history,
+      exportedAt: Date.now()
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: 'application/json'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `performance-benchmark-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [baselineMetrics, currentResults, history]);
   return <div className="space-y-6">
       {/* 控制面板 */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5" />
-            性能基准测试
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground mb-2">
-                运行性能基准测试以评估应用性能表现
-              </p>
-              {benchmarkResults.length > 0 && <p className="text-xs text-muted-foreground">
-                  已完成 {benchmarkResults.length} 次测试
-                </p>}
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="w-5 h-5" />
+              性能基准测试
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setBenchmarkResults([])}>
-                <RotateCcw className="w-4 h-4 mr-2" />
-                清除历史
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={exportResults} disabled={!currentResults}>
+                <Download className="w-4 h-4 mr-2" />
+                导出结果
               </Button>
               <Button onClick={runBenchmark} disabled={isRunning}>
                 {isRunning ? <>
-                    <Activity className="w-4 h-4 mr-2 animate-pulse" />
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
                     测试中...
                   </> : <>
                     <Play className="w-4 h-4 mr-2" />
@@ -182,145 +169,118 @@ export function PerformanceBenchmark({
                   </>}
               </Button>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 当前测试结果 */}
-      {currentMetrics && <Card>
-          <CardHeader>
-            <CardTitle>最新测试结果</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {performanceMetrics.map(metric => {
-            const value = currentMetrics.metrics[metric.key];
-            const status = getMetricStatus(value, metric.threshold);
-            const improvement = calculateImprovement(value, baseline[metric.key]);
-            const trend = getHistoricalTrend(metric.key);
-            return <div key={metric.key} className="p-4 border rounded-lg">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        {metric.icon}
-                        <span className="font-medium text-sm">{metric.name}</span>
-                      </div>
-                      {getStatusBadge(status)}
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-baseline gap-2">
-                        <span className={`text-2xl font-bold ${getStatusColor(status)}`}>
-                          {formatValue(value, metric.unit)}
-                        </span>
-                        <span className="text-sm text-muted-foreground">{metric.unit}</span>
-                      </div>
-                      
-                      {/* 与基准对比 */}
-                      {improvement && <div className="flex items-center gap-1">
-                          {improvement.isPositive ? <TrendingDown className="w-3 h-3 text-green-500" /> : <TrendingUp className="w-3 h-3 text-red-500" />}
-                          <span className={`text-xs ${improvement.isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                            {improvement.isPositive ? '改善' : '恶化'} {Math.abs(improvement.value)}%
-                          </span>
-                        </div>}
-                      
-                      {/* 趋势指示 */}
-                      {trend && <div className="flex items-center gap-1">
-                          {trend.isImproving ? <TrendingDown className="w-3 h-3 text-green-500" /> : <TrendingUp className="w-3 h-3 text-red-500" />}
-                          <span className={`text-xs ${trend.isImproving ? 'text-green-500' : 'text-red-500'}`}>
-                            {trend.isImproving ? '改善中' : '恶化中'}
-                          </span>
-                        </div>}
-                    </div>
-                    
-                    {/* 进度条 */}
-                    <div className="mt-3">
-                      <Progress value={status === 'good' ? 100 : status === 'warning' ? 66 : 33} className="w-full h-2" />
-                    </div>
-                  </div>;
-          })}
-            </div>
-          </CardContent>
-        </Card>}
-
-      {/* 性能指标详情 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>性能指标详情</CardTitle>
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {performanceMetrics.map(metric => {
-            const currentValue = currentMetrics?.metrics[metric.key];
-            const status = currentValue ? getMetricStatus(currentValue, metric.threshold) : 'none';
-            return <div key={metric.key} className="p-4 border rounded-lg">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      {metric.icon}
-                      <h4 className="font-medium">{metric.name}</h4>
-                    </div>
-                    {currentValue && getStatusBadge(status)}
-                  </div>
-                  
-                  <p className="text-sm text-muted-foreground mb-3">{metric.description}</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">基准值: </span>
-                      <span>{formatValue(baseline[metric.key], metric.unit)}{metric.unit}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">当前值: </span>
-                      <span className={currentValue ? getStatusColor(status) : ''}>
-                        {currentValue ? formatValue(currentValue, metric.unit) : '-'}{metric.unit}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">优秀阈值: </span>
-                      <span className="text-green-500">≤{metric.threshold.good}{metric.unit}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">警告阈值: </span>
-                      <span className="text-yellow-500">≤{metric.threshold.warning}{metric.unit}</span>
-                    </div>
-                  </div>
-                </div>;
-          })}
-          </div>
-        </CardContent>
-      </Card>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="overview">概览</TabsTrigger>
+              <TabsTrigger value="comparison">对比分析</TabsTrigger>
+              <TabsTrigger value="history">历史记录</TabsTrigger>
+            </TabsList>
 
-      {/* 历史趋势 */}
-      {benchmarkResults.length > 1 && <Card>
-          <CardHeader>
-            <CardTitle>历史趋势</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {performanceMetrics.map(metric => {
-            const values = benchmarkResults.map(r => r.metrics[metric.key]);
-            const latest = values[values.length - 1];
-            const oldest = values[0];
-            const change = (latest - oldest) / oldest * 100;
-            return <div key={metric.key} className="flex items-center justify-between p-3 bg-muted rounded">
-                    <div className="flex items-center gap-2">
-                      {metric.icon}
-                      <span className="text-sm font-medium">{metric.name}</span>
+            {/* 概览 */}
+            <TabsContent value="overview" className="space-y-4">
+              {currentResults ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {Object.entries(currentResults.metrics).map(([key, value]) => {
+                const config = getMetricConfig(key);
+                const baselineValue = baselineMetrics[key];
+                const comparison = currentResults.comparison[key];
+                return <Card key={key}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            {config.icon}
+                            <span className="text-sm font-medium">{config.label}</span>
+                          </div>
+                          {getStatusIcon(value, baselineValue, config.lowerIsBetter)}
+                        </div>
+                        <div className="text-2xl font-bold mb-1">
+                          {formatValue(value, config.unit)}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          基准: {formatValue(baselineValue, config.unit)}
+                        </div>
+                        {comparison && <div className={`text-xs mt-1 ${parseFloat(comparison) > 100 ? 'text-red-500' : 'text-green-500'}`}>
+                            {comparison}% of baseline
+                          </div>}
+                      </CardContent>
+                    </Card>;
+              })}
+                </div> : <div className="text-center py-8 text-muted-foreground">
+                  <BarChart3 className="w-12 h-12 mx-auto mb-4" />
+                  <p>点击"运行基准测试"开始性能测试</p>
+                </div>}
+            </TabsContent>
+
+            {/* 对比分析 */}
+            <TabsContent value="comparison" className="space-y-4">
+              {currentResults ? <div className="space-y-4">
+                  {Object.entries(currentResults.metrics).map(([key, value]) => {
+                const config = getMetricConfig(key);
+                const baselineValue = baselineMetrics[key];
+                const percentage = value / baselineValue * 100;
+                const isGood = config.lowerIsBetter ? percentage < 100 : percentage > 100;
+                return <div key={key} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {config.icon}
+                        <span className="font-medium">{config.label}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{formatValue(value, config.unit)}</span>
+                        <Badge variant={isGood ? 'default' : 'destructive'}>
+                          {isGood ? '优秀' : '需改进'}
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <span className="text-sm text-muted-foreground">
-                        {formatValue(oldest, metric.unit)} → {formatValue(latest, metric.unit)}
-                      </span>
-                      <div className="flex items-center gap-1">
-                        {change < 0 ? <TrendingDown className="w-3 h-3 text-green-500" /> : <TrendingUp className="w-3 h-3 text-red-500" />}
-                        <span className={`text-sm ${change < 0 ? 'text-green-500' : 'text-red-500'}`}>
-                          {change > 0 ? '+' : ''}{change.toFixed(1)}%
-                        </span>
+                    <div className="space-y-1">
+                      <Progress value={Math.min(percentage, 200)} className="w-full" />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>基准: {formatValue(baselineValue, config.unit)}</span>
+                        <span>{percentage.toFixed(1)}%</span>
                       </div>
                     </div>
                   </div>;
-          })}
-            </div>
-          </CardContent>
-        </Card>}
+              })}
+                </div> : <Alert>
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>
+                    请先运行基准测试以查看对比分析
+                  </AlertDescription>
+                </Alert>}
+            </TabsContent>
+
+            {/* 历史记录 */}
+            <TabsContent value="history" className="space-y-4">
+              {history.length > 0 ? <div className="space-y-3">
+                  {history.map((result, index) => <div key={index} className="border rounded-lg p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">测试 #{index + 1}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(result.timestamp).toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+                        {Object.entries(result.metrics).map(([key, value]) => {
+                    const config = getMetricConfig(key);
+                    return <div key={key} className="text-center">
+                            <div className="flex items-center justify-center gap-1 mb-1">
+                              {config.icon}
+                            </div>
+                            <div>{formatValue(value, config.unit)}</div>
+                          </div>;
+                  })}
+                      </div>
+                    </div>)}
+                </div> : <div className="text-center py-8 text-muted-foreground">
+                  <Clock className="w-12 h-12 mx-auto mb-4" />
+                  <p>暂无历史记录</p>
+                </div>}
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </div>;
 }
+export default PerformanceBenchmark;
